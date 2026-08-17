@@ -3,7 +3,7 @@ import { NavLink, Outlet } from "react-router";
 export default function Layout() {
   return (
     <div className="flex flex-col min-h-screen">
-      <header className="sticky top-0 z-10 bg-slate-900 px-4 py-3">
+      <header className="sticky top-0 z-10 bg-slate-900 px-4 py-3 text-white">
         <span>Kinetic</span>
 
         <nav className="flex gap-5">
@@ -44,7 +44,7 @@ export default function Layout() {
         <Outlet />
       </main>
 
-      <footer className="bg-slate-900 px-4 py-6">
+      <footer className="bg-slate-900 px-4 py-6 text-white">
         © 2026 Kinetic. Todos los derechos reservados.
       </footer>
     </div>
