@@ -1,0 +1,7 @@
+{
+  "errors": {
+    "genericErrorTitle": "Algo ha ido mal",
+    "genericErrorDescription": "Ha ocurrido un error inesperado.",
+    "backHome": "Volver al inicio"
+  }
+}
