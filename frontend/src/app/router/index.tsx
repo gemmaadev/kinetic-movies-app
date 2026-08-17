@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router";
 import AuthLayout from "@/app/layout/AuthLayout";
 import Layout from "@/app/layout/Layout";
-import RouterErrorFallback from "@/app/providers/RouterErrorFallback";
+import ErrorFallback from "@/shared/components/ErrorFallback";
 
 import HomePage from "@/pages/HomePage";
 import ExplorePage from "@/pages/ExplorePage";
@@ -17,7 +17,7 @@ import NotFoundPage from "@/pages/NotFoundPage";
 
 export const router = createBrowserRouter([
   {
-    errorElement: <RouterErrorFallback />,
+    errorElement: <ErrorFallback />,
     children: [
       {
         element: <AuthLayout />,
