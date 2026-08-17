@@ -12,11 +12,28 @@ dist
 dist-ssr
 *.local
 
+# Environment variables 
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Test coverage
+coverage
+
+# TypeScript build info
+*.tsbuildinfo
+
+# Firebase Admin credentials (backend)
+serviceAccountKey.json
+firebase-adminsdk-*.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
 .idea
 .DS_Store
+Thumbs.db
 *.suo
 *.ntvs*
 *.njsproj
