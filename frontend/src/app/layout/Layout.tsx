@@ -7,7 +7,7 @@ export default function Layout() {
         <span>Kinetic</span>
 
         <nav className="flex gap-5">
-          <NavLink
+          <NavLink //Fer un .map al NavBar amb un const objecte que tingui la el to "" i el titol 
             to={"/"}
             className={({ isActive }) => (isActive ? "font-bold" : "")}
           >
