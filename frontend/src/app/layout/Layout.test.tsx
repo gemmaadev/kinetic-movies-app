@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { MemoryRouter, Routes, Route } from "react-router";
 import Layout from "./Layout";
 
@@ -15,8 +15,11 @@ describe("Layout", () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByRole("banner")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /inicio/i })).toBeInTheDocument();
+    const header = screen.getByRole("banner");
+    expect(header).toBeInTheDocument();
+    expect(
+      within(header).getByRole("link", { name: /inicio/i }),
+    ).toBeInTheDocument();
   });
 
   it("renders the active route's content inside the Outlet", () => {

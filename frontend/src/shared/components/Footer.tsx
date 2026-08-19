@@ -1,0 +1,94 @@
+import logo from "@/shared/assets/logo.png";
+import { FaInstagram, FaFacebookF, FaTwitter } from "react-icons/fa";
+import { Link } from "react-router";
+
+const discoverLinks = [
+  { to: "/", label: "Inicio" },
+  { to: "/explorar", label: "Explorar" },
+  { to: "/ranking", label: "Ranking" },
+  { to: "/favoritos", label: "Favoritos" },
+];
+
+const accountLinks = [
+  { to: "/perfil", label: "Mi perfil" },
+  { to: "/login", label: "Cerrar sesión" }, // placeholder, connects with useAuth()
+];
+
+const legalLinks = [
+  { to: "/terminos", label: "Términos y condiciones" },
+  { to: "/privacidad", label: "Política de privacidad" },
+  { to: "/cookies", label: "Política de cookies" },
+];
+
+const socialLinks = [
+  { href: "#", label: "Instagram", Icon: FaInstagram },
+  { href: "#", label: "Facebook", Icon: FaFacebookF },
+  { href: "#", label: "Twitter/X", Icon: FaTwitter },
+];
+
+export function Footer() {
+  return (
+    <>
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-5">
+        <div className="flex flex-col gap-3 md:col-span-2">
+          <img src={logo} alt="Kinetic logo" className="w-32 cursor-pointer" />
+          <p className="text-secondary-text text-sm">
+            Tu plataforma personal para explorar, valorar y disfrutar del mejor
+            cine. Todo el universo del celuloide al alcance de tu mano.
+          </p>
+        </div>
+
+        <FooterColumn title="DESCUBRIR" links={discoverLinks} />
+        <FooterColumn title="CUENTA" links={accountLinks} />
+        <FooterColumn title="LEGAL" links={legalLinks} />
+
+        <div className="flex flex-col gap-3">
+          <h4 className="font-bold">SÍGUENOS</h4>
+          <div className="flex gap-4">
+            {socialLinks.map(({ href, label, Icon }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={label}
+                className="text-secondary-text hover:text-brand-teal"
+              >
+                <Icon size={20} />
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-8 border-t border-bg-surface pt-6">
+        <span className="text-secondary-text text-sm">
+          © 2026 Kinetic. Todos los derechos reservados.
+        </span>
+      </div>
+    </>
+  );
+}
+
+function FooterColumn({
+  title,
+  links,
+}: {
+  title: string;
+  links: { to: string; label: string }[];
+}) {
+  return (
+    <div className="flex flex-col gap-3">
+      <h4 className="font-bold">{title}</h4>
+      <ul className="flex flex-col gap-2">
+        {links.map(({ to, label }) => (
+          <li key={to}>
+            <Link to={to} className="text-secondary-text hover:text-brand-teal">
+              {label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
