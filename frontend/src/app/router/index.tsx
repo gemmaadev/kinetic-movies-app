@@ -37,9 +37,9 @@ export const router = createBrowserRouter([
           { path: "/ranking", Component: RankingPage },
           { path: "/favoritos", Component: FavoritesPage },
           { path: "/perfil", Component: ProfilePage },
+          { path: "*", Component: NotFoundPage },
         ],
       },
-      { path: "*", Component: NotFoundPage },
     ],
   },
 ]);
