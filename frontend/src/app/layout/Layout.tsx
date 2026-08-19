@@ -1,3 +1,4 @@
+import { Footer } from "@/shared/components/Footer";
 import NavBar from "@/shared/components/NavBar";
 import { Outlet } from "react-router";
 
@@ -13,7 +14,7 @@ export default function Layout() {
       </main>
 
       <footer className=" bg-kinetic-bg border-t border-t-gray-800 px-4 py-11 text-primary-text">
-        © 2026 Kinetic. Todos los derechos reservados.
+        <Footer />
       </footer>
     </div>
   );
