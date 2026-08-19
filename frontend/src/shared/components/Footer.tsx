@@ -26,10 +26,16 @@ const socialLinks = [
   { href: "#", label: "Twitter/X", Icon: FaTwitter },
 ];
 
+const footerColumns = [
+  { title: "DESCUBRIR", links: discoverLinks },
+  { title: "CUENTA", links: accountLinks },
+  { title: "LEGAL", links: legalLinks },
+];
+
 export function Footer() {
   return (
     <>
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-5">
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-5 pb-8">
         <div className="flex flex-col gap-3 md:col-span-2">
           <img src={logo} alt="Kinetic logo" className="w-32 cursor-pointer" />
           <p className="text-secondary-text text-sm">
@@ -38,9 +44,9 @@ export function Footer() {
           </p>
         </div>
 
-        <FooterColumn title="DESCUBRIR" links={discoverLinks} />
-        <FooterColumn title="CUENTA" links={accountLinks} />
-        <FooterColumn title="LEGAL" links={legalLinks} />
+        {footerColumns.map((column) => (
+          <FooterColumn title={column.title} links={column.links} />
+        ))}
 
         <div className="flex flex-col gap-3">
           <h4 className="font-bold">SÍGUENOS</h4>
@@ -61,7 +67,7 @@ export function Footer() {
         </div>
       </div>
 
-      <div className="mt-8 border-t border-bg-surface pt-6">
+      <div className=" border-t border-bg-surface pt-6">
         <span className="text-secondary-text text-sm">
           © 2026 Kinetic. Todos los derechos reservados.
         </span>
