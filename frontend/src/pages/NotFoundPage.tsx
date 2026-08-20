@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { PrimaryLinkButton } from "@/shared/components/buttons/PrimaryLinkButton";
 import background from "@/shared/assets/404-background.png";
 
 export default function NotFoundPage() {
@@ -18,13 +18,9 @@ export default function NotFoundPage() {
             Lo sentimos, la página que buscas no existe
             <br />o ha sido movida.
           </p>
-
-          <Link
-            to="/"
-            className="self-center rounded-md bg-brand-blue text-kinetic-bg hover:bg-brand-teal px-6 py-3 font-bold md:self-start"
-          >
+          <PrimaryLinkButton to="/" className="self-center md:self-start">
             Volver al inicio
-          </Link>
+          </PrimaryLinkButton>
         </div>
       </div>
     </>
