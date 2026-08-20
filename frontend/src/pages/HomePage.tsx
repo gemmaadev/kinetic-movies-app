@@ -5,6 +5,7 @@ import { Heart, Search, Star, User } from "lucide-react";
 import { PageContainer } from "@/shared/components/PageContainer";
 import { MovieCarousel } from "@/features/explore/components/MovieCarousel";
 import { useTrending } from "@/features/explore/hooks/useTrending";
+import { useNowPlaying } from "@/features/explore/hooks/useNowPlaying";
 
 const features = [
   {
@@ -31,6 +32,7 @@ const features = [
 
 export default function HomePage() {
   const trending = useTrending();
+  const nowPlaying = useNowPlaying();
 
   return (
     <div className="flex flex-col gap-12">
@@ -70,10 +72,15 @@ export default function HomePage() {
       </PageContainer>
 
       <div className="bg-bg-deep flex flex-col gap-3 py-10">
-        <PageContainer>
+        <PageContainer className="flex flex-col gap-10">
           <MovieCarousel
             title="Tendencias de esta semana"
             movies={trending.movies}
+          />
+
+          <MovieCarousel
+            title="Lo más popular del mes"
+            movies={nowPlaying.movies}
           />
         </PageContainer>
       </div>

@@ -40,8 +40,9 @@ export function Footer() {
         <div className="flex flex-col gap-3 md:col-span-2">
           <img src={logo} alt="Kinetic logo" className="w-32 cursor-pointer" />
           <p className="text-secondary-text text-sm">
-            Tu plataforma personal para explorar, valorar y disfrutar del mejor
-            cine. Todo el universo de películas al alcance de tu mano.
+            Tu plataforma personal para explorar, <br /> valorar y disfrutar del
+            mejor cine. Todo el universo <br />
+            de películas al alcance de tu mano.
           </p>
         </div>
 
