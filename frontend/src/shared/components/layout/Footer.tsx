@@ -1,5 +1,6 @@
 import logo from "@/shared/assets/logo.png";
-import { FaInstagram, FaFacebookF, FaTwitter } from "react-icons/fa";
+import { FaInstagram, FaFacebookF } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 import { Link } from "react-router";
 
 const discoverLinks = [
@@ -23,7 +24,7 @@ const legalLinks = [
 const socialLinks = [
   { href: "#", label: "Instagram", Icon: FaInstagram },
   { href: "#", label: "Facebook", Icon: FaFacebookF },
-  { href: "#", label: "Twitter/X", Icon: FaTwitter },
+  { href: "#", label: "Twitter/X", Icon: FaXTwitter },
 ];
 
 const footerColumns = [
@@ -39,8 +40,9 @@ export function Footer() {
         <div className="flex flex-col gap-3 md:col-span-2">
           <img src={logo} alt="Kinetic logo" className="w-32 cursor-pointer" />
           <p className="text-secondary-text text-sm">
-            Tu plataforma personal para explorar, valorar y disfrutar del mejor
-            cine. Todo el universo del celuloide al alcance de tu mano.
+            Tu plataforma personal para explorar, <br /> valorar y disfrutar del
+            mejor cine. Todo el universo <br />
+            de películas al alcance de tu mano.
           </p>
         </div>
 
