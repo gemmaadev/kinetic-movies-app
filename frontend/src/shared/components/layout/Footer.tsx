@@ -40,7 +40,7 @@ export function Footer() {
           <img src={logo} alt="Kinetic logo" className="w-32 cursor-pointer" />
           <p className="text-secondary-text text-sm">
             Tu plataforma personal para explorar, valorar y disfrutar del mejor
-            cine. Todo el universo del celuloide al alcance de tu mano.
+            cine. Todo el universo de películas al alcance de tu mano.
           </p>
         </div>
 
