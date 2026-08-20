@@ -1,8 +1,37 @@
 import { HeroSection } from "@/shared/components/HeroSection";
 import { PrimaryLinkButton } from "@/shared/components/buttons/PrimaryLinkButton";
 import heroBackground from "@/shared/assets/hero-background.png";
+import { Heart, Search, Star, User } from "lucide-react";
+import { PageContainer } from "@/shared/components/PageContainer";
+import { MovieCarousel } from "@/features/explore/components/MovieCarousel";
+import { useTrending } from "@/features/explore/hooks/useTrending";
+
+const features = [
+  {
+    Icon: Search,
+    title: "Explora",
+    description: "Miles de películas y series",
+  },
+  {
+    Icon: Heart,
+    title: "Guarda",
+    description: "Tus favoritas siempre contigo",
+  },
+  {
+    Icon: Star,
+    title: "Puntúa",
+    description: "Valora del 1 al 10 y crea tu ranking",
+  },
+  {
+    Icon: User,
+    title: "Tu espacio",
+    description: "Todo tu mundo cinematográfico",
+  },
+];
 
 export default function HomePage() {
+  const trending = useTrending();
+
   return (
     <div className="flex flex-col gap-12">
       <HeroSection
@@ -24,6 +53,30 @@ export default function HomePage() {
           </PrimaryLinkButton>
         </div>
       </HeroSection>
+
+      <PageContainer>
+        <div className="grid grid-cols-1 md:grid-cols-4 md:gap-0 md:divide-x md:divide-secondary-text/15">
+          {features.map(({ Icon, title, description }) => (
+            <div
+              key={title}
+              className="flex flex-col items-center gap-2 px-4 pb-10 text-center md:pt-10 md:pb-20"
+            >
+              <Icon size={30} className="text-primary-text" />
+              <h3 className="text-2xl font-bold">{title}</h3>
+              <p className="text-secondary-text text-sm">{description}</p>
+            </div>
+          ))}
+        </div>
+      </PageContainer>
+
+      <div className="bg-bg-deep flex flex-col gap-3 py-10">
+        <PageContainer>
+          <MovieCarousel
+            title="Tendencias de esta semana"
+            movies={trending.movies}
+          />
+        </PageContainer>
+      </div>
     </div>
   );
 }
