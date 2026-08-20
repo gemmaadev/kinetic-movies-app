@@ -1,6 +1,12 @@
+import type { ReactNode } from "react";
 import { primaryStyles } from "./buttonStyles";
 
-export function PrimaryButton({ children, onClick }) {
+interface PrimaryButtonProps {
+  children: ReactNode;
+  onClick: () => void;
+}
+
+export function PrimaryButton({ children, onClick }: PrimaryButtonProps) {
   return (
     <button onClick={onClick} className={primaryStyles}>
       {children}
