@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "tsc -b",
-    "test": "vitest run"
+    "test": "vitest run",
+    "postinstall": "prisma generate"
   },
   "keywords": [],
   "author": "",
