@@ -11,7 +11,7 @@ export async function addFavoriteMovie(data: {
   poster?: string;
 }): Promise<Movie> {
   if (data.rating < 1 || data.rating > 10) {
-    throw new Error("El rating tiene que estar entre 1 y 10");
+    throw new Error("Rating must be between 1 and 10");
   }
   return prisma.movie.create({ data });
 }
