@@ -46,25 +46,42 @@ export async function exploreController(req: Request, res: Response) {
   try {
     if (search && typeof search === "string") {
       const [movieResults, personResults] = await Promise.all([
-        tmdbFetch("/search/movie", { query: search }),
-        tmdbFetch("/search/person", { query: search }),
+        tmdbFetch("/search/movie", { query: search }).catch((error) => {
+          console.error("Movie search failed:", error);
+          return null;
+        }),
+        tmdbFetch("/search/person", { query: search }).catch((error) => {
+          console.error("Person search failed:", error);
+          return null;
+        }),
       ]);
 
-      const actors = personResults.results
-        .filter(
-          (person: TmdbPersonRaw) => person.known_for_department === "Acting",
-        )
-        .map(mapPerson);
+      if (movieResults === null && personResults === null) {
+        return res
+          .status(502)
+          .json({ error: "Failed to fetch data from TMDB" });
+      }
 
-      const directors = personResults.results
-        .filter(
-          (person: TmdbPersonRaw) =>
-            person.known_for_department === "Directing",
-        )
-        .map(mapPerson);
+      const actors = personResults
+        ? personResults.results
+            .filter(
+              (person: TmdbPersonRaw) =>
+                person.known_for_department === "Acting",
+            )
+            .map(mapPerson)
+        : [];
+
+      const directors = personResults
+        ? personResults.results
+            .filter(
+              (person: TmdbPersonRaw) =>
+                person.known_for_department === "Directing",
+            )
+            .map(mapPerson)
+        : [];
 
       return res.json({
-        movies: movieResults.results.map(mapMovie),
+        movies: movieResults ? movieResults.results.map(mapMovie) : [],
         actors,
         directors,
       });

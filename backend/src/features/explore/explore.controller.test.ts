@@ -81,6 +81,59 @@ describe("exploreController", () => {
     });
   });
 
+  it("returns movies only (empty actors/directors) when only the person search fails", async () => {
+    vi.mocked(tmdbFetch).mockImplementation((endpoint: string) => {
+      if (endpoint === "/search/movie") {
+        return Promise.resolve({
+          results: [
+            {
+              id: 1,
+              title: "Spider-Man",
+              poster_path: null,
+              vote_average: 8,
+              release_date: "2024-01-01",
+            },
+          ],
+        });
+      }
+      return Promise.reject(new Error("TMDB person search down"));
+    });
+
+    const req = { query: { search: "spiderman" } } as unknown as Request;
+    const res = createMockResponse();
+
+    await exploreController(req, res);
+
+    expect(res.status).not.toHaveBeenCalledWith(502);
+    expect(res.json).toHaveBeenCalledWith({
+      movies: [
+        {
+          id: 1,
+          title: "Spider-Man",
+          posterUrl: null,
+          voteAverage: 8,
+          releaseYear: 2024,
+        },
+      ],
+      actors: [],
+      directors: [],
+    });
+  });
+
+  it("returns 502 when both search calls fail", async () => {
+    vi.mocked(tmdbFetch).mockRejectedValue(new Error("TMDB is down"));
+
+    const req = { query: { search: "spiderman" } } as unknown as Request;
+    const res = createMockResponse();
+
+    await exploreController(req, res);
+
+    expect(res.status).toHaveBeenCalledWith(502);
+    expect(res.json).toHaveBeenCalledWith({
+      error: "Failed to fetch data from TMDB",
+    });
+  });
+
   it("uses discover/movie with filters when there is no search text", async () => {
     vi.mocked(tmdbFetch).mockResolvedValue({
       results: [
@@ -121,17 +174,14 @@ describe("exploreController", () => {
     });
   });
 
-  it("returns 502 when TMDB request fails", async () => {
+  it("returns 502 when discover/movie fails", async () => {
     vi.mocked(tmdbFetch).mockRejectedValue(new Error("TMDB is down"));
 
-    const req = { query: { search: "spiderman" } } as unknown as Request;
+    const req = { query: { genre: "28" } } as unknown as Request;
     const res = createMockResponse();
 
     await exploreController(req, res);
 
     expect(res.status).toHaveBeenCalledWith(502);
-    expect(res.json).toHaveBeenCalledWith({
-      error: "Failed to fetch data from TMDB",
-    });
   });
 });
