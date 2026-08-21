@@ -27,6 +27,9 @@ coverage
 # Firebase Admin credentials (backend)
 firebase-service-account.json
 
+# Prisma generated client (backend)
+backend/src/generated/prisma
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
