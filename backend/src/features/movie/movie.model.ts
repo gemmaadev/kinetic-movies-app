@@ -7,9 +7,15 @@ export async function toggleFavorite(data: {
   userId: string;
   movieId: number;
 }): Promise<UserMovie> {
+  const existing = await prisma.userMovie.findUnique({
+    where: { userId_movieId: { userId: data.userId, movieId: data.movieId } },
+  });
+
+  const newFavoriteStatus = !existing?.isFavourite;
+
   return prisma.userMovie.upsert({
     where: { userId_movieId: { userId: data.userId, movieId: data.movieId } },
-    update: { isFavourite: true },
+    update: { isFavourite: newFavoriteStatus },
     create: { userId: data.userId, movieId: data.movieId, isFavourite: true },
   });
 }
@@ -25,7 +31,11 @@ export async function rateMovie(data: {
   return prisma.userMovie.upsert({
     where: { userId_movieId: { userId: data.userId, movieId: data.movieId } },
     update: { userRating: data.rating },
-    create: { userId: data.userId, movieId: data.movieId, userRating: data.rating },
+    create: {
+      userId: data.userId,
+      movieId: data.movieId,
+      userRating: data.rating,
+    },
   });
 }
 
