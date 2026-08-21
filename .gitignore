@@ -25,8 +25,7 @@ coverage
 *.tsbuildinfo
 
 # Firebase Admin credentials (backend)
-serviceAccountKey.json
-firebase-adminsdk-*.json
+firebase-service-account.json
 
 # Editor directories and files
 .vscode/*
