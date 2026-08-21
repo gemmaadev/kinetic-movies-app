@@ -21,14 +21,13 @@ model User {
   createdAt DateTime @default(now())
 }
 
-model Movie {
-  id        String   @id @default(cuid())
-  userId    String
-  movieId   Int
-  rating    Int
-  title     String
-  poster    String?
-  addedAt   DateTime @default(now())
+model UserMovie {
+  id          String   @id @default(cuid())
+  userId      String
+  movieId     Int
+  userRating  Int?
+  isFavourite Boolean  @default(false)
+  addedAt     DateTime @default(now())
 
   @@unique([userId, movieId])
 }
