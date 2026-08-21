@@ -1,21 +1,44 @@
 import prisma from "../../config/db.js";
-import type { Movie } from "../../generated/prisma/client.js";
+import type { UserMovie } from "../../generated/prisma/client.js";
 
-export type { Movie };
+export type { UserMovie };
 
-export async function addFavoriteMovie(data: {
+export async function toggleFavorite(data: {
+  userId: string;
+  movieId: number;
+}): Promise<UserMovie> {
+  const existing = await prisma.userMovie.findUnique({
+    where: { userId_movieId: { userId: data.userId, movieId: data.movieId } },
+  });
+
+  const newFavoriteStatus = !existing?.isFavourite;
+
+  return prisma.userMovie.upsert({
+    where: { userId_movieId: { userId: data.userId, movieId: data.movieId } },
+    update: { isFavourite: newFavoriteStatus },
+    create: { userId: data.userId, movieId: data.movieId, isFavourite: true },
+  });
+}
+
+export async function rateMovie(data: {
   userId: string;
   movieId: number;
   rating: number;
-  title: string;
-  poster?: string;
-}): Promise<Movie> {
+}): Promise<UserMovie> {
   if (data.rating < 1 || data.rating > 10) {
     throw new Error("Rating must be between 1 and 10");
   }
-  return prisma.movie.create({ data });
+  return prisma.userMovie.upsert({
+    where: { userId_movieId: { userId: data.userId, movieId: data.movieId } },
+    update: { userRating: data.rating },
+    create: {
+      userId: data.userId,
+      movieId: data.movieId,
+      userRating: data.rating,
+    },
+  });
 }
 
-export async function getFavoritesByUser(userId: string): Promise<Movie[]> {
-  return prisma.movie.findMany({ where: { userId } });
+export async function getFavoritesByUser(userId: string): Promise<UserMovie[]> {
+  return prisma.userMovie.findMany({ where: { userId, isFavourite: true } });
 }
