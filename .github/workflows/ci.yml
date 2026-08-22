@@ -30,11 +30,14 @@ jobs:
       DIRECT_URL: ${{ secrets.DIRECT_URL }}
       TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
       TMDB_BASE_URL: ${{ secrets.TMDB_BASE_URL }}
+      FIREBASE_SERVICE_ACCOUNT_PATH: ./firebase-service-account.json
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+      - name: Create Firebase service account file
+        run: echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}' > firebase-service-account.json
       - run: npm install
       - run: npm run lint --if-present
       - run: npm test --if-present
