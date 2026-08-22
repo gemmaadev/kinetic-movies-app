@@ -1,22 +1,13 @@
 import type { Request, Response } from "express";
 import { tmdbFetch } from "../../shared/tmdbClient.js";
+import type {
+  TmdbMovieRaw,
+  TmdbPersonRaw,
+  Movie,
+  Person,
+} from "./explore.types.js";
 
-interface TmdbMovieRaw {
-  id: number;
-  title: string;
-  poster_path: string | null;
-  vote_average: number;
-  release_date: string;
-}
-
-interface TmdbPersonRaw {
-  id: number;
-  name: string;
-  known_for_department: string;
-  profile_path: string | null;
-}
-
-function mapMovie(movie: TmdbMovieRaw) {
+function mapMovie(movie: TmdbMovieRaw): Movie {
   return {
     id: movie.id,
     title: movie.title,
@@ -30,7 +21,7 @@ function mapMovie(movie: TmdbMovieRaw) {
   };
 }
 
-function mapPerson(person: TmdbPersonRaw) {
+function mapPerson(person: TmdbPersonRaw): Person {
   return {
     id: person.id,
     name: person.name,
