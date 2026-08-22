@@ -25,6 +25,8 @@ export interface MovieDetail extends Movie {
   genres: Genre[];
   tagline: string | null;
   cast: CastMember[];
+  director: string | null;
+  writers: string[];
   trailerUrl: string | null;
 }
 
@@ -48,6 +50,12 @@ export interface TmdbCastMemberRaw {
   profile_path: string | null;
 }
 
+export interface TmdbCrewMemberRaw {
+  id: number;
+  name: string;
+  job: string;
+}
+
 export interface TmdbVideoRaw {
   key: string;
   site: string;
@@ -62,6 +70,7 @@ export interface TmdbMovieDetailRaw extends TmdbMovieRaw {
   tagline: string | null;
   credits: {
     cast: TmdbCastMemberRaw[];
+    crew: TmdbCrewMemberRaw[];
   };
   videos: {
     results: TmdbVideoRaw[];

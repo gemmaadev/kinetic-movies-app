@@ -26,6 +26,14 @@ function mapMovieDetail(movie: TmdbMovieDetailRaw): MovieDetail {
     (video) => video.site === "YouTube" && video.type === "Trailer",
   );
 
+  const director = movie.credits.crew.find(
+    (member) => member.job === "Director",
+  );
+
+  const writers = movie.credits.crew
+    .filter((member) => member.job === "Writer" || member.job === "Screenplay")
+    .map((member) => member.name);
+
   return {
     ...mapMovie(movie),
     overview: movie.overview,
@@ -43,6 +51,8 @@ function mapMovieDetail(movie: TmdbMovieDetailRaw): MovieDetail {
         ? `https://image.tmdb.org/t/p/w200${member.profile_path}`
         : null,
     })),
+    director: director ? director.name : null,
+    writers,
     trailerUrl: trailer
       ? `https://www.youtube.com/watch?v=${trailer.key}`
       : null,

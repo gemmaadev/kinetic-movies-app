@@ -113,7 +113,7 @@ describe("movie.controller", () => {
     expect(res.json).toHaveBeenCalledWith({ movies: [mockMappedMovie] });
   });
 
-  it("getMovieDetail returns full movie detail with cast and trailer", async () => {
+  it("getMovieDetail returns full movie detail with cast, crew, and trailer", async () => {
     vi.mocked(tmdbFetch).mockResolvedValue({
       ...mockRawMovie,
       overview: "A team travels through a wormhole.",
@@ -129,6 +129,11 @@ describe("movie.controller", () => {
             character: "Cooper",
             profile_path: "/mm.jpg",
           },
+        ],
+        crew: [
+          { id: 200, name: "Christopher Nolan", job: "Director" },
+          { id: 201, name: "Jonathan Nolan", job: "Writer" },
+          { id: 200, name: "Christopher Nolan", job: "Writer" },
         ],
       },
       videos: {
@@ -156,7 +161,35 @@ describe("movie.controller", () => {
             photoUrl: "https://image.tmdb.org/t/p/w200/mm.jpg",
           },
         ],
+        director: "Christopher Nolan",
+        writers: ["Jonathan Nolan", "Christopher Nolan"],
         trailerUrl: "https://www.youtube.com/watch?v=zSWdZVtXT7E",
+      }),
+    );
+  });
+
+  it("getMovieDetail returns null director and empty writers when crew data is missing them", async () => {
+    vi.mocked(tmdbFetch).mockResolvedValue({
+      ...mockRawMovie,
+      overview: "A team travels through a wormhole.",
+      backdrop_path: null,
+      runtime: 169,
+      genres: [],
+      tagline: null,
+      credits: { cast: [], crew: [] },
+      videos: { results: [] },
+    });
+
+    const req = { params: { id: "157336" } } as unknown as Request;
+    const res = createMockResponse();
+
+    await getMovieDetail(req, res);
+
+    expect(res.json).toHaveBeenCalledWith(
+      expect.objectContaining({
+        director: null,
+        writers: [],
+        trailerUrl: null,
       }),
     );
   });
