@@ -47,7 +47,11 @@ export function Footer() {
         </div>
 
         {footerColumns.map((column) => (
-          <FooterColumn title={column.title} links={column.links} />
+          <FooterColumn
+            key={column.title}
+            title={column.title}
+            links={column.links}
+          />
         ))}
 
         <div className="flex flex-col gap-3">
