@@ -13,7 +13,7 @@ export function MovieCard({ movie }: MovieCardProps) {
       className="w-40 shrink-0 overflow-hidden rounded-lg bg-bg-surface transition-transform hover:scale-[1.02]"
     >
       <img
-        src={movie.posterPath}
+        src={movie.posterUrl ?? undefined}
         alt={movie.title}
         className="h-60 w-40 object-cover"
       />

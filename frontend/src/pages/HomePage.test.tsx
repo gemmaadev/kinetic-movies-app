@@ -47,6 +47,6 @@ describe("HomePage", () => {
     );
 
     expect(screen.getByText(/tendencias de esta semana/i)).toBeInTheDocument();
-    expect(screen.getByText(/lo más popular del mes/i)).toBeInTheDocument();
+    expect(screen.getByText(/en cines/i)).toBeInTheDocument();
   });
 });

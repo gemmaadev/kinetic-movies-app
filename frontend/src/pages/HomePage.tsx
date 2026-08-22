@@ -79,7 +79,7 @@ export default function HomePage() {
           />
 
           <MovieCarousel
-            title="Lo más popular del mes"
+            title="En cines"
             movies={nowPlaying.movies}
           />
         </PageContainer>
