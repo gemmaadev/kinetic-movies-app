@@ -5,3 +5,6 @@ export interface Movie {
   voteAverage: number;
   releaseYear: number | null;
 }
+export interface MovieListResponse {
+  movies: Movie[];
+}
