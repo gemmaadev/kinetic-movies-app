@@ -73,7 +73,9 @@ describe("movie.controller", () => {
 
     await getNowPlaying(req, res);
 
-    expect(tmdbFetch).toHaveBeenCalledWith("/movie/now_playing");
+    expect(tmdbFetch).toHaveBeenCalledWith("/movie/now_playing", {
+      region: "ES",
+    });
     expect(res.json).toHaveBeenCalledWith({ movies: [mockMappedMovie] });
   });
 
@@ -109,7 +111,9 @@ describe("movie.controller", () => {
 
     await getUpcoming(req, res);
 
-    expect(tmdbFetch).toHaveBeenCalledWith("/movie/upcoming");
+    expect(tmdbFetch).toHaveBeenCalledWith("/movie/upcoming", {
+      region: "ES",
+    });
     expect(res.json).toHaveBeenCalledWith({ movies: [mockMappedMovie] });
   });
 
