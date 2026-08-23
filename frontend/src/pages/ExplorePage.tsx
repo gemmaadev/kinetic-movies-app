@@ -4,6 +4,7 @@ import { MovieCard } from "@/features/explore/components/MovieCard";
 import { Search, SlidersHorizontal } from "lucide-react";
 import { PersonList } from "@/features/explore/components/PersonList";
 import { FilterSelect } from "@/features/explore/components/FilterSelect";
+import { EmptyState } from "@/shared/components";
 
 const categories = [
   { key: "popular", label: "Populares" },
@@ -151,17 +152,10 @@ export default function ExplorePage() {
         movies.length === 0 &&
         actors.length === 0 &&
         directors.length === 0 && (
-          <div className="flex min-h-[60vh] w-full flex-col items-center justify-center text-center">
-            <blockquote className="italic text-xl font-bold md:text-2xl">
-              "Estos no son los droides que estás buscando."
-              <cite className="block text-lg not-italic md:text-xl">
-                —
-                <span className="font-medium">
-                  Star Wars: Episode IV – A New Hope
-                </span>
-              </cite>
-            </blockquote>
-          </div>
+          <EmptyState
+            quote="Estos no son los droides que estás buscando."
+            cite="Star Wars: Episode IV – A New Hope"
+          />
         )}
 
       {movies.length > 0 && (
