@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useExplore } from "@/features/explore/hooks/useExplore";
 import { MovieCard } from "@/features/explore/components/MovieCard";
 import { Search, SlidersHorizontal, ChevronDown } from "lucide-react";
+import { PersonList } from "@/features/explore/components/PersonList";
 
 const categories = [
   { key: "popular", label: "Populares" },
@@ -197,48 +198,8 @@ export default function ExplorePage() {
         </section>
       )}
 
-      {actors.length > 0 && (
-        <section className="flex flex-col gap-3">
-          <h2 className="text-xl font-bold md:text-2xl">Actores</h2>
-          <div className="flex flex-wrap gap-4">
-            {actors.map((actor) => (
-              <div key={actor.id} className="flex flex-col items-center gap-2">
-                {actor.photoUrl && (
-                  <img
-                    src={actor.photoUrl}
-                    alt={actor.name}
-                    className="h-20 w-20 rounded-full object-cover md:h-30 md:w-30"
-                  />
-                )}
-                <p className="text-center text-sm">{actor.name}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {directors.length > 0 && (
-        <section className="flex flex-col gap-3">
-          <h2 className="text-xl font-bold md:text-2xl">Directores</h2>
-          <div className="flex flex-wrap gap-4">
-            {directors.map((director) => (
-              <div
-                key={director.id}
-                className="flex flex-col items-center gap-2"
-              >
-                {director.photoUrl && (
-                  <img
-                    src={director.photoUrl}
-                    alt={director.name}
-                    className="h-20 w-20 rounded-full object-cover md:h-30 md:w-30"
-                  />
-                )}
-                <p className="text-center text-sm">{director.name}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
+      <PersonList title="Actores" people={actors} />
+      <PersonList title="Directores" people={directors} />
     </div>
   );
 }
