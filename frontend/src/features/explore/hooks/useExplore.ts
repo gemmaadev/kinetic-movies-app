@@ -5,6 +5,7 @@ import type {
   Person,
   ExploreResponse,
   CategoryResponse,
+  ExploreFilters,
 } from "../types/explore.types";
 
 const categoryEndpoints: Record<string, string> = {
@@ -15,7 +16,12 @@ const categoryEndpoints: Record<string, string> = {
   upcoming: "/api/movie/upcoming",
 };
 
-export function useExplore(search: string, category: string, page: number = 1) {
+export function useExplore(
+  search: string,
+  category: string,
+  filters: ExploreFilters = {},
+  page: number = 1,
+) {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [actors, setActors] = useState<Person[]>([]);
   const [directors, setDirectors] = useState<Person[]>([]);
@@ -23,6 +29,10 @@ export function useExplore(search: string, category: string, page: number = 1) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    const hasFilters = Boolean(
+      filters.genre || filters.year || filters.language || filters.minRating,
+    );
+
     if (search) {
       const params = new URLSearchParams();
       params.set("search", search);
@@ -33,6 +43,22 @@ export function useExplore(search: string, category: string, page: number = 1) {
           setMovies(data.movies);
           setActors(data.actors);
           setDirectors(data.directors);
+        })
+        .catch((error) => setError(error.message))
+        .finally(() => setIsLoading(false));
+    } else if (hasFilters) {
+      const params = new URLSearchParams();
+      if (filters.genre) params.set("genre", filters.genre);
+      if (filters.year) params.set("year", filters.year);
+      if (filters.language) params.set("language", filters.language);
+      if (filters.minRating) params.set("minRating", filters.minRating);
+      params.set("page", String(page));
+
+      apiClient<CategoryResponse>(`/api/explore?${params.toString()}`)
+        .then((data) => {
+          setMovies(data.movies);
+          setActors([]);
+          setDirectors([]);
         })
         .catch((error) => setError(error.message))
         .finally(() => setIsLoading(false));
@@ -48,7 +74,15 @@ export function useExplore(search: string, category: string, page: number = 1) {
         .catch((error) => setError(error.message))
         .finally(() => setIsLoading(false));
     }
-  }, [search, category, page]);
+  }, [
+    search,
+    category,
+    filters.genre,
+    filters.year,
+    filters.language,
+    filters.minRating,
+    page,
+  ]);
 
   return { movies, actors, directors, isLoading, error };
 }
