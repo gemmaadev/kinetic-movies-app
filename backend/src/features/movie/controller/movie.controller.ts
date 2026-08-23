@@ -71,7 +71,7 @@ export async function getPopular(req: Request, res: Response) {
 
 export async function getNowPlaying(req: Request, res: Response) {
   try {
-    const results = await tmdbFetch("/movie/now_playing");
+    const results = await tmdbFetch("/movie/now_playing", { region: "ES" });
     return res.json({ movies: results.results.map(mapMovie) });
   } catch (error) {
     console.error("Failed to fetch now playing movies:", error);
@@ -101,7 +101,7 @@ export async function getTopRated(req: Request, res: Response) {
 
 export async function getUpcoming(req: Request, res: Response) {
   try {
-    const results = await tmdbFetch("/movie/upcoming");
+    const results = await tmdbFetch("/movie/upcoming", { region: "ES" });
     return res.json({ movies: results.results.map(mapMovie) });
   } catch (error) {
     console.error("Failed to fetch upcoming movies:", error);
