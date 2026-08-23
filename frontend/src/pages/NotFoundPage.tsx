@@ -10,11 +10,18 @@ export default function NotFoundPage() {
     >
       <h1 className="text-brand-blue font-bold text-6xl">Error 404</h1>
       <div className="flex flex-col gap-4">
-        <h4 className="text-3xl font-bold">Houston, tenemos un problema</h4>
+        <blockquote className="italic text-3xl font-bold">
+          “Houston, tenemos un problema.”
+          <cite className="block text-xl not-italic">
+            — <span className="font-medium">Apollo 13</span>
+          </cite>
+        </blockquote>
+
         <p className="text-xl">
           Lo sentimos, la página que buscas no existe
           <br />o ha sido movida.
         </p>
+
         <PrimaryLinkButton to="/" className="self-center md:self-start">
           Volver al inicio
         </PrimaryLinkButton>
