@@ -3,7 +3,7 @@ import { apiClient } from "@/shared/services/apiClient";
 import type { Movie } from "../types/movie.types";
 import type { Person, ExploreResponse } from "../types/explore.types";
 
-export function useExplore(search: string) {
+export function useExplore(search: string, page: number = 1) {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [actors, setActors] = useState<Person[]>([]);
   const [directors, setDirectors] = useState<Person[]>([]);
@@ -11,11 +11,11 @@ export function useExplore(search: string) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const url = search
-      ? `/api/explore?search=${encodeURIComponent(search)}`
-      : "/api/explore";
+    const params = new URLSearchParams();
+    if (search) params.set("search", search);
+    params.set("page", String(page));
 
-    apiClient<ExploreResponse>(url)
+    apiClient<ExploreResponse>(`/api/explore?${params.toString()}`)
       .then((data) => {
         setMovies(data.movies);
         setActors(data.actors);
@@ -23,7 +23,7 @@ export function useExplore(search: string) {
       })
       .catch((error) => setError(error.message))
       .finally(() => setIsLoading(false));
-  }, [search]);
+  }, [search, page]);
 
   return { movies, actors, directors, isLoading, error };
 }
