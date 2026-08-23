@@ -5,7 +5,7 @@ import type {
   Person,
   ExploreResponse,
   CategoryResponse,
-  ExploreFilters,
+  ExploreFiltersValues,
 } from "../types/explore.types";
 
 const categoryEndpoints: Record<string, string> = {
@@ -19,7 +19,7 @@ const categoryEndpoints: Record<string, string> = {
 export function useExplore(
   search: string,
   category: string,
-  filters: ExploreFilters = {},
+  filters: ExploreFiltersValues,
   page: number = 1,
 ) {
   const [movies, setMovies] = useState<Movie[]>([]);

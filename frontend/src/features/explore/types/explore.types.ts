@@ -15,10 +15,9 @@ export interface ExploreResponse {
 export interface CategoryResponse {
   movies: Movie[];
 }
-
-export interface ExploreFilters {
-  genre?: string;
-  year?: string;
-  language?: string;
-  minRating?: string;
+export interface ExploreFiltersValues {
+  genre: string;
+  year: string;
+  language: string;
+  minRating: string;
 }

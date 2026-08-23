@@ -3,8 +3,9 @@ import { useExplore } from "@/features/explore/hooks/useExplore";
 import { MovieCard } from "@/features/explore/components/MovieCard";
 import { Search, SlidersHorizontal } from "lucide-react";
 import { PersonList } from "@/features/explore/components/PersonList";
-import { FilterSelect } from "@/features/explore/components/FilterSelect";
 import { EmptyState } from "@/shared/components";
+import { ExploreFilters } from "@/features/explore/components/ExploreFilters";
+import type { ExploreFiltersValues } from "@/features/explore/types/explore.types";
 
 const categories = [
   { key: "popular", label: "Populares" },
@@ -14,42 +15,28 @@ const categories = [
   { key: "upcoming", label: "Próximamente" },
 ];
 
-const genres = [
-  { id: "28", name: "Acción" },
-  { id: "35", name: "Comedia" },
-  { id: "18", name: "Drama" },
-  { id: "27", name: "Terror" },
-  { id: "878", name: "Ciencia ficción" },
-];
-
-const languages = [
-  { code: "es", name: "Español" },
-  { code: "en", name: "Inglés" },
-  { code: "fr", name: "Francés" },
-  { code: "ja", name: "Japonés" },
-];
+const EMPTY_FILTERS: ExploreFiltersValues = {
+  genre: "",
+  year: "",
+  language: "",
+  minRating: "",
+};
 
 export default function ExplorePage() {
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("popular");
-  const [genre, setGenre] = useState("");
-  const [year, setYear] = useState("");
-  const [language, setLanguage] = useState("");
-  const [minRating, setMinRating] = useState("");
+  const [filters, setFilters] = useState<ExploreFiltersValues>(EMPTY_FILTERS);
   const [showFilters, setShowFilters] = useState(false);
   const { movies, actors, directors, isLoading, error } = useExplore(
     search,
     activeCategory,
-    { genre, year, language, minRating },
+    filters,
     1,
   );
 
   function handleCategoryClick(categoryKey: string) {
     setActiveCategory(categoryKey);
-    setGenre("");
-    setYear("");
-    setLanguage("");
-    setMinRating("");
+    setFilters(EMPTY_FILTERS);
   }
 
   return (
@@ -83,48 +70,7 @@ export default function ExplorePage() {
       </div>
 
       {showFilters && !search && (
-        <div className="flex flex-wrap gap-3">
-          <FilterSelect
-            value={genre}
-            onChange={setGenre}
-            placeholder="Género"
-            options={genres.map((genre) => ({
-              value: genre.id,
-              label: genre.name,
-            }))}
-          />
-
-          <input
-            type="number"
-            placeholder="Año"
-            value={year}
-            onChange={(event) => setYear(event.target.value)}
-            className="w-24 rounded-md bg-bg-surface p-2 text-sm text-primary-text"
-          />
-
-          <FilterSelect
-            value={language}
-            onChange={setLanguage}
-            placeholder="Idioma"
-            options={languages.map((language) => ({
-              value: language.code,
-              label: language.name,
-            }))}
-          />
-
-          <FilterSelect
-            value={minRating}
-            onChange={setMinRating}
-            placeholder="Puntuación mínima"
-            options={[
-              { value: "5", label: "5+" },
-              { value: "6", label: "6+" },
-              { value: "7", label: "7+" },
-              { value: "8", label: "8+" },
-              { value: "9", label: "9+" },
-            ]}
-          />
-        </div>
+        <ExploreFilters filters={filters} onChange={setFilters} />
       )}
 
       {!search && (
