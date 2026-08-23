@@ -6,6 +6,7 @@ import { PersonList } from "@/features/explore/components/PersonList";
 import { EmptyState } from "@/shared/components";
 import { ExploreFilters } from "@/features/explore/components/ExploreFilters";
 import type { ExploreFiltersValues } from "@/features/explore/types/explore.types";
+import { useDebounce } from "@/shared/hooks/useDebounce";
 
 const categories = [
   { key: "popular", label: "Populares" },
@@ -24,11 +25,12 @@ const EMPTY_FILTERS: ExploreFiltersValues = {
 
 export default function ExplorePage() {
   const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 400);
   const [activeCategory, setActiveCategory] = useState("popular");
   const [filters, setFilters] = useState<ExploreFiltersValues>(EMPTY_FILTERS);
   const [showFilters, setShowFilters] = useState(false);
   const { movies, actors, directors, isLoading, error } = useExplore(
-    search,
+    debouncedSearch,
     activeCategory,
     filters,
     1,
