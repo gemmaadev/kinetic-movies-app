@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useExplore } from "@/features/explore/hooks/useExplore";
 import { MovieCard } from "@/features/explore/components/MovieCard";
-import { Search, SlidersHorizontal, ChevronDown } from "lucide-react";
+import { Search, SlidersHorizontal } from "lucide-react";
 import { PersonList } from "@/features/explore/components/PersonList";
+import { FilterSelect } from "@/features/explore/components/FilterSelect";
 
 const categories = [
   { key: "popular", label: "Populares" },
@@ -82,24 +83,15 @@ export default function ExplorePage() {
 
       {showFilters && !search && (
         <div className="flex flex-wrap gap-3">
-          <div className="relative">
-            <select
-              value={genre}
-              onChange={(event) => setGenre(event.target.value)}
-              className="appearance-none rounded-md bg-bg-surface p-2 pr-8 text-sm text-primary-text"
-            >
-              <option value="">Género</option>
-              {genres.map((genre) => (
-                <option key={genre.id} value={genre.id}>
-                  {genre.name}
-                </option>
-              ))}
-            </select>
-            <ChevronDown
-              size={16}
-              className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-secondary-text"
-            />
-          </div>
+          <FilterSelect
+            value={genre}
+            onChange={setGenre}
+            placeholder="Género"
+            options={genres.map((genre) => ({
+              value: genre.id,
+              label: genre.name,
+            }))}
+          />
 
           <input
             type="number"
@@ -109,43 +101,28 @@ export default function ExplorePage() {
             className="w-24 rounded-md bg-bg-surface p-2 text-sm text-primary-text"
           />
 
-          <div className="relative">
-            <select
-              value={language}
-              onChange={(event) => setLanguage(event.target.value)}
-              className="appearance-none rounded-md bg-bg-surface p-2 pr-8 text-sm text-primary-text"
-            >
-              <option value="">Idioma</option>
-              {languages.map((language) => (
-                <option key={language.code} value={language.code}>
-                  {language.name}
-                </option>
-              ))}
-            </select>
-            <ChevronDown
-              size={16}
-              className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-secondary-text"
-            />
-          </div>
+          <FilterSelect
+            value={language}
+            onChange={setLanguage}
+            placeholder="Idioma"
+            options={languages.map((language) => ({
+              value: language.code,
+              label: language.name,
+            }))}
+          />
 
-          <div className="relative">
-            <select
-              value={minRating}
-              onChange={(event) => setMinRating(event.target.value)}
-              className="appearance-none rounded-md bg-bg-surface p-2 pr-8 text-sm text-primary-text"
-            >
-              <option value="">Puntuación mínima</option>
-              <option value="5">5+</option>
-              <option value="6">6+</option>
-              <option value="7">7+</option>
-              <option value="8">8+</option>
-              <option value="9">9+</option>
-            </select>
-            <ChevronDown
-              size={16}
-              className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-secondary-text"
-            />
-          </div>
+          <FilterSelect
+            value={minRating}
+            onChange={setMinRating}
+            placeholder="Puntuación mínima"
+            options={[
+              { value: "5", label: "5+" },
+              { value: "6", label: "6+" },
+              { value: "7", label: "7+" },
+              { value: "8", label: "8+" },
+              { value: "9", label: "9+" },
+            ]}
+          />
         </div>
       )}
 
