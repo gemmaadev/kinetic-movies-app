@@ -11,3 +11,6 @@ export interface ExploreResponse {
   actors: Person[];
   directors: Person[];
 }
+export interface CategoryResponse {
+  movies: Movie[];
+}
