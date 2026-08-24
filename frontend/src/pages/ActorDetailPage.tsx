@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { MovieCard } from "@/features/explore/components/MovieCard";
 import { usePersonDetail } from "@/features/person/hooks/usePersonDetail";
 import { SecondaryButton } from "@/shared/components/buttons/SecondaryButton";
 import { useParams } from "react-router";
+import { MovieGrid } from "@/features/explore/components/MovieGrid";
 
 const FEATURED_MOVIES_LIMIT = 8;
 
@@ -65,11 +65,7 @@ export default function ActorDetailPage() {
       {person.filmography.length > 0 && (
         <section className="flex flex-col gap-8">
           <h2 className="text-3xl font-bold">Películas destacadas</h2>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-[repeat(auto-fill,160px)] md:gap-4 justify-center">
-            {visibleMovies.map((credit) => (
-              <MovieCard key={credit.id} movie={credit} />
-            ))}
-          </div>
+          <MovieGrid movies={visibleMovies} />
 
           {!showAll && person.filmography.length > FEATURED_MOVIES_LIMIT && (
             <div className="flex justify-center">

@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useExplore } from "@/features/explore/hooks/useExplore";
-import { MovieCard } from "@/features/explore/components/MovieCard";
 import { Search, SlidersHorizontal } from "lucide-react";
 import { PersonList } from "@/features/explore/components/PersonList";
 import { EmptyState } from "@/shared/components";
 import { ExploreFilters } from "@/features/explore/components/ExploreFilters";
 import type { ExploreFiltersValues } from "@/features/explore/types/explore.types";
 import { useDebounce } from "@/shared/hooks/useDebounce";
+import { MovieGrid } from "@/features/explore/components/MovieGrid";
 
 const categories = [
   { key: "popular", label: "Populares" },
@@ -109,11 +109,7 @@ export default function ExplorePage() {
       {movies.length > 0 && (
         <section className="flex flex-col gap-3">
           <h2 className="text-xl font-bold md:text-2xl">Películas</h2>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-[repeat(auto-fill,160px)] md:gap-4 justify-center">
-            {movies.map((movie) => (
-              <MovieCard key={movie.id} movie={movie} />
-            ))}
-          </div>
+          <MovieGrid movies={movies} />
         </section>
       )}
 
