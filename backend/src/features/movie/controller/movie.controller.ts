@@ -41,6 +41,8 @@ function mapMovieDetail(movie: TmdbMovieDetailRaw): MovieDetail {
       logoUrl: `https://image.tmdb.org/t/p/w92${provider.logo_path}`,
     })) ?? [];
 
+  const watchProvidersLink = movie["watch/providers"].results.ES?.link ?? null;
+
   return {
     ...mapMovie(movie),
     overview: movie.overview,
@@ -58,12 +60,13 @@ function mapMovieDetail(movie: TmdbMovieDetailRaw): MovieDetail {
         ? `https://image.tmdb.org/t/p/w200${member.profile_path}`
         : null,
     })),
-    director: director ? director.name : null,
+    director: director ? { id: director.id, name: director.name } : null,
     writers,
     trailerUrl: trailer
       ? `https://www.youtube.com/watch?v=${trailer.key}`
       : null,
     watchProviders,
+    watchProvidersLink,
   };
 }
 

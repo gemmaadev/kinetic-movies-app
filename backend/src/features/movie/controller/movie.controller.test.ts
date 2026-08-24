@@ -168,6 +168,7 @@ describe("movie.controller", () => {
 
     expect(tmdbFetch).toHaveBeenCalledWith("/movie/157336", {
       append_to_response: "credits,videos,watch/providers",
+      language: "es-ES",
     });
     expect(res.json).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -181,7 +182,7 @@ describe("movie.controller", () => {
             photoUrl: "https://image.tmdb.org/t/p/w200/mm.jpg",
           },
         ],
-        director: "Christopher Nolan",
+        director: { id: 200, name: "Christopher Nolan" },
         writers: ["Jonathan Nolan", "Christopher Nolan"],
         trailerUrl: "https://www.youtube.com/watch?v=zSWdZVtXT7E",
         watchProviders: [

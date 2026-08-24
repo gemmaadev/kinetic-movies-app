@@ -24,6 +24,10 @@ export interface WatchProvider {
   logoUrl: string;
 }
 
+export interface DirectorInfo {
+  id: number;
+  name: string;
+}
 export interface MovieDetail extends Movie {
   overview: string;
   backdropUrl: string | null;
@@ -31,10 +35,11 @@ export interface MovieDetail extends Movie {
   genres: Genre[];
   tagline: string | null;
   cast: CastMember[];
-  director: string | null;
+  director: DirectorInfo | null;
   writers: string[];
   trailerUrl: string | null;
   watchProviders: WatchProvider[];
+  watchProvidersLink: string | null;
 }
 
 export interface TmdbMovieRaw {
@@ -91,6 +96,7 @@ export interface TmdbMovieDetailRaw extends TmdbMovieRaw {
   "watch/providers": {
     results: {
       ES?: {
+        link?: string;
         flatrate?: TmdbWatchProviderRaw[];
       };
     };
