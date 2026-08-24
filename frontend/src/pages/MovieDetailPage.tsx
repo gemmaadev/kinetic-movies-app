@@ -112,30 +112,46 @@ export default function MovieDetailPage() {
           )}
         </section>
 
-        <section>
-          <h2>Tu valoración</h2>
-        </section>
-
-        {movie.watchProviders.length > 0 && (
-          <section className="flex flex-col gap-4 p-4 md:p-6">
-            <h2 className="text-2xl font-bold">¿Dónde ver?</h2>
-            <ul
-              className="flex flex-wrap gap-3"
-              aria-label="Plataformas de streaming disponibles"
+        <div className="flex flex-col gap-5">
+          <section className="flex flex-col gap-4 md:p-6">
+            <h2 className="text-2xl font-bold">Tu valoración</h2>
+            <div
+              className="flex items-center gap-3"
+              role="img"
+              aria-label="Sin valorar todavía"
             >
-              {movie.watchProviders.map((provider) => (
-                <li key={provider.providerId}>
-                  <img
-                    src={provider.logoUrl}
-                    alt={provider.providerName}
-                    title={provider.providerName}
-                    className="h-12 w-12 rounded-lg"
-                  />
-                </li>
+              {Array.from({ length: 5 }).map((_, index) => (
+                <Star
+                  key={index}
+                  size={30}
+                  className="text-secondary-text"
+                  aria-hidden="true"
+                />
               ))}
-            </ul>
+            </div>
           </section>
-        )}
+
+          {movie.watchProviders.length > 0 && (
+            <section className="flex flex-col gap-4 md:p-6">
+              <h2 className="text-2xl font-bold">¿Dónde ver?</h2>
+              <ul
+                className="flex flex-wrap gap-3"
+                aria-label="Plataformas de streaming disponibles"
+              >
+                {movie.watchProviders.map((provider) => (
+                  <li key={provider.providerId}>
+                    <img
+                      src={provider.logoUrl}
+                      alt={provider.providerName}
+                      title={provider.providerName}
+                      className="h-12 w-12 rounded-lg"
+                    />
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+        </div>
       </div>
 
       <section className="flex flex-col gap-4 p-4 md:p-6">
