@@ -3,7 +3,7 @@ import { HeroSection } from "@/shared/components/HeroSection";
 import { PrimaryButton } from "@/shared/components/buttons/PrimaryButton";
 import { SecondaryButton } from "@/shared/components/buttons/SecondaryButton";
 import { Star } from "lucide-react";
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 
 export default function MovieDetailPage() {
   const { id } = useParams();
@@ -119,8 +119,30 @@ export default function MovieDetailPage() {
         <h2>¿Dónde ver?</h2>
       </section>
 
-      <section>
-        <h2>Reparto principal</h2>
+      <section className="flex flex-col gap-4 p-4 md:p-6">
+        <h2 className="text-2xl font-bold">Reparto principal</h2>
+        <ul className="flex flex-wrap gap-4">
+          {movie.cast.map((member) => (
+            <li key={member.id}>
+              <Link
+                to={`/actor/${member.id}`}
+                className="flex flex-col items-center gap-1 text-center"
+              >
+                {member.photoUrl && (
+                  <img
+                    src={member.photoUrl}
+                    alt={member.name}
+                    className="h-20 w-20 rounded-full object-cover md:h-24 md:w-24"
+                  />
+                )}
+                <span className="text-sm font-bold">{member.name}</span>
+                <span className="text-xs text-secondary-text">
+                  {member.character}
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
       </section>
     </article>
   );
