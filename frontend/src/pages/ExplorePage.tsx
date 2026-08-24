@@ -117,8 +117,16 @@ export default function ExplorePage() {
         </section>
       )}
 
-      <PersonList title="Actores" people={actors} />
-      <PersonList title="Directores" people={directors} />
+      <PersonList
+        title="Actores"
+        people={actors}
+        linkTo={(id) => `/actor/${id}`}
+      />
+      <PersonList
+        title="Directores"
+        people={directors}
+        linkTo={(id) => `/director/${id}`}
+      />
     </div>
   );
 }

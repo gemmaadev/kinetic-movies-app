@@ -16,6 +16,11 @@ export interface WatchProvider {
   logoUrl: string;
 }
 
+export interface DirectorInfo {
+  id: number;
+  name: string;
+}
+
 export interface MovieDetail {
   id: number;
   title: string;
@@ -28,8 +33,9 @@ export interface MovieDetail {
   genres: Genre[];
   tagline: string | null;
   cast: CastMember[];
-  director: string | null;
+  director: DirectorInfo | null;
   writers: string[];
   trailerUrl: string | null;
   watchProviders: WatchProvider[];
+  watchProvidersLink: string | null;
 }

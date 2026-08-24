@@ -86,7 +86,17 @@ export default function MovieDetailPage() {
           <h2 className="text-2xl font-bold">Ficha técnica</h2>
 
           {movie.director && (
-            <DetailField label="Director" value={movie.director} />
+            <div>
+              <h3 className="text-sm font-bold text-secondary-text">
+                Director
+              </h3>
+              <Link
+                to={`/director/${movie.director.id}`}
+                className="hover:underline"
+              >
+                {movie.director.name}
+              </Link>
+            </div>
           )}
 
           {movie.writers.length > 0 && (
