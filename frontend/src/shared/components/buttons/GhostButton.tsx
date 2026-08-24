@@ -3,7 +3,7 @@ import { ghostStyles } from "./buttonStyles";
 
 interface GhostButtonProps {
   children: ReactNode;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 export function GhostButton({ children, onClick }: GhostButtonProps) {

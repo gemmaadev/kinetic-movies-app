@@ -126,6 +126,7 @@ export async function getMovieDetail(req: Request, res: Response) {
   try {
     const movie = await tmdbFetch(`/movie/${id}`, {
       append_to_response: "credits,videos,watch/providers",
+      language: "es-ES",
     });
     return res.json(mapMovieDetail(movie));
   } catch (error) {
