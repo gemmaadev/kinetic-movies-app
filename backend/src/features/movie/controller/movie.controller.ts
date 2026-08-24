@@ -34,6 +34,13 @@ function mapMovieDetail(movie: TmdbMovieDetailRaw): MovieDetail {
     .filter((member) => member.job === "Writer" || member.job === "Screenplay")
     .map((member) => member.name);
 
+  const watchProviders =
+    movie["watch/providers"].results.ES?.flatrate?.map((provider) => ({
+      providerId: provider.provider_id,
+      providerName: provider.provider_name,
+      logoUrl: `https://image.tmdb.org/t/p/w92${provider.logo_path}`,
+    })) ?? [];
+
   return {
     ...mapMovie(movie),
     overview: movie.overview,
@@ -56,6 +63,7 @@ function mapMovieDetail(movie: TmdbMovieDetailRaw): MovieDetail {
     trailerUrl: trailer
       ? `https://www.youtube.com/watch?v=${trailer.key}`
       : null,
+    watchProviders,
   };
 }
 
@@ -91,7 +99,10 @@ export async function getTrending(req: Request, res: Response) {
 
 export async function getTopRated(req: Request, res: Response) {
   try {
-    const results = await tmdbFetch("/movie/top_rated");
+    const results = await tmdbFetch("/movie/top_rated", {
+      region: "ES",
+      "vote_count.gte": "1000",
+    });
     return res.json({ movies: results.results.map(mapMovie) });
   } catch (error) {
     console.error("Failed to fetch top rated movies:", error);
@@ -114,7 +125,7 @@ export async function getMovieDetail(req: Request, res: Response) {
 
   try {
     const movie = await tmdbFetch(`/movie/${id}`, {
-      append_to_response: "credits,videos",
+      append_to_response: "credits,videos,watch/providers",
     });
     return res.json(mapMovieDetail(movie));
   } catch (error) {
