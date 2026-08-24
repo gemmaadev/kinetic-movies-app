@@ -81,43 +81,62 @@ export default function MovieDetailPage() {
         </div>
       </HeroSection>
 
-      <section className="flex w-full flex-col gap-4 p-4 md:w-1/2 md:p-6">
-        <h2 className="text-2xl font-bold">Ficha técnica</h2>
+      <div className="flex flex-col gap-6 p-4 md:flex-row md:p-6">
+        <section className="flex w-full flex-col gap-4 md:w-1/2">
+          <h2 className="text-2xl font-bold">Ficha técnica</h2>
 
-        {movie.director && (
-          <DetailField label="Director" value={movie.director} />
+          {movie.director && (
+            <DetailField label="Director" value={movie.director} />
+          )}
+
+          {movie.writers.length > 0 && (
+            <DetailField label="Guión" value={movie.writers.join(", ")} />
+          )}
+
+          {movie.cast.length > 0 && (
+            <DetailField
+              label="Reparto"
+              value={movie.cast.map((member) => member.name).join(", ")}
+            />
+          )}
+
+          {movie.genres.length > 0 && (
+            <DetailField
+              label="Géneros"
+              value={movie.genres.map((genre) => genre.name).join(", ")}
+            />
+          )}
+
+          {movie.releaseYear && (
+            <DetailField label="Estreno" value={String(movie.releaseYear)} />
+          )}
+        </section>
+
+        <section>
+          <h2>Tu valoración</h2>
+        </section>
+
+        {movie.watchProviders.length > 0 && (
+          <section className="flex flex-col gap-4 p-4 md:p-6">
+            <h2 className="text-2xl font-bold">¿Dónde ver?</h2>
+            <ul
+              className="flex flex-wrap gap-3"
+              aria-label="Plataformas de streaming disponibles"
+            >
+              {movie.watchProviders.map((provider) => (
+                <li key={provider.providerId}>
+                  <img
+                    src={provider.logoUrl}
+                    alt={provider.providerName}
+                    title={provider.providerName}
+                    className="h-12 w-12 rounded-lg"
+                  />
+                </li>
+              ))}
+            </ul>
+          </section>
         )}
-
-        {movie.writers.length > 0 && (
-          <DetailField label="Guión" value={movie.writers.join(", ")} />
-        )}
-
-        {movie.cast.length > 0 && (
-          <DetailField
-            label="Reparto"
-            value={movie.cast.map((member) => member.name).join(", ")}
-          />
-        )}
-
-        {movie.genres.length > 0 && (
-          <DetailField
-            label="Géneros"
-            value={movie.genres.map((genre) => genre.name).join(", ")}
-          />
-        )}
-
-        {movie.releaseYear && (
-          <DetailField label="Estreno" value={String(movie.releaseYear)} />
-        )}
-      </section>
-
-      <section>
-        <h2>Tu valoración</h2>
-      </section>
-
-      <section>
-        <h2>¿Dónde ver?</h2>
-      </section>
+      </div>
 
       <section className="flex flex-col gap-4 p-4 md:p-6">
         <h2 className="text-2xl font-bold">Reparto principal</h2>
