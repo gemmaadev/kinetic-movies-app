@@ -81,8 +81,34 @@ export default function MovieDetailPage() {
         </div>
       </HeroSection>
 
-      <section>
-        <h2>Crew</h2>
+      <section className="flex w-full flex-col gap-4 p-4 md:w-1/2 md:p-6">
+        <h2 className="text-2xl font-bold">Ficha técnica</h2>
+
+        {movie.director && (
+          <DetailField label="Director" value={movie.director} />
+        )}
+
+        {movie.writers.length > 0 && (
+          <DetailField label="Guión" value={movie.writers.join(", ")} />
+        )}
+
+        {movie.cast.length > 0 && (
+          <DetailField
+            label="Reparto"
+            value={movie.cast.map((member) => member.name).join(", ")}
+          />
+        )}
+
+        {movie.genres.length > 0 && (
+          <DetailField
+            label="Géneros"
+            value={movie.genres.map((genre) => genre.name).join(", ")}
+          />
+        )}
+
+        {movie.releaseYear && (
+          <DetailField label="Estreno" value={String(movie.releaseYear)} />
+        )}
       </section>
 
       <section>
@@ -97,5 +123,19 @@ export default function MovieDetailPage() {
         <h2>Reparto principal</h2>
       </section>
     </article>
+  );
+}
+
+interface DetailFieldProps {
+  label: string;
+  value: string;
+}
+
+function DetailField({ label, value }: DetailFieldProps) {
+  return (
+    <div>
+      <h3 className="text-sm font-bold text-secondary-text">{label}</h3>
+      <p>{value}</p>
+    </div>
   );
 }
