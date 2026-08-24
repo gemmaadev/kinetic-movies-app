@@ -1,9 +1,22 @@
 import prisma from "../../config/db.js";
-import type { UserMovie } from "../../generated/prisma/client.js";
+import type { UserMovie, Prisma } from "../../generated/prisma/client.js";
 
 export type { UserMovie };
 
-export async function toggleFavorite(data: {
+async function updateOrInsertMovie(data: {
+  userId: string;
+  movieId: number;
+  update: Prisma.UserMovieUpdateInput;
+  create: Prisma.UserMovieUncheckedCreateInput;
+}): Promise<UserMovie> {
+  return prisma.userMovie.upsert({
+    where: { userId_movieId: { userId: data.userId, movieId: data.movieId } },
+    update: data.update,
+    create: data.create,
+  });
+}
+
+export async function updateMovieFavorite(data: {
   userId: string;
   movieId: number;
 }): Promise<UserMovie> {
@@ -13,14 +26,15 @@ export async function toggleFavorite(data: {
 
   const newFavoriteStatus = !existing?.isFavourite;
 
-  return prisma.userMovie.upsert({
-    where: { userId_movieId: { userId: data.userId, movieId: data.movieId } },
+  return updateOrInsertMovie({
+    userId: data.userId,
+    movieId: data.movieId,
     update: { isFavourite: newFavoriteStatus },
     create: { userId: data.userId, movieId: data.movieId, isFavourite: true },
   });
 }
 
-export async function rateMovie(data: {
+export async function updateMovieRating(data: {
   userId: string;
   movieId: number;
   rating: number;
@@ -28,8 +42,10 @@ export async function rateMovie(data: {
   if (data.rating < 1 || data.rating > 10) {
     throw new Error("Rating must be between 1 and 10");
   }
-  return prisma.userMovie.upsert({
-    where: { userId_movieId: { userId: data.userId, movieId: data.movieId } },
+
+  return updateOrInsertMovie({
+    userId: data.userId,
+    movieId: data.movieId,
     update: { userRating: data.rating },
     create: {
       userId: data.userId,

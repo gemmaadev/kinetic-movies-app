@@ -157,6 +157,7 @@ describe("exploreController", () => {
     expect(tmdbFetch).toHaveBeenCalledWith("/discover/movie", {
       with_genres: "28",
       "vote_average.gte": "6",
+      "vote_count.gte": "50",
       sort_by: "popularity.desc",
     });
     expect(res.json).toHaveBeenCalledWith({

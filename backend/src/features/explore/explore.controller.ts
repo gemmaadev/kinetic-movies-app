@@ -32,7 +32,7 @@ function mapPerson(person: TmdbPersonRaw): Person {
 }
 
 export async function exploreController(req: Request, res: Response) {
-  const { search, genre, minRating, sort, year, language, page } = req.query;
+  const { search, genre, minRating, year, language, page } = req.query;
 
   try {
     if (search && typeof search === "string") {
@@ -81,10 +81,12 @@ export async function exploreController(req: Request, res: Response) {
     const params: Record<string, string> = {};
     if (genre) params.with_genres = String(genre);
     if (minRating) params["vote_average.gte"] = String(minRating);
-    if (sort) params.sort_by = String(sort);
     if (year) params.primary_release_year = String(year);
     if (language) params.with_original_language = String(language);
     if (page) params.page = String(page);
+
+    params["vote_count.gte"] = "50";
+    params.sort_by = "popularity.desc";
 
     const discoverResults = await tmdbFetch("/discover/movie", params);
 

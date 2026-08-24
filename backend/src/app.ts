@@ -14,7 +14,6 @@ app.get("/health", (req, res) => {
 });
 
 app.use("/api/explore", exploreRoutes);
-
 app.use("/api/movie", movieRoutes);
 
 export default app;
