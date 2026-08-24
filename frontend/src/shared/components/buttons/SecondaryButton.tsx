@@ -3,7 +3,7 @@ import { secondaryStyles } from "./buttonStyles";
 
 interface SecondaryButtonProps {
   children: ReactNode;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 export function SecondaryButton({ children, onClick }: SecondaryButtonProps) {

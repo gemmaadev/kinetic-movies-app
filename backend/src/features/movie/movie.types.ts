@@ -18,6 +18,16 @@ export interface CastMember {
   photoUrl: string | null;
 }
 
+export interface WatchProvider {
+  providerId: number;
+  providerName: string;
+  logoUrl: string;
+}
+
+export interface DirectorInfo {
+  id: number;
+  name: string;
+}
 export interface MovieDetail extends Movie {
   overview: string;
   backdropUrl: string | null;
@@ -25,9 +35,11 @@ export interface MovieDetail extends Movie {
   genres: Genre[];
   tagline: string | null;
   cast: CastMember[];
-  director: string | null;
+  director: DirectorInfo | null;
   writers: string[];
   trailerUrl: string | null;
+  watchProviders: WatchProvider[];
+  watchProvidersLink: string | null;
 }
 
 export interface TmdbMovieRaw {
@@ -62,6 +74,12 @@ export interface TmdbVideoRaw {
   type: string;
 }
 
+export interface TmdbWatchProviderRaw {
+  provider_id: number;
+  provider_name: string;
+  logo_path: string;
+}
+
 export interface TmdbMovieDetailRaw extends TmdbMovieRaw {
   overview: string;
   backdrop_path: string | null;
@@ -74,5 +92,13 @@ export interface TmdbMovieDetailRaw extends TmdbMovieRaw {
   };
   videos: {
     results: TmdbVideoRaw[];
+  };
+  "watch/providers": {
+    results: {
+      ES?: {
+        link?: string;
+        flatrate?: TmdbWatchProviderRaw[];
+      };
+    };
   };
 }

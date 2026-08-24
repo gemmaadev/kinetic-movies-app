@@ -99,7 +99,10 @@ describe("movie.controller", () => {
 
     await getTopRated(req, res);
 
-    expect(tmdbFetch).toHaveBeenCalledWith("/movie/top_rated");
+    expect(tmdbFetch).toHaveBeenCalledWith("/movie/top_rated", {
+      region: "ES",
+      "vote_count.gte": "1000",
+    });
     expect(res.json).toHaveBeenCalledWith({ movies: [mockMappedMovie] });
   });
 
@@ -117,7 +120,7 @@ describe("movie.controller", () => {
     expect(res.json).toHaveBeenCalledWith({ movies: [mockMappedMovie] });
   });
 
-  it("getMovieDetail returns full movie detail with cast, crew, and trailer", async () => {
+  it("getMovieDetail returns full movie detail with cast, crew, trailer, and watch providers", async () => {
     vi.mocked(tmdbFetch).mockResolvedValue({
       ...mockRawMovie,
       overview: "A team travels through a wormhole.",
@@ -143,6 +146,19 @@ describe("movie.controller", () => {
       videos: {
         results: [{ key: "zSWdZVtXT7E", site: "YouTube", type: "Trailer" }],
       },
+      "watch/providers": {
+        results: {
+          ES: {
+            flatrate: [
+              {
+                provider_id: 8,
+                provider_name: "Netflix",
+                logo_path: "/netflix.jpg",
+              },
+            ],
+          },
+        },
+      },
     });
 
     const req = { params: { id: "157336" } } as unknown as Request;
@@ -151,7 +167,8 @@ describe("movie.controller", () => {
     await getMovieDetail(req, res);
 
     expect(tmdbFetch).toHaveBeenCalledWith("/movie/157336", {
-      append_to_response: "credits,videos",
+      append_to_response: "credits,videos,watch/providers",
+      language: "es-ES",
     });
     expect(res.json).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -165,14 +182,21 @@ describe("movie.controller", () => {
             photoUrl: "https://image.tmdb.org/t/p/w200/mm.jpg",
           },
         ],
-        director: "Christopher Nolan",
+        director: { id: 200, name: "Christopher Nolan" },
         writers: ["Jonathan Nolan", "Christopher Nolan"],
         trailerUrl: "https://www.youtube.com/watch?v=zSWdZVtXT7E",
+        watchProviders: [
+          {
+            providerId: 8,
+            providerName: "Netflix",
+            logoUrl: "https://image.tmdb.org/t/p/w92/netflix.jpg",
+          },
+        ],
       }),
     );
   });
 
-  it("getMovieDetail returns null director and empty writers when crew data is missing them", async () => {
+  it("getMovieDetail returns null director, empty writers, and empty watchProviders when data is missing them", async () => {
     vi.mocked(tmdbFetch).mockResolvedValue({
       ...mockRawMovie,
       overview: "A team travels through a wormhole.",
@@ -182,6 +206,7 @@ describe("movie.controller", () => {
       tagline: null,
       credits: { cast: [], crew: [] },
       videos: { results: [] },
+      "watch/providers": { results: {} },
     });
 
     const req = { params: { id: "157336" } } as unknown as Request;
@@ -194,6 +219,7 @@ describe("movie.controller", () => {
         director: null,
         writers: [],
         trailerUrl: null,
+        watchProviders: [],
       }),
     );
   });

@@ -3,7 +3,7 @@ import { primaryStyles } from "./buttonStyles";
 
 interface PrimaryButtonProps {
   children: ReactNode;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 export function PrimaryButton({ children, onClick }: PrimaryButtonProps) {
