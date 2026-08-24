@@ -49,7 +49,14 @@ describe("MovieCard", () => {
   it("does not break when posterUrl is null", () => {
     renderMovieCard({ ...mockMovie, posterUrl: null });
 
-    const image = screen.getByAltText("Dune: Parte Dos");
-    expect(image).not.toHaveAttribute("src", expect.stringContaining("null"));
+    expect(
+      screen.queryByRole("img", { name: "Dune: Parte Dos" }),
+    ).not.toBeInTheDocument();
+
+    expect(
+      screen.getByRole("img", {
+        name: "Sin póster disponible de Dune: Parte Dos",
+      }),
+    ).toBeInTheDocument();
   });
 });

@@ -57,6 +57,7 @@ describe("getPersonDetail", () => {
 
     expect(tmdbFetch).toHaveBeenCalledWith("/person/525", {
       append_to_response: "movie_credits",
+      language: "es-ES",
     });
 
     expect(res.json).toHaveBeenCalledWith(
