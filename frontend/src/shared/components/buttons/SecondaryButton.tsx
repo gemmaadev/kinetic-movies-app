@@ -4,6 +4,7 @@ import { secondaryStyles } from "./buttonStyles";
 interface SecondaryButtonProps {
   children: ReactNode;
   onClick?: () => void;
+  className?: string;
 }
 
 export function SecondaryButton({ children, onClick }: SecondaryButtonProps) {
