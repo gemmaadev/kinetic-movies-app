@@ -55,6 +55,7 @@ export async function getPersonDetail(req: Request, res: Response) {
   try {
     const person = await tmdbFetch(`/person/${id}`, {
       append_to_response: "movie_credits",
+      language: "es-ES",
     });
     return res.json(mapPersonDetail(person));
   } catch (error) {

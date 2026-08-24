@@ -1,3 +1,4 @@
+import { PersonList } from "@/features/explore/components/PersonList";
 import { useMovieDetail } from "@/features/movie/hooks/useMovieDetail";
 import { HeroSection } from "@/shared/components/HeroSection";
 import { PrimaryButton } from "@/shared/components/buttons/PrimaryButton";
@@ -23,7 +24,7 @@ export default function MovieDetailPage() {
           <img
             src={movie.posterUrl ?? undefined}
             alt={`Póster de ${movie.title}`}
-            className="w-55 self-start rounded-lg md:w-56 md:self-start"
+            className="w-56 self-start rounded-lg"
           />
 
           <div className="flex flex-col gap-4">
@@ -81,7 +82,7 @@ export default function MovieDetailPage() {
         </div>
       </HeroSection>
 
-      <div className="flex flex-col gap-6 p-4 md:flex-row md:p-6">
+      <div className="flex flex-col gap-6 p-4 md:flex-row md:p-11">
         <section className="flex w-full flex-col gap-4 md:w-1/2">
           <h2 className="text-2xl font-bold">Ficha técnica</h2>
 
@@ -164,30 +165,17 @@ export default function MovieDetailPage() {
         </div>
       </div>
 
-      <section className="flex flex-col gap-4 p-4 md:p-6">
-        <h2 className="text-2xl font-bold">Reparto principal</h2>
-        <ul className="flex flex-wrap gap-4">
-          {movie.cast.map((member) => (
-            <li key={member.id}>
-              <Link
-                to={`/actor/${member.id}`}
-                className="flex flex-col items-center gap-1 text-center"
-              >
-                {member.photoUrl && (
-                  <img
-                    src={member.photoUrl}
-                    alt={member.name}
-                    className="h-20 w-20 rounded-full object-cover md:h-24 md:w-24"
-                  />
-                )}
-                <span className="text-sm font-bold">{member.name}</span>
-                <span className="text-xs text-secondary-text">
-                  {member.character}
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
+      <section className="flex flex-col gap-4 p-4 md:p-11">
+        <PersonList
+          title="Reparto principal"
+          people={movie.cast.map((member) => ({
+            id: member.id,
+            name: member.name,
+            photoUrl: member.photoUrl,
+            subtitle: member.character,
+          }))}
+          linkTo={(id) => `/actor/${id}`}
+        />
       </section>
     </article>
   );
