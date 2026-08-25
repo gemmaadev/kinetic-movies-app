@@ -1,5 +1,6 @@
 import { PersonList } from "@/features/explore/components/PersonList";
 import { useMovieDetail } from "@/features/movie/hooks/useMovieDetail";
+import { BackButton } from "@/shared/components/BackButton";
 import { HeroSection } from "@/shared/components/HeroSection";
 import { PrimaryButton } from "@/shared/components/buttons/PrimaryButton";
 import { SecondaryButton } from "@/shared/components/buttons/SecondaryButton";
@@ -16,6 +17,8 @@ export default function MovieDetailPage() {
 
   return (
     <article>
+      <BackButton />
+
       <HeroSection
         backgroundImage={movie.backdropUrl ?? undefined}
         className="flex min-h-[60vh] items-end p-4 md:p-6"

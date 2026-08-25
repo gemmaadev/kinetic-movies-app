@@ -4,6 +4,7 @@ import { MovieGrid } from "@/features/explore/components/MovieGrid";
 import { SecondaryButton } from "@/shared/components/buttons/SecondaryButton";
 import { useParams } from "react-router";
 import type { MovieCredit } from "@/features/person/types/person.types";
+import { BackButton } from "@/shared/components/BackButton";
 
 const FEATURED_MOVIES_LIMIT = 8;
 
@@ -35,8 +36,9 @@ export function PersonDetailPage({
     : movies.slice(0, FEATURED_MOVIES_LIMIT);
 
   return (
-    <article className="flex flex-col gap-10 py-15 px-6">
-      <section className="flex flex-col gap-6 md:flex-row">
+    <article className="flex flex-col gap-5 pb-15 px-6">
+      <BackButton />
+      <section className="flex flex-col gap-6 pb-7 md:flex-row">
         {person.photoUrl ? (
           <img
             src={person.photoUrl}
