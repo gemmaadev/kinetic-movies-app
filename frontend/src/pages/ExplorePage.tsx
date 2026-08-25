@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSearchParams } from "react-router";
 import { useExplore } from "@/features/explore/hooks/useExplore";
 import { Search, SlidersHorizontal } from "lucide-react";
 import { PersonList } from "@/features/explore/components/PersonList";
@@ -16,19 +17,21 @@ const categories = [
   { key: "upcoming", label: "Próximamente" },
 ];
 
-const EMPTY_FILTERS: ExploreFiltersValues = {
-  genre: "",
-  year: "",
-  language: "",
-  minRating: "",
-};
-
 export default function ExplorePage() {
-  const [search, setSearch] = useState("");
-  const debouncedSearch = useDebounce(search, 400);
-  const [activeCategory, setActiveCategory] = useState("popular");
-  const [filters, setFilters] = useState<ExploreFiltersValues>(EMPTY_FILTERS);
+  const [searchParams, setSearchParams] = useSearchParams();
   const [showFilters, setShowFilters] = useState(false);
+
+  const search = searchParams.get("search") ?? "";
+  const activeCategory = searchParams.get("category") ?? "popular";
+  const filters: ExploreFiltersValues = {
+    genre: searchParams.get("genre") ?? "",
+    year: searchParams.get("year") ?? "",
+    language: searchParams.get("language") ?? "",
+    minRating: searchParams.get("minRating") ?? "",
+  };
+
+  const debouncedSearch = useDebounce(search, 400);
+
   const { movies, actors, directors, isLoading, error } = useExplore(
     debouncedSearch,
     activeCategory,
@@ -36,9 +39,43 @@ export default function ExplorePage() {
     1,
   );
 
+  function updateParams(updates: Record<string, string>) {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      Object.entries(updates).forEach(([key, value]) => {
+        if (value) {
+          next.set(key, value);
+        } else {
+          next.delete(key);
+        }
+      });
+      return next;
+    });
+  }
+
+  function handleSearchChange(value: string) {
+    updateParams({ search: value });
+  }
+
+  function handleFiltersChange(newFilters: ExploreFiltersValues) {
+    updateParams({
+      genre: newFilters.genre,
+      year: newFilters.year,
+      language: newFilters.language,
+      minRating: newFilters.minRating,
+    });
+  }
+
   function handleCategoryClick(categoryKey: string) {
-    setActiveCategory(categoryKey);
-    setFilters(EMPTY_FILTERS);
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      next.set("category", categoryKey);
+      next.delete("genre");
+      next.delete("year");
+      next.delete("language");
+      next.delete("minRating");
+      return next;
+    });
   }
 
   return (
@@ -55,7 +92,7 @@ export default function ExplorePage() {
             type="search"
             placeholder="Buscar películas, actores, directores..."
             value={search}
-            onChange={(event) => setSearch(event.target.value)}
+            onChange={(event) => handleSearchChange(event.target.value)}
             className="w-full rounded-md bg-bg-surface p-2 pl-10 text-primary-text"
           />
         </div>
@@ -72,7 +109,7 @@ export default function ExplorePage() {
       </div>
 
       {showFilters && !search && (
-        <ExploreFilters filters={filters} onChange={setFilters} />
+        <ExploreFilters filters={filters} onChange={handleFiltersChange} />
       )}
 
       {!search && (
