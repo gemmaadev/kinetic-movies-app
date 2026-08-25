@@ -15,3 +15,18 @@ export async function createUser(data: {
 export async function getUserByUid(uid: string): Promise<User | null> {
   return prisma.user.findUnique({ where: { uid } });
 }
+
+export async function updateUser(data: {
+  uid: string;
+  name: string;
+  avatarUrl?: string;
+}): Promise<User> {
+  return prisma.user.update({
+    where: { uid: data.uid },
+    data: { name: data.name, avatarUrl: data.avatarUrl },
+  });
+}
+
+export async function deleteUser(uid: string): Promise<void> {
+  await prisma.user.delete({ where: { uid } });
+}
