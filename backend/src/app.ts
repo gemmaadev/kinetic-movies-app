@@ -5,6 +5,7 @@ import exploreRoutes from "./features/explore/explore.routes.js";
 import movieRoutes from "./features/movie/movie.routes.js";
 import personRoutes from "./features/person/person.routes.js";
 import authRoutes from "./features/auth/auth.routes.js";
+import userRoutes from "./features/user/user.routes.js";
 
 const app = express();
 
@@ -19,5 +20,6 @@ app.use("/api/explore", exploreRoutes);
 app.use("/api/movie", movieRoutes);
 app.use("/api/person", personRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/user", userRoutes);
 
 export default app;
