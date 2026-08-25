@@ -1,19 +1,19 @@
 import { it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router";
-import ActorDetailPage from "./ActorDetailPage";
+import DirectorDetailPage from "./DirectorDetailPage";
 import { usePersonDetail } from "@/features/person/hooks/usePersonDetail";
 
 vi.mock("@/features/person/hooks/usePersonDetail", () => ({
   usePersonDetail: vi.fn(),
 }));
 
-// Scenario: ActorDetailPage uses the actor's filmography (not directing credits)
-it("renders acting filmography, not directing credits", () => {
+// Scenario: DirectorDetailPage uses the director's filmography (not acting credits)
+it("renders directing filmography, not acting credits", () => {
   vi.mocked(usePersonDetail).mockReturnValue({
     person: {
       id: 1,
-      name: "Test Actor",
+      name: "Test Director",
       photoUrl: null,
       biography: "",
       birthday: null,
@@ -42,13 +42,13 @@ it("renders acting filmography, not directing credits", () => {
   });
 
   render(
-    <MemoryRouter initialEntries={["/actor/1"]}>
+    <MemoryRouter initialEntries={["/director/1"]}>
       <Routes>
-        <Route path="/actor/:id" element={<ActorDetailPage />} />
+        <Route path="/director/:id" element={<DirectorDetailPage />} />
       </Routes>
     </MemoryRouter>,
   );
 
-  expect(screen.getByText("Acted Movie")).toBeInTheDocument();
-  expect(screen.queryByText("Directed Movie")).not.toBeInTheDocument();
+  expect(screen.getByText("Directed Movie")).toBeInTheDocument();
+  expect(screen.queryByText("Acted Movie")).not.toBeInTheDocument();
 });
