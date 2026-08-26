@@ -4,11 +4,16 @@ import { primaryStyles } from "./buttonStyles";
 interface PrimaryButtonProps {
   children: ReactNode;
   onClick?: () => void;
+  type?: "button" | "submit";
 }
 
-export function PrimaryButton({ children, onClick }: PrimaryButtonProps) {
+export function PrimaryButton({
+  children,
+  onClick,
+  type = "button",
+}: PrimaryButtonProps) {
   return (
-    <button onClick={onClick} className={primaryStyles}>
+    <button type={type} onClick={onClick} className={primaryStyles}>
       {children}
     </button>
   );
