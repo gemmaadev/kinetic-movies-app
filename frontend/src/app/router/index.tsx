@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router";
 import AuthLayout from "@/app/layout/AuthLayout";
 import Layout from "@/app/layout/Layout";
-import {ErrorFallback} from "@/shared/components/ErrorFallback";
+import { ErrorFallback } from "@/shared/components/ErrorFallback";
 
 import HomePage from "@/pages/HomePage";
 import ExplorePage from "@/pages/ExplorePage";
@@ -14,6 +14,7 @@ import ProfilePage from "@/pages/ProfilePage";
 import LoginPage from "@/pages/LoginPage";
 import RegisterPage from "@/pages/RegisterPage";
 import NotFoundPage from "@/pages/NotFoundPage";
+import ForgotPasswordPage from "@/pages/ForgotPasswordPage";
 
 export const router = createBrowserRouter([
   {
@@ -24,6 +25,7 @@ export const router = createBrowserRouter([
         children: [
           { path: "/login", Component: LoginPage },
           { path: "/registro", Component: RegisterPage },
+          { path: "/recuperar-contrasena", Component: ForgotPasswordPage },
         ],
       },
       {

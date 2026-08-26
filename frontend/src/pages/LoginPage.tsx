@@ -59,6 +59,13 @@ export default function LoginPage() {
           onChange={setPassword}
         />
 
+        <Link
+          to="/recuperar-contrasena"
+          className="self-end text-sm text-secondary-text hover:text-brand-teal hover:underline"
+        >
+          ¿Olvidaste tu contraseña?
+        </Link>
+
         {(validationError || error) && (
           <p className="text-error">{validationError ?? error}</p>
         )}
