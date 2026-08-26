@@ -50,57 +50,64 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="flex h-screen w-full">
+    <div className="grid min-h-screen grid-cols-1 md:grid-cols-2">
       <div
-        className="w-1/2 bg-cover bg-center"
+        className="hidden bg-cover bg-center md:block"
         style={{ backgroundImage: `url(${backgroundImage})` }}
       />
 
-      <form
-        onSubmit={handleSubmit}
-        className="flex w-1/2 flex-col justify-center gap-6 p-20"
-      >
-        <div className="flex flex-col gap-1">
-          <h1 className="text-2xl font-bold">Crea tu cuenta</h1>
-          <p className="text-secondary-text">Únete y empieza a disfrutar.</p>
-        </div>
+      <div className="flex items-center justify-center px-6 py-12">
+        <form
+          onSubmit={handleSubmit}
+          className="flex w-full max-w-md flex-col gap-6"
+        >
+          <div className="flex flex-col gap-1">
+            <h1 className="text-2xl font-bold">Crea tu cuenta</h1>
+            <p className="text-secondary-text">Únete y empieza a disfrutar.</p>
+          </div>
 
-        <FormField label="Nombre" type="text" value={name} onChange={setName} />
-        <FormField
-          label="Correo electrónico"
-          type="email"
-          value={email}
-          onChange={setEmail}
-        />
-        <PasswordInput
-          label="Contraseña"
-          value={password}
-          onChange={setPassword}
-        />
-        <PasswordInput
-          label="Confirmar contraseña"
-          value={confirmPassword}
-          onChange={setConfirmPassword}
-        />
+          <FormField
+            label="Nombre"
+            type="text"
+            value={name}
+            onChange={setName}
+          />
+          <FormField
+            label="Correo electrónico"
+            type="email"
+            value={email}
+            onChange={setEmail}
+          />
+          <PasswordInput
+            label="Contraseña"
+            value={password}
+            onChange={setPassword}
+          />
+          <PasswordInput
+            label="Confirmar contraseña"
+            value={confirmPassword}
+            onChange={setConfirmPassword}
+          />
 
-        {(validationError || error) && (
-          <p className="text-error">{validationError ?? error}</p>
-        )}
+          {(validationError || error) && (
+            <p className="text-error">{validationError ?? error}</p>
+          )}
 
-        <PrimaryButton type="submit">
-          {isLoading ? "Creando cuenta..." : "Registrarme"}
-        </PrimaryButton>
+          <PrimaryButton type="submit">
+            {isLoading ? "Creando cuenta..." : "Registrarme"}
+          </PrimaryButton>
 
-        <p className="text-center text-sm text-secondary-text">
-          ¿Ya tienes cuenta?{" "}
-          <Link
-            to="/login"
-            className="font-bold text-brand-blue hover:text-brand-teal"
-          >
-            Inicia sesión
-          </Link>
-        </p>
-      </form>
+          <p className="text-center text-sm text-secondary-text">
+            ¿Ya tienes cuenta?{" "}
+            <Link
+              to="/login"
+              className="font-bold text-brand-blue hover:text-brand-teal"
+            >
+              Inicia sesión
+            </Link>
+          </p>
+        </form>
+      </div>
     </div>
   );
 }

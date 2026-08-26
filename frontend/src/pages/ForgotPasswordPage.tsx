@@ -54,13 +54,13 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="flex h-screen w-full">
+    <div className="grid min-h-screen grid-cols-1 md:grid-cols-2">
       <div
-        className="w-1/2 bg-cover bg-center"
+        className="hidden bg-cover bg-center md:block"
         style={{ backgroundImage: `url(${backgroundImage})` }}
       />
 
-      <div className="flex w-1/2 flex-col justify-center gap-6 p-20">
+      <div className="flex items-center justify-center px-6 py-12">
         {success ? (
           <div className="flex flex-col gap-4">
             <h1 className="text-2xl font-bold">Revisa tu email</h1>
