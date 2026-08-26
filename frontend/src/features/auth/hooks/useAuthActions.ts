@@ -33,23 +33,13 @@ export function useAuthActions() {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  async function registerWithEmail(
-    email: string,
-    password: string,
-    name: string,
-  ) {
+  async function runAuthAction(action: () => Promise<void>) {
     setIsLoading(true);
     setError(null);
 
     try {
-      await createUserWithEmailAndPassword(firebaseAuth, email, password);
-
-      await apiClient("/api/auth/register", {
-        method: "POST",
-        body: JSON.stringify({ name, email }),
-      });
-
-      navigate("/perfil");
+      await action();
+      navigate("/");
     } catch (error) {
       setError(getFirebaseErrorMessage(error));
     } finally {
@@ -57,24 +47,24 @@ export function useAuthActions() {
     }
   }
 
-  async function loginWithEmail(email: string, password: string) {
-    setIsLoading(true);
-    setError(null);
+  function registerWithEmail(email: string, password: string, name: string) {
+    return runAuthAction(async () => {
+      await createUserWithEmailAndPassword(firebaseAuth, email, password);
+      await apiClient("/api/auth/register", {
+        method: "POST",
+        body: JSON.stringify({ name, email }),
+      });
+    });
+  }
 
-    try {
+  function loginWithEmail(email: string, password: string) {
+    return runAuthAction(async () => {
       await signInWithEmailAndPassword(firebaseAuth, email, password);
-
       await apiClient("/api/auth/login", {
         method: "POST",
         body: JSON.stringify({}),
       });
-
-      navigate("/perfil");
-    } catch (error) {
-      setError(getFirebaseErrorMessage(error));
-    } finally {
-      setIsLoading(false);
-    }
+    });
   }
 
   return { registerWithEmail, loginWithEmail, isLoading, error };
