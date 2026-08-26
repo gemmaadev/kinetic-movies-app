@@ -3,6 +3,8 @@ import { Link } from "react-router";
 import { useAuthActions } from "@/features/auth/hooks/useAuthActions";
 import { PrimaryButton } from "@/shared/components/buttons/PrimaryButton";
 import backgroundImage from "@/shared/assets/background-login-register.png";
+import { FormField } from "@/shared/components/FormField";
+import { PasswordInput } from "@/shared/components/PasswordInput";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
@@ -63,73 +65,23 @@ export default function RegisterPage() {
           <p className="text-secondary-text">Únete y empieza a disfrutar.</p>
         </div>
 
-        <label className="flex flex-col gap-1">
-          <span className="text-sm">
-            Nombre
-            <span className="text-error" aria-hidden="true">
-              *
-            </span>
-          </span>
-          <input
-            type="text"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-            required
-            aria-required="true"
-            className="rounded-md bg-bg-surface p-2"
-          />
-        </label>
-
-        <label className="flex flex-col gap-1">
-          <span className="text-sm">
-            Correo electrónico
-            <span className="text-error" aria-hidden="true">
-              *
-            </span>
-          </span>
-          <input
-            type="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            required
-            aria-required="true"
-            className="rounded-md bg-bg-surface p-2"
-          />
-        </label>
-
-        <label className="flex flex-col gap-1">
-          <span className="text-sm">
-            Contraseña
-            <span className="text-error" aria-hidden="true">
-              *
-            </span>
-          </span>
-          <input
-            type="password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            required
-            aria-required="true"
-            className="rounded-md bg-bg-surface p-2"
-          />
-        </label>
-
-        <label className="flex flex-col gap-1">
-          <span className="text-sm">
-            Confirmar contraseña
-            <span className="text-error" aria-hidden="true">
-              *
-            </span>
-          </span>
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={(event) => setConfirmPassword(event.target.value)}
-            required
-            aria-required="true"
-            className="rounded-md bg-bg-surface p-2"
-          />
-        </label>
+        <FormField label="Nombre" type="text" value={name} onChange={setName} />
+        <FormField
+          label="Correo electrónico"
+          type="email"
+          value={email}
+          onChange={setEmail}
+        />
+        <PasswordInput
+          label="Contraseña"
+          value={password}
+          onChange={setPassword}
+        />
+        <PasswordInput
+          label="Confirmar contraseña"
+          value={confirmPassword}
+          onChange={setConfirmPassword}
+        />
 
         {(validationError || error) && (
           <p className="text-error">{validationError ?? error}</p>
