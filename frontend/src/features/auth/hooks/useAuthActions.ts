@@ -1,7 +1,9 @@
 import { useState } from "react";
 import {
   createUserWithEmailAndPassword,
+  GoogleAuthProvider,
   signInWithEmailAndPassword,
+  signInWithPopup,
 } from "firebase/auth";
 import { useNavigate } from "react-router";
 import { firebaseAuth } from "@/shared/services/firebase";
@@ -23,6 +25,8 @@ function getFirebaseErrorMessage(error: unknown): string {
       return "Email o contraseña incorrectos.";
     case "auth/too-many-requests":
       return "Demasiados intentos. Inténtalo más tarde.";
+    case "auth/account-exists-with-different-credential":
+      return "Ya existe una cuenta con este email usando otro método de acceso. Prueba a iniciar sesión con tu contraseña.";
     default:
       return "Ha ocurrido un error. Inténtalo de nuevo.";
   }
@@ -67,5 +71,27 @@ export function useAuthActions() {
     });
   }
 
-  return { registerWithEmail, loginWithEmail, isLoading, error };
+  function loginWithGoogle() {
+    return runAuthAction(async () => {
+      const provider = new GoogleAuthProvider();
+      const credential = await signInWithPopup(firebaseAuth, provider);
+
+      await apiClient("/api/auth/register", {
+        method: "POST",
+        body: JSON.stringify({
+          name: credential.user.displayName,
+          email: credential.user.email,
+          avatarUrl: credential.user.photoURL,
+        }),
+      });
+    });
+  }
+
+  return {
+    registerWithEmail,
+    loginWithEmail,
+    loginWithGoogle,
+    isLoading,
+    error,
+  };
 }
