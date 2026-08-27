@@ -3,7 +3,17 @@ import { firebaseAuth } from "@/shared/services/firebase";
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
 
+function waitForAuthReady(): Promise<void> {
+  return new Promise((resolve) => {
+    const unsubscribe = firebaseAuth.onAuthStateChanged(() => {
+      unsubscribe();
+      resolve();
+    });
+  });
+}
+
 async function getAuthToken(): Promise<string | null> {
+  await waitForAuthReady();
   const user = firebaseAuth.currentUser;
   if (!user) return null;
   return user.getIdToken();
