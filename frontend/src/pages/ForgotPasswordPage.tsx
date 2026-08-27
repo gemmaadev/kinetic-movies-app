@@ -2,9 +2,9 @@ import { useState } from "react";
 import { Link } from "react-router";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { firebaseAuth } from "@/shared/services/firebase";
+import { AuthPageLayout } from "@/features/auth/components/AuthPageLayout";
 import { PrimaryButton } from "@/shared/components/buttons/PrimaryButton";
 import { FormField } from "@/shared/components/FormField";
-import backgroundImage from "@/shared/assets/background-login-register.png";
 
 function getFirebaseErrorMessage(error: unknown): string {
   const code = (error as { code?: string })?.code;
@@ -53,59 +53,59 @@ export default function ForgotPasswordPage() {
     }
   }
 
+  if (success) {
+    return (
+      <AuthPageLayout>
+        <div className="flex w-full max-w-md flex-col gap-4">
+          <h1 className="text-2xl font-bold">Revisa tu email</h1>
+          <p className="text-secondary-text">
+            Te hemos enviado un enlace a <strong>{email}</strong> para
+            restablecer tu contraseña.
+          </p>
+          <Link
+            to="/login"
+            className="text-sm font-bold text-brand-blue hover:text-brand-teal"
+          >
+            Volver a iniciar sesión
+          </Link>
+        </div>
+      </AuthPageLayout>
+    );
+  }
+
   return (
-    <div className="grid min-h-screen grid-cols-1 md:grid-cols-2">
-      <div
-        className="hidden bg-cover bg-center md:block"
-        style={{ backgroundImage: `url(${backgroundImage})` }}
-      />
+    <AuthPageLayout>
+      <form
+        onSubmit={handleSubmit}
+        className="flex w-full max-w-md flex-col gap-6"
+      >
+        <div className="flex flex-col gap-1">
+          <h1 className="text-2xl font-bold">¿Olvidaste tu contraseña?</h1>
+          <p className="text-secondary-text">
+            Introduce tu email y te enviaremos un enlace para restablecerla.
+          </p>
+        </div>
 
-      <div className="flex items-center justify-center px-6 py-12">
-        {success ? (
-          <div className="flex flex-col gap-4">
-            <h1 className="text-2xl font-bold">Revisa tu email</h1>
-            <p className="text-secondary-text">
-              Te hemos enviado un enlace a <strong>{email}</strong> para
-              restablecer tu contraseña.
-            </p>
-            <Link
-              to="/login"
-              className="text-sm font-bold text-brand-blue hover:text-brand-teal"
-            >
-              Volver a iniciar sesión
-            </Link>
-          </div>
-        ) : (
-          <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-            <div className="flex flex-col gap-1">
-              <h1 className="text-2xl font-bold">¿Olvidaste tu contraseña?</h1>
-              <p className="text-secondary-text">
-                Introduce tu email y te enviaremos un enlace para restablecerla.
-              </p>
-            </div>
+        <FormField
+          label="Correo electrónico"
+          type="email"
+          value={email}
+          onChange={setEmail}
+        />
 
-            <FormField
-              label="Correo electrónico"
-              type="email"
-              value={email}
-              onChange={setEmail}
-            />
+        {error && <p className="text-error">{error}</p>}
 
-            {error && <p className="text-error">{error}</p>}
+        <PrimaryButton type="submit">
+          {isLoading ? "Enviando..." : "Enviar enlace"}
+        </PrimaryButton>
 
-            <PrimaryButton type="submit">
-              {isLoading ? "Enviando..." : "Enviar enlace"}
-            </PrimaryButton>
-
-            <Link
-              to="/login"
-              className="self-center text-sm text-secondary-text hover:text-brand-teal hover:underline"
-            >
-              Volver a iniciar sesión
-            </Link>
-          </form>
-        )}
-      </div>
-    </div>
+        <Link
+          to="/login"
+          className="self-center text-sm text-secondary-text hover:text-brand-teal hover:underline"
+        >
+          Volver a iniciar sesión
+        </Link>
+      </form>
+    </AuthPageLayout>
   );
 }
