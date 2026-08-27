@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router";
 import AuthLayout from "@/app/layout/AuthLayout";
 import Layout from "@/app/layout/Layout";
 import { ErrorFallback } from "@/shared/components/ErrorFallback";
+import { ProtectedRoute } from "./ProtectedRoute";
 
 import HomePage from "@/pages/HomePage";
 import ExplorePage from "@/pages/ExplorePage";
@@ -29,17 +30,22 @@ export const router = createBrowserRouter([
         ],
       },
       {
-        element: <Layout />,
+        element: <ProtectedRoute />,
         children: [
-          { index: true, Component: HomePage },
-          { path: "/explorar", Component: ExplorePage },
-          { path: "/pelicula/:id", Component: MovieDetailPage },
-          { path: "/actor/:id", Component: ActorDetailPage },
-          { path: "/director/:id", Component: DirectorDetailPage },
-          { path: "/ranking", Component: RankingPage },
-          { path: "/favoritos", Component: FavoritesPage },
-          { path: "/perfil", Component: ProfilePage },
-          { path: "*", Component: NotFoundPage },
+          {
+            element: <Layout />,
+            children: [
+              { index: true, Component: HomePage },
+              { path: "/explorar", Component: ExplorePage },
+              { path: "/pelicula/:id", Component: MovieDetailPage },
+              { path: "/actor/:id", Component: ActorDetailPage },
+              { path: "/director/:id", Component: DirectorDetailPage },
+              { path: "/ranking", Component: RankingPage },
+              { path: "/favoritos", Component: FavoritesPage },
+              { path: "/perfil", Component: ProfilePage },
+              { path: "*", Component: NotFoundPage },
+            ],
+          },
         ],
       },
     ],
