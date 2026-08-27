@@ -29,12 +29,14 @@ async function fillValidForm(user: ReturnType<typeof userEvent.setup>) {
 
 describe("RegisterPage", () => {
   const registerWithEmail = vi.fn();
+  const loginWithGoogle = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
     vi.mocked(useAuthActions).mockReturnValue({
       registerWithEmail,
       loginWithEmail: vi.fn(),
+      loginWithGoogle,
       isLoading: false,
       error: null,
     });
@@ -181,6 +183,7 @@ describe("RegisterPage", () => {
     vi.mocked(useAuthActions).mockReturnValue({
       registerWithEmail,
       loginWithEmail: vi.fn(),
+      loginWithGoogle,
       isLoading: false,
       error: "Ya existe una cuenta con este email.",
     });
@@ -189,7 +192,6 @@ describe("RegisterPage", () => {
 
     expect(screen.getByText(/ya existe una cuenta/i)).toBeInTheDocument();
   });
-
   // Scenario: Link to login page is present
   it("has a link to the login page", () => {
     renderPage();

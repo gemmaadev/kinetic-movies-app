@@ -4,12 +4,16 @@ import { secondaryStyles } from "./buttonStyles";
 interface SecondaryButtonProps {
   children: ReactNode;
   onClick?: () => void;
-  className?: string;
+  type?: "button" | "submit";
 }
 
-export function SecondaryButton({ children, onClick }: SecondaryButtonProps) {
+export function SecondaryButton({
+  children,
+  onClick,
+  type = "button",
+}: SecondaryButtonProps) {
   return (
-    <button onClick={onClick} className={secondaryStyles}>
+    <button type={type} onClick={onClick} className={secondaryStyles}>
       {children}
     </button>
   );

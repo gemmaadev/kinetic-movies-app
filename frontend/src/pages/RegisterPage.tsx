@@ -5,6 +5,7 @@ import { AuthPageLayout } from "@/features/auth/components/AuthPageLayout";
 import { PrimaryButton } from "@/shared/components/buttons/PrimaryButton";
 import { FormField } from "@/shared/components/FormField";
 import { PasswordInput } from "@/shared/components/PasswordInput";
+import { SocialAuthDivider } from "@/features/auth/components/SocialAuthDivider";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
@@ -12,7 +13,8 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [validationError, setValidationError] = useState<string | null>(null);
-  const { registerWithEmail, isLoading, error } = useAuthActions();
+  const { registerWithEmail, loginWithGoogle, isLoading, error } =
+    useAuthActions();
 
   function validate(): boolean {
     if (!name.trim()) {
@@ -43,7 +45,7 @@ export default function RegisterPage() {
     return true;
   }
 
-  function handleSubmit(event: React.SubmitEvent) {
+  function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     if (!validate()) return;
     registerWithEmail(email, password, name);
@@ -86,6 +88,8 @@ export default function RegisterPage() {
         <PrimaryButton type="submit">
           {isLoading ? "Creando cuenta..." : "Registrarme"}
         </PrimaryButton>
+
+        <SocialAuthDivider onGoogleClick={loginWithGoogle} />
 
         <p className="text-center text-sm text-secondary-text">
           ¿Ya tienes cuenta?{" "}
