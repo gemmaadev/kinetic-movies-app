@@ -77,6 +77,7 @@ export default function ForgotPasswordPage() {
     <AuthPageLayout>
       <form
         onSubmit={handleSubmit}
+        noValidate
         className="flex w-full max-w-md flex-col gap-6"
       >
         <div className="flex flex-col gap-1">
