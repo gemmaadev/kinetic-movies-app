@@ -1,18 +1,16 @@
+import { useState } from "react";
 import logo from "@/shared/assets/logo.png";
 import { FaInstagram, FaFacebookF } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { Link } from "react-router";
+import { useLogout } from "@/features/auth/hooks/useLogout";
+import { LogoutConfirmModal } from "@/features/auth/components/LogoutConfirmModal";
 
 const discoverLinks = [
   { to: "/", label: "Inicio" },
   { to: "/explorar", label: "Explorar" },
   { to: "/ranking", label: "Ranking" },
   { to: "/favoritos", label: "Favoritos" },
-];
-
-const accountLinks = [
-  { to: "/perfil", label: "Mi perfil" },
-  { to: "/login", label: "Cerrar sesión" }, // placeholder, connects with useAuth()
 ];
 
 const legalLinks = [
@@ -27,13 +25,10 @@ const socialLinks = [
   { href: "#", label: "Twitter/X", Icon: FaXTwitter },
 ];
 
-const footerColumns = [
-  { title: "DESCUBRIR", links: discoverLinks },
-  { title: "CUENTA", links: accountLinks },
-  { title: "LEGAL", links: legalLinks },
-];
-
 export function Footer() {
+  const logout = useLogout();
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+
   return (
     <>
       <div className="grid grid-cols-1 gap-8 md:grid-cols-5 pb-8">
@@ -46,13 +41,31 @@ export function Footer() {
           </p>
         </div>
 
-        {footerColumns.map((column) => (
-          <FooterColumn
-            key={column.title}
-            title={column.title}
-            links={column.links}
-          />
-        ))}
+        <FooterColumn title="DESCUBRIR" links={discoverLinks} />
+
+        <div className="flex flex-col gap-3">
+          <h4 className="font-bold">CUENTA</h4>
+          <ul className="flex flex-col gap-2">
+            <li>
+              <Link
+                to="/perfil"
+                className="text-secondary-text hover:text-brand-teal"
+              >
+                Mi perfil
+              </Link>
+            </li>
+            <li>
+              <button
+                onClick={() => setShowLogoutConfirm(true)}
+                className="text-left text-secondary-text hover:text-brand-teal"
+              >
+                Cerrar sesión
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <FooterColumn title="LEGAL" links={legalLinks} />
 
         <div className="flex flex-col gap-3">
           <h4 className="font-bold">SÍGUENOS</h4>
@@ -78,6 +91,12 @@ export function Footer() {
           © 2026 Kinetic. Todos los derechos reservados.
         </span>
       </div>
+
+      <LogoutConfirmModal
+        isOpen={showLogoutConfirm}
+        onCancel={() => setShowLogoutConfirm(false)}
+        onConfirm={logout}
+      />
     </>
   );
 }

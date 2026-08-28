@@ -2,6 +2,7 @@ import { Link, NavLink } from "react-router";
 import logo from "@/shared/assets/logo.png";
 import { Menu, Search, X } from "lucide-react";
 import { useState } from "react";
+import { useAuth } from "@/features/auth/hooks/useAuth";
 
 const navLinks = [
   { to: "/", label: "Inicio" },
@@ -14,6 +15,7 @@ const navLinks = [
 export default function NavBar() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user } = useAuth();
 
   return (
     <div className="flex items-center justify-between">
@@ -58,11 +60,24 @@ export default function NavBar() {
             </button>
           )}
 
-          {/* Placeholder, connects when useAuth() exists */}
-          <div className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-full bg-slate-700" />
-            <span>Usuario</span>
-          </div>
+          <Link
+            to="/perfil"
+            className="flex items-center gap-2 hover:opacity-80"
+          >
+            {user?.photoURL ? (
+              <img
+                src={user.photoURL}
+                alt={user.displayName ?? "Usuario"}
+                referrerPolicy="no-referrer"
+                className="h-9 w-9 rounded-full object-cover"
+              />
+            ) : (
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-700 text-sm font-bold">
+                {user?.displayName?.[0]?.toUpperCase() ?? "U"}
+              </div>
+            )}
+            <span>{user?.displayName ?? "Usuario"}</span>
+          </Link>
         </div>
 
         {/* Hamburger button: visible only on mobile */}
