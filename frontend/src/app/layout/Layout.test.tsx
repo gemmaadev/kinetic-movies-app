@@ -1,9 +1,23 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import { MemoryRouter, Routes, Route } from "react-router";
 import Layout from "./Layout";
+import { useAuth } from "@/features/auth/hooks/useAuth";
+
+vi.mock("@/features/auth/hooks/useAuth", () => ({
+  useAuth: vi.fn(),
+}));
 
 describe("Layout", () => {
+  beforeEach(() => {
+    vi.mocked(useAuth).mockReturnValue({
+      user: null,
+      isAuthenticated: false,
+      loading: false,
+      getIdToken: vi.fn(),
+    });
+  });
+
   it("renders the header with navigation", () => {
     render(
       <MemoryRouter>

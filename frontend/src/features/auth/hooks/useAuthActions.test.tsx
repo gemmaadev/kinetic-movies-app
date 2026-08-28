@@ -8,6 +8,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signInWithPopup,
+  updateProfile,
 } from "firebase/auth";
 
 vi.mock("firebase/auth", () => ({
@@ -15,6 +16,7 @@ vi.mock("firebase/auth", () => ({
   signInWithEmailAndPassword: vi.fn(),
   signInWithPopup: vi.fn(),
   GoogleAuthProvider: vi.fn(),
+  updateProfile: vi.fn(),
 }));
 
 vi.mock("@/shared/services/firebase", () => ({
@@ -49,9 +51,13 @@ describe("useAuthActions", () => {
     // Scenario: Successful registration
     //   Given valid registration data
     //   When registerWithEmail is called
-    //   Then Firebase creates the user, the backend is synced, and the user is redirected
-    it("creates the Firebase user, syncs with backend, and navigates on success", async () => {
-      vi.mocked(createUserWithEmailAndPassword).mockResolvedValue({} as never);
+    //   Then Firebase creates the user, sets the displayName, the backend is
+    //   synced, and the user is redirected
+    it("creates the Firebase user, sets displayName, syncs with backend, and navigates on success", async () => {
+      vi.mocked(createUserWithEmailAndPassword).mockResolvedValue({
+        user: { uid: "test-uid" },
+      } as never);
+      vi.mocked(updateProfile).mockResolvedValue(undefined);
       vi.mocked(apiClient).mockResolvedValue({});
 
       const { result } = renderAuthActions();
@@ -68,6 +74,10 @@ describe("useAuthActions", () => {
         firebaseAuth,
         "test@test.com",
         "Password1",
+      );
+      expect(updateProfile).toHaveBeenCalledWith(
+        { uid: "test-uid" },
+        { displayName: "Test User" },
       );
       expect(apiClient).toHaveBeenCalledWith("/api/auth/register", {
         method: "POST",
@@ -104,7 +114,10 @@ describe("useAuthActions", () => {
     //   When registerWithEmail starts
     //   Then isLoading should be true until it resolves
     it("sets isLoading to false after completing", async () => {
-      vi.mocked(createUserWithEmailAndPassword).mockResolvedValue({} as never);
+      vi.mocked(createUserWithEmailAndPassword).mockResolvedValue({
+        user: { uid: "test-uid" },
+      } as never);
+      vi.mocked(updateProfile).mockResolvedValue(undefined);
       vi.mocked(apiClient).mockResolvedValue({});
 
       const { result } = renderAuthActions();

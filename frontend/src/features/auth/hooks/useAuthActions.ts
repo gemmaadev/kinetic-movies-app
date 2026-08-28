@@ -4,6 +4,7 @@ import {
   GoogleAuthProvider,
   signInWithEmailAndPassword,
   signInWithPopup,
+  updateProfile,
 } from "firebase/auth";
 import { useNavigate } from "react-router";
 import { firebaseAuth } from "@/shared/services/firebase";
@@ -53,7 +54,13 @@ export function useAuthActions() {
 
   function registerWithEmail(email: string, password: string, name: string) {
     return runAuthAction(async () => {
-      await createUserWithEmailAndPassword(firebaseAuth, email, password);
+      const credential = await createUserWithEmailAndPassword(
+        firebaseAuth,
+        email,
+        password,
+      );
+      await updateProfile(credential.user, { displayName: name });
+
       await apiClient("/api/auth/register", {
         method: "POST",
         body: JSON.stringify({ name, email }),

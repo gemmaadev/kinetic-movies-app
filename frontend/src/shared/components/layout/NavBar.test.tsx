@@ -1,10 +1,24 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router";
 import NavBar from "./NavBar";
+import { useAuth } from "@/features/auth/hooks/useAuth";
+
+vi.mock("@/features/auth/hooks/useAuth", () => ({
+  useAuth: vi.fn(),
+}));
 
 describe("NavBar", () => {
+  beforeEach(() => {
+    vi.mocked(useAuth).mockReturnValue({
+      user: null,
+      isAuthenticated: false,
+      loading: false,
+      getIdToken: vi.fn(),
+    });
+  });
+
   // Given a user is on any page with the NavBar rendered
   // When the page loads
   // Then all 5 navigation links are visible
