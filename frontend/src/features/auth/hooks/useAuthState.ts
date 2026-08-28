@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { onAuthStateChanged, type User } from "firebase/auth";
- import type { AuthContextValue } from "../context/AuthContext";
+import type { AuthContextValue } from "../context/AuthContext";
 import { firebaseAuth } from "@/shared/services/firebase";
- 
+
 export function useAuthState(): AuthContextValue {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
