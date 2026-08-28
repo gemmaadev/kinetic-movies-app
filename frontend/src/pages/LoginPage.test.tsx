@@ -19,12 +19,14 @@ function renderPage() {
 
 describe("LoginPage", () => {
   const loginWithEmail = vi.fn();
+  const loginWithGoogle = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
     vi.mocked(useAuthActions).mockReturnValue({
       registerWithEmail: vi.fn(),
       loginWithEmail,
+      loginWithGoogle,
       isLoading: false,
       error: null,
     });
@@ -88,6 +90,21 @@ describe("LoginPage", () => {
     );
   });
 
+  // Scenario: Click "Continuar con Google" triggers loginWithGoogle
+  //   Given the login page
+  //   When I click "Continuar con Google"
+  //   Then loginWithGoogle should be called
+  it("calls loginWithGoogle when clicking the Google button", async () => {
+    const user = userEvent.setup();
+    renderPage();
+
+    await user.click(
+      screen.getByRole("button", { name: /continuar con google/i }),
+    );
+
+    expect(loginWithGoogle).toHaveBeenCalled();
+  });
+
   // Scenario: Show a Firebase error returned by the hook
   //   Given useAuthActions returns an error
   //   When the page renders
@@ -96,6 +113,7 @@ describe("LoginPage", () => {
     vi.mocked(useAuthActions).mockReturnValue({
       registerWithEmail: vi.fn(),
       loginWithEmail,
+      loginWithGoogle,
       isLoading: false,
       error: "Email o contraseña incorrectos.",
     });

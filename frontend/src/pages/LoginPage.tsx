@@ -5,12 +5,14 @@ import { AuthPageLayout } from "@/features/auth/components/AuthPageLayout";
 import { PrimaryButton } from "@/shared/components/buttons/PrimaryButton";
 import { FormField } from "@/shared/components/FormField";
 import { PasswordInput } from "@/shared/components/PasswordInput";
+import { SocialAuthDivider } from "@/features/auth/components/SocialAuthDivider";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [validationError, setValidationError] = useState<string | null>(null);
-  const { loginWithEmail, isLoading, error } = useAuthActions();
+  const { loginWithEmail, loginWithGoogle, isLoading, error } =
+    useAuthActions();
 
   function validate(): boolean {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -69,6 +71,8 @@ export default function LoginPage() {
         <PrimaryButton type="submit">
           {isLoading ? "Entrando..." : "Iniciar sesión"}
         </PrimaryButton>
+
+        <SocialAuthDivider onGoogleClick={loginWithGoogle} />
 
         <p className="text-center text-sm text-secondary-text">
           ¿No tienes cuenta?{" "}

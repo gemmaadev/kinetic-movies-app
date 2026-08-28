@@ -1,8 +1,8 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import { onAuthStateChanged, type User } from "firebase/auth";
-import { AuthProvider } from "./AuthProvider";
-import { useAuth } from "../hooks/useAuth";
+import { AuthProvider } from "../context/AuthProvider";
+import { useAuth } from "./useAuth";
 
 vi.mock("firebase/auth", () => ({
   onAuthStateChanged: vi.fn(),
@@ -23,7 +23,11 @@ function TestComponent() {
   );
 }
 
-describe("AuthProvider", () => {
+describe("useAuthState", () => {
+  // Scenario: Initial state is loading with no user
+  //   Given the AuthProvider has just mounted
+  //   When Firebase hasn't confirmed the auth state yet
+  //   Then loading should be true and user should be null
   it("starts in a loading state with no user", () => {
     vi.mocked(onAuthStateChanged).mockImplementation(() => () => {});
 
@@ -37,6 +41,10 @@ describe("AuthProvider", () => {
     expect(screen.getByText(/user: none/i)).toBeInTheDocument();
   });
 
+  // Scenario: Firebase confirms a logged-in user
+  //   Given Firebase's onAuthStateChanged fires with a real user
+  //   When the callback runs
+  //   Then user should be set and loading should become false
   it("updates state when Firebase confirms an authenticated user", async () => {
     vi.mocked(onAuthStateChanged).mockImplementation((_auth, callback) => {
       const onNext = callback as (user: User | null) => void;
@@ -57,6 +65,10 @@ describe("AuthProvider", () => {
     expect(screen.getByText(/user: test-uid/i)).toBeInTheDocument();
   });
 
+  // Scenario: Firebase confirms no user is logged in
+  //   Given Firebase's onAuthStateChanged fires with null
+  //   When the callback runs
+  //   Then isAuthenticated should be false and loading should become false
   it("updates state when Firebase confirms no user is logged in", async () => {
     vi.mocked(onAuthStateChanged).mockImplementation((_auth, callback) => {
       const onNext = callback as (user: User | null) => void;

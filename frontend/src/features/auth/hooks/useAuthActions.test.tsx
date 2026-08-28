@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { renderHook, waitFor } from "@testing-library/react";
+import { renderHook, act } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import { useAuthActions } from "./useAuthActions";
 import { firebaseAuth } from "@/shared/services/firebase";
@@ -7,11 +7,14 @@ import { apiClient } from "@/shared/services/apiClient";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signInWithPopup,
 } from "firebase/auth";
 
 vi.mock("firebase/auth", () => ({
   createUserWithEmailAndPassword: vi.fn(),
   signInWithEmailAndPassword: vi.fn(),
+  signInWithPopup: vi.fn(),
+  GoogleAuthProvider: vi.fn(),
 }));
 
 vi.mock("@/shared/services/firebase", () => ({
@@ -39,7 +42,7 @@ function renderAuthActions() {
 
 describe("useAuthActions", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.resetAllMocks();
   });
 
   describe("registerWithEmail", () => {
@@ -53,20 +56,19 @@ describe("useAuthActions", () => {
 
       const { result } = renderAuthActions();
 
-      await result.current.registerWithEmail(
-        "test@test.com",
-        "Password1",
-        "Test User",
-      );
-
-      await waitFor(() => {
-        expect(createUserWithEmailAndPassword).toHaveBeenCalledWith(
-          firebaseAuth,
+      await act(async () => {
+        await result.current.registerWithEmail(
           "test@test.com",
           "Password1",
+          "Test User",
         );
       });
 
+      expect(createUserWithEmailAndPassword).toHaveBeenCalledWith(
+        firebaseAuth,
+        "test@test.com",
+        "Password1",
+      );
       expect(apiClient).toHaveBeenCalledWith("/api/auth/register", {
         method: "POST",
         body: JSON.stringify({ name: "Test User", email: "test@test.com" }),
@@ -85,17 +87,15 @@ describe("useAuthActions", () => {
 
       const { result } = renderAuthActions();
 
-      await result.current.registerWithEmail(
-        "test@test.com",
-        "Password1",
-        "Test User",
-      );
-
-      await waitFor(() => {
-        expect(result.current.error).toBe(
-          "Ya existe una cuenta con este email.",
+      await act(async () => {
+        await result.current.registerWithEmail(
+          "test@test.com",
+          "Password1",
+          "Test User",
         );
       });
+
+      expect(result.current.error).toBe("Ya existe una cuenta con este email.");
       expect(mockNavigate).not.toHaveBeenCalled();
     });
 
@@ -109,15 +109,15 @@ describe("useAuthActions", () => {
 
       const { result } = renderAuthActions();
 
-      await result.current.registerWithEmail(
-        "test@test.com",
-        "Password1",
-        "Test User",
-      );
-
-      await waitFor(() => {
-        expect(result.current.isLoading).toBe(false);
+      await act(async () => {
+        await result.current.registerWithEmail(
+          "test@test.com",
+          "Password1",
+          "Test User",
+        );
       });
+
+      expect(result.current.isLoading).toBe(false);
     });
   });
 
@@ -132,16 +132,15 @@ describe("useAuthActions", () => {
 
       const { result } = renderAuthActions();
 
-      await result.current.loginWithEmail("test@test.com", "Password1");
-
-      await waitFor(() => {
-        expect(signInWithEmailAndPassword).toHaveBeenCalledWith(
-          firebaseAuth,
-          "test@test.com",
-          "Password1",
-        );
+      await act(async () => {
+        await result.current.loginWithEmail("test@test.com", "Password1");
       });
 
+      expect(signInWithEmailAndPassword).toHaveBeenCalledWith(
+        firebaseAuth,
+        "test@test.com",
+        "Password1",
+      );
       expect(apiClient).toHaveBeenCalledWith("/api/auth/login", {
         method: "POST",
         body: JSON.stringify({}),
@@ -160,11 +159,11 @@ describe("useAuthActions", () => {
 
       const { result } = renderAuthActions();
 
-      await result.current.loginWithEmail("test@test.com", "wrongpass");
-
-      await waitFor(() => {
-        expect(result.current.error).toBe("Email o contraseña incorrectos.");
+      await act(async () => {
+        await result.current.loginWithEmail("test@test.com", "wrongpass");
       });
+
+      expect(result.current.error).toBe("Email o contraseña incorrectos.");
       expect(mockNavigate).not.toHaveBeenCalled();
     });
 
@@ -179,13 +178,93 @@ describe("useAuthActions", () => {
 
       const { result } = renderAuthActions();
 
-      await result.current.loginWithEmail("test@test.com", "wrongpass");
-
-      await waitFor(() => {
-        expect(result.current.error).toBe(
-          "Demasiados intentos. Inténtalo más tarde.",
-        );
+      await act(async () => {
+        await result.current.loginWithEmail("test@test.com", "wrongpass");
       });
+
+      expect(result.current.error).toBe(
+        "Demasiados intentos. Inténtalo más tarde.",
+      );
+    });
+  });
+
+  describe("loginWithGoogle", () => {
+    const mockGoogleCredential = {
+      user: {
+        displayName: "Ada Lovelace",
+        email: "ada@example.com",
+        photoURL: "https://example.com/ada.jpg",
+      },
+    };
+
+    // Scenario: Successful Google sign-in
+    //   Given the Google popup resolves with a valid credential
+    //   When loginWithGoogle is called
+    //   Then the backend is synced via /api/auth/register, and the user is redirected
+    it("syncs the user via /api/auth/register and navigates on success", async () => {
+      vi.mocked(signInWithPopup).mockResolvedValue(
+        mockGoogleCredential as never,
+      );
+      vi.mocked(apiClient).mockResolvedValue({});
+
+      const { result } = renderAuthActions();
+
+      await act(async () => {
+        await result.current.loginWithGoogle();
+      });
+
+      expect(signInWithPopup).toHaveBeenCalledTimes(1);
+      expect(apiClient).toHaveBeenCalledWith("/api/auth/register", {
+        method: "POST",
+        body: JSON.stringify({
+          name: "Ada Lovelace",
+          email: "ada@example.com",
+          avatarUrl: "https://example.com/ada.jpg",
+        }),
+      });
+      expect(mockNavigate).toHaveBeenCalledWith("/");
+    });
+
+    // Scenario: User closes the popup or a generic error occurs
+    //   Given the Google popup fails without a specific known code
+    //   When loginWithGoogle is called
+    //   Then a generic error message is set, and no backend sync happens
+    it("sets a generic error message when the popup fails and does not call the backend", async () => {
+      vi.mocked(signInWithPopup).mockRejectedValue({
+        code: "auth/popup-closed-by-user",
+      });
+
+      const { result } = renderAuthActions();
+
+      await act(async () => {
+        await result.current.loginWithGoogle();
+      });
+
+      expect(apiClient).not.toHaveBeenCalled();
+      expect(mockNavigate).not.toHaveBeenCalled();
+      expect(result.current.error).toBe(
+        "Ha ocurrido un error. Inténtalo de nuevo.",
+      );
+    });
+
+    // Scenario: Account already exists with a different provider
+    //   Given the email is already registered with email/password
+    //   When loginWithGoogle is called
+    //   Then a specific conflict error message is set
+    it("shows a specific message when the account exists with a different provider", async () => {
+      vi.mocked(signInWithPopup).mockRejectedValue({
+        code: "auth/account-exists-with-different-credential",
+      });
+
+      const { result } = renderAuthActions();
+
+      await act(async () => {
+        await result.current.loginWithGoogle();
+      });
+
+      expect(result.current.error).toBe(
+        "Ya existe una cuenta con este email usando otro método de acceso. Prueba a iniciar sesión con tu contraseña.",
+      );
     });
   });
 });
