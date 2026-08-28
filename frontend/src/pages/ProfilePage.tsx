@@ -9,6 +9,9 @@ import {
   LogOut,
   ChevronDown,
   ChevronUp,
+  Clapperboard,
+  Star,
+  TrendingUp,
 } from "lucide-react";
 import { useProfile } from "@/features/auth/hooks/useProfile";
 import { useLogout } from "@/features/auth/hooks/useLogout";
@@ -20,6 +23,13 @@ const sidebarLinks = [
   { icon: List, label: "Listas", active: false, to: null },
   { icon: Clock, label: "Actividad", active: false, to: null },
   { icon: Settings, label: "Ajustes", active: false, to: null },
+];
+
+const stats = [
+  { icon: Clapperboard, value: "—", label: "Películas vistas" },
+  { icon: Heart, value: "—", label: "Favoritas" },
+  { icon: Star, value: "—", label: "Puntuadas" },
+  { icon: TrendingUp, value: "—", label: "Puntuación media" },
 ];
 
 export default function ProfilePage() {
@@ -87,31 +97,58 @@ export default function ProfilePage() {
         </ul>
       </aside>
 
-      <main className="p-10 flex flex-col gap-5">
-        <h1 className="text-4xl font-bold">Resumen</h1>
-        <div className="flex max-w-2xl flex-row gap-3">
-          {profile?.avatarUrl ? (
-            <img
-              src={profile.avatarUrl}
-              alt={profile.name}
-              className="h-24 w-24 rounded-full object-cover"
-            />
-          ) : (
-            <div className="flex h-24 w-24 items-center justify-center rounded-full bg-brand-blue text-2xl font-bold">
-              {profile?.name?.[0]?.toUpperCase() ?? "U"}
+      <main className="flex flex-col gap-10 p-10">
+        <div className="flex flex-col gap-10">
+          <h1 className="text-4xl font-bold">Resumen</h1>
+          <div className="flex max-w-2xl flex-row gap-3">
+            {profile?.avatarUrl ? (
+              <img
+                src={profile.avatarUrl}
+                alt={profile.name}
+                className="h-24 w-24 rounded-full object-cover"
+              />
+            ) : (
+              <div className="flex h-24 w-24 items-center justify-center rounded-full bg-brand-blue text-2xl font-bold">
+                {profile?.name?.[0]?.toUpperCase() ?? "U"}
+              </div>
+            )}
+            <div className="flex flex-col gap-2">
+              <h2 className="text-2xl font-black">{profile?.name}</h2>
+              <span>{profile?.email}</span>
+              <span className="w-fit rounded-full border border-brand-blue px-3 py-1 text-sm text-brand-blue">
+                Miembro desde{" "}
+                {profile?.createdAt &&
+                  new Date(profile.createdAt).toLocaleDateString("es-ES", {
+                    year: "numeric",
+                  })}
+              </span>
             </div>
-          )}
-          <div className="flex flex-col gap-2">
-            <h2 className="font-black text-2xl">{profile?.name}</h2>
-            <span>{profile?.email}</span>
-            <span className="w-fit rounded-full border border-brand-blue px-3 py-1 text-sm text-brand-blue">
-              Miembro desde{" "}
-              {profile?.createdAt &&
-                new Date(profile.createdAt).toLocaleDateString("es-ES", {
-                  year: "numeric",
-                })}
-            </span>
           </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+          {stats.map((stat) => {
+            const Icon = stat.icon;
+            return (
+              <div
+                key={stat.label}
+                className="flex flex-col items-center gap-2 rounded-lg border border-bg-surface p-6 text-center"
+              >
+                <Icon size={24} className="text-brand-teal" />
+                <span className="text-2xl font-bold">{stat.value}</span>
+                <span className="text-sm text-secondary-text">
+                  {stat.label}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="flex flex-col gap-3">
+          <h2 className="text-2xl font-bold">Actividad reciente</h2>
+          <p className="text-secondary-text">
+            Aquí verás tu actividad reciente próximamente.
+          </p>
         </div>
       </main>
 
