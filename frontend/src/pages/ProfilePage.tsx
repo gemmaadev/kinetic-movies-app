@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router";
 import {
   Home,
   Heart,
@@ -10,19 +11,22 @@ import {
   ChevronUp,
 } from "lucide-react";
 import { useProfile } from "@/features/auth/hooks/useProfile";
+import { useLogout } from "@/features/auth/hooks/useLogout";
+import { LogoutConfirmModal } from "@/features/auth/components/LogoutConfirmModal";
 
 const sidebarLinks = [
-  { icon: Home, label: "Resumen", active: true },
-  { icon: Heart, label: "Favoritas", active: false },
-  { icon: List, label: "Listas", active: false },
-  { icon: Clock, label: "Actividad", active: false },
-  { icon: Settings, label: "Ajustes", active: false },
-  { icon: LogOut, label: "Cerrar sesión", active: false },
+  { icon: Home, label: "Resumen", active: true, to: "/perfil" },
+  { icon: Heart, label: "Favoritas", active: false, to: "/favoritos" },
+  { icon: List, label: "Listas", active: false, to: null },
+  { icon: Clock, label: "Actividad", active: false, to: null },
+  { icon: Settings, label: "Ajustes", active: false, to: null },
 ];
 
 export default function ProfilePage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const { profile, isLoading, error } = useProfile();
+  const logout = useLogout();
 
   if (isLoading) return <p className="p-6">Cargando...</p>;
   if (error) return <p className="p-6 text-error">Error: {error}</p>;
@@ -45,20 +49,41 @@ export default function ProfilePage() {
         >
           {sidebarLinks.map((link) => {
             const Icon = link.icon;
+            const itemClassName = `flex items-center gap-3 rounded-lg px-4 py-3 ${
+              link.active ? "bg-brand-blue font-bold" : "hover:bg-bg-surface"
+            }`;
+
+            if (link.to) {
+              return (
+                <li key={link.label}>
+                  <Link to={link.to} className={itemClassName}>
+                    <Icon size={20} />
+                    <span>{link.label}</span>
+                  </Link>
+                </li>
+              );
+            }
+
             return (
               <li
                 key={link.label}
-                className={`flex items-center gap-3 rounded-lg px-4 py-3 ${
-                  link.active
-                    ? "bg-brand-blue font-bold"
-                    : "hover:bg-bg-surface"
-                }`}
+                className={`${itemClassName} cursor-not-allowed opacity-50`}
               >
                 <Icon size={20} />
                 <span>{link.label}</span>
               </li>
             );
           })}
+
+          <li>
+            <button
+              onClick={() => setShowLogoutConfirm(true)}
+              className="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left hover:bg-bg-surface"
+            >
+              <LogOut size={20} />
+              <span>Cerrar sesión</span>
+            </button>
+          </li>
         </ul>
       </aside>
 
@@ -89,6 +114,12 @@ export default function ProfilePage() {
           </div>
         </div>
       </main>
+
+      <LogoutConfirmModal
+        isOpen={showLogoutConfirm}
+        onCancel={() => setShowLogoutConfirm(false)}
+        onConfirm={logout}
+      />
     </div>
   );
 }
