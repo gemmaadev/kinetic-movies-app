@@ -5,12 +5,15 @@ import { RouterProvider } from "react-router/dom";
 import { router } from "./app/router";
 import ErrorBoundary from "./app/providers/ErrorBoundary";
 import { AuthProvider } from "@/features/auth/context/AuthProvider";
+import { FavoritesProvider } from "./features/favorites/context/FavoritesProvider";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ErrorBoundary>
       <AuthProvider>
-        <RouterProvider router={router} />
+        <FavoritesProvider>
+          <RouterProvider router={router} />
+        </FavoritesProvider>
       </AuthProvider>
     </ErrorBoundary>
   </StrictMode>,
