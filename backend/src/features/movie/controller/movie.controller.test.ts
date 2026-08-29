@@ -42,6 +42,10 @@ describe("movie.controller", () => {
     vi.clearAllMocks();
   });
 
+  // Scenario: Fetch popular movies successfully
+  //   Given TMDB returns a list of popular movies
+  //   When getPopular is called
+  //   Then it should return the mapped movies
   it("getPopular returns mapped movies from /movie/popular", async () => {
     vi.mocked(tmdbFetch).mockResolvedValue({ results: [mockRawMovie] });
 
@@ -54,6 +58,10 @@ describe("movie.controller", () => {
     expect(res.json).toHaveBeenCalledWith({ movies: [mockMappedMovie] });
   });
 
+  // Scenario: TMDB fails while fetching popular movies
+  //   Given TMDB is unreachable
+  //   When getPopular is called
+  //   Then it should return 502
   it("getPopular returns 502 when TMDB fails", async () => {
     vi.mocked(tmdbFetch).mockRejectedValue(new Error("TMDB is down"));
 
@@ -65,6 +73,10 @@ describe("movie.controller", () => {
     expect(res.status).toHaveBeenCalledWith(502);
   });
 
+  // Scenario: Fetch now-playing movies for Spain
+  //   Given TMDB returns now-playing movies
+  //   When getNowPlaying is called
+  //   Then it should request the ES region and return the mapped movies
   it("getNowPlaying returns mapped movies from /movie/now_playing", async () => {
     vi.mocked(tmdbFetch).mockResolvedValue({ results: [mockRawMovie] });
 
@@ -79,6 +91,10 @@ describe("movie.controller", () => {
     expect(res.json).toHaveBeenCalledWith({ movies: [mockMappedMovie] });
   });
 
+  // Scenario: Fetch trending movies of the week
+  //   Given TMDB returns trending movies
+  //   When getTrending is called
+  //   Then it should return the mapped movies
   it("getTrending returns mapped movies from /trending/movie/week", async () => {
     vi.mocked(tmdbFetch).mockResolvedValue({ results: [mockRawMovie] });
 
@@ -91,6 +107,10 @@ describe("movie.controller", () => {
     expect(res.json).toHaveBeenCalledWith({ movies: [mockMappedMovie] });
   });
 
+  // Scenario: Fetch top-rated movies with a minimum vote count
+  //   Given TMDB returns top-rated movies
+  //   When getTopRated is called
+  //   Then it should filter by vote_count and return the mapped movies
   it("getTopRated returns mapped movies from /movie/top_rated", async () => {
     vi.mocked(tmdbFetch).mockResolvedValue({ results: [mockRawMovie] });
 
@@ -106,6 +126,10 @@ describe("movie.controller", () => {
     expect(res.json).toHaveBeenCalledWith({ movies: [mockMappedMovie] });
   });
 
+  // Scenario: Fetch upcoming movies for Spain
+  //   Given TMDB returns upcoming movies
+  //   When getUpcoming is called
+  //   Then it should request the ES region and return the mapped movies
   it("getUpcoming returns mapped movies from /movie/upcoming", async () => {
     vi.mocked(tmdbFetch).mockResolvedValue({ results: [mockRawMovie] });
 
@@ -120,6 +144,10 @@ describe("movie.controller", () => {
     expect(res.json).toHaveBeenCalledWith({ movies: [mockMappedMovie] });
   });
 
+  // Scenario: Fetch full movie detail
+  //   Given TMDB returns a movie with credits, videos, and watch providers
+  //   When getMovieDetail is called
+  //   Then it should return cast, director, writers, trailer, and providers correctly mapped
   it("getMovieDetail returns full movie detail with cast, crew, trailer, and watch providers", async () => {
     vi.mocked(tmdbFetch).mockResolvedValue({
       ...mockRawMovie,
@@ -196,6 +224,10 @@ describe("movie.controller", () => {
     );
   });
 
+  // Scenario: Movie detail with missing crew/video/provider data
+  //   Given TMDB returns a movie without director, writers, trailer, or providers
+  //   When getMovieDetail is called
+  //   Then those fields should default to null/empty arrays instead of failing
   it("getMovieDetail returns null director, empty writers, and empty watchProviders when data is missing them", async () => {
     vi.mocked(tmdbFetch).mockResolvedValue({
       ...mockRawMovie,
@@ -224,6 +256,10 @@ describe("movie.controller", () => {
     );
   });
 
+  // Scenario: TMDB fails while fetching movie detail
+  //   Given TMDB is unreachable
+  //   When getMovieDetail is called
+  //   Then it should return 502
   it("getMovieDetail returns 502 when TMDB fails", async () => {
     vi.mocked(tmdbFetch).mockRejectedValue(new Error("TMDB is down"));
 

@@ -8,8 +8,17 @@ import {
   getMovieDetail,
 } from "./controller/movie.controller.js";
 import { verifyFirebaseToken } from "../../middleware/verifyFirebaseToken.js";
+import {
+  getFavoriteMovies,
+  toggleFavorite,
+  rateMovie,
+} from "./controller/movie.favorites.controller.js";
 
 const router = Router();
+
+router.get("/favorites", verifyFirebaseToken, getFavoriteMovies);
+router.post("/favorites", verifyFirebaseToken, toggleFavorite);
+router.patch("/rating", verifyFirebaseToken, rateMovie);
 
 router.get("/", verifyFirebaseToken, getPopular);
 router.get("/now-playing", verifyFirebaseToken, getNowPlaying);
