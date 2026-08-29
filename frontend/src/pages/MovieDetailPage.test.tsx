@@ -3,9 +3,14 @@ import { render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router";
 import MovieDetailPage from "./MovieDetailPage";
 import { useMovieDetail } from "@/features/movie/hooks/useMovieDetail";
+import { useFavoritesContext } from "@/features/favorites/hooks/useFavoritesContext";
 
 vi.mock("@/features/movie/hooks/useMovieDetail", () => ({
   useMovieDetail: vi.fn(),
+}));
+
+vi.mock("@/features/favorites/hooks/useFavoritesContext", () => ({
+  useFavoritesContext: vi.fn(),
 }));
 
 function renderWithRouter() {
@@ -35,11 +40,16 @@ const mockMovie = {
   trailerUrl: null,
   watchProviders: [],
   watchProvidersLink: null,
+  isFavourite: false,
 };
 
 describe("MovieDetailPage", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.mocked(useFavoritesContext).mockReturnValue({
+      favoriteIds: new Set(),
+      toggleFavorite: vi.fn(),
+    });
   });
 
   // Scenario: Show loading indicator while data is being fetched
