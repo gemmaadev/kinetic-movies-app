@@ -11,7 +11,7 @@ export function MovieCard({ movie }: MovieCardProps) {
   return (
     <div className="relative w-40 shrink-0 overflow-hidden rounded-lg bg-bg-surface transition-transform hover:scale-[1.02]">
       <div className="absolute right-2 top-2 z-10">
-        <FavoriteButton movieId={movie.id} initialIsFavorite={false} />
+        <FavoriteButton movieId={movie.id}/>
       </div>
 
       <Link to={`/pelicula/${movie.id}`}>

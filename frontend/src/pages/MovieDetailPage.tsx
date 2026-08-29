@@ -70,11 +70,7 @@ export default function MovieDetailPage() {
             <p className="max-w-xl text-sm md:text-base">{movie.overview}</p>
 
             <div className="flex flex-wrap gap-3">
-              <FavoriteButton
-                movieId={movie.id}
-                initialIsFavorite={false}
-                variant="button"
-              />
+              <FavoriteButton movieId={movie.id} variant="button" />
               {movie.trailerUrl && (
                 <a
                   href={movie.trailerUrl}
