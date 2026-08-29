@@ -28,7 +28,7 @@ export interface DirectorInfo {
   id: number;
   name: string;
 }
-export interface MovieDetail extends Movie {
+export interface MovieDetailFromTmdb extends Movie {
   overview: string;
   backdropUrl: string | null;
   runtime: number | null;
@@ -40,6 +40,10 @@ export interface MovieDetail extends Movie {
   trailerUrl: string | null;
   watchProviders: WatchProvider[];
   watchProvidersLink: string | null;
+}
+
+export interface MovieDetail extends MovieDetailFromTmdb {
+  isFavourite: boolean;
 }
 
 export interface TmdbMovieRaw {
