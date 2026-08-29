@@ -6,11 +6,13 @@ import {
   getTopRated,
   getUpcoming,
   getMovieDetail,
+} from "./controller/movie.controller.js";
+import { verifyFirebaseToken } from "../../middleware/verifyFirebaseToken.js";
+import {
   getFavoriteMovies,
   toggleFavorite,
   rateMovie,
-} from "./controller/movie.controller.js";
-import { verifyFirebaseToken } from "../../middleware/verifyFirebaseToken.js";
+} from "./controller/movie.favorites.controller.js";
 
 const router = Router();
 
