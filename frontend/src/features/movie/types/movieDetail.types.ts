@@ -38,4 +38,5 @@ export interface MovieDetail {
   trailerUrl: string | null;
   watchProviders: WatchProvider[];
   watchProvidersLink: string | null;
+  isFavourite: boolean;
 }
