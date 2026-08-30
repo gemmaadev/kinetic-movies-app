@@ -16,6 +16,7 @@ import {
 import { useProfile } from "@/features/auth/hooks/useProfile";
 import { useLogout } from "@/features/auth/hooks/useLogout";
 import { LogoutConfirmModal } from "@/features/auth/components/LogoutConfirmModal";
+import { useFavoritesContext } from "@/features/favorites/hooks/useFavoritesContext";
 
 const sidebarLinks = [
   { icon: Home, label: "Resumen", active: true, to: "/perfil" },
@@ -25,18 +26,19 @@ const sidebarLinks = [
   { icon: Settings, label: "Ajustes", active: false, to: null },
 ];
 
-const stats = [
-  { icon: Clapperboard, value: "—", label: "Películas vistas" },
-  { icon: Heart, value: "—", label: "Favoritas" },
-  { icon: Star, value: "—", label: "Puntuadas" },
-  { icon: TrendingUp, value: "—", label: "Puntuación media" },
-];
-
 export default function ProfilePage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const { profile, isLoading, error } = useProfile();
   const logout = useLogout();
+  const { favoriteIds } = useFavoritesContext();
+
+  const stats = [
+    { icon: Clapperboard, value: "—", label: "Películas vistas" },
+    { icon: Heart, value: String(favoriteIds.size), label: "Favoritas" },
+    { icon: Star, value: "—", label: "Puntuadas" },
+    { icon: TrendingUp, value: "—", label: "Puntuación media" },
+  ];
 
   if (isLoading) return <p className="p-6">Cargando...</p>;
   if (error) return <p className="p-6 text-error">Error: {error}</p>;
