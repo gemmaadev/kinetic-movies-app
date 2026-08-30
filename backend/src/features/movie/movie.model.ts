@@ -58,3 +58,12 @@ export async function updateMovieRating(data: {
 export async function getFavoritesByUser(userId: string): Promise<UserMovie[]> {
   return prisma.userMovie.findMany({ where: { userId, isFavourite: true } });
 }
+
+export async function getUserMovie(
+  userId: string,
+  movieId: number,
+): Promise<UserMovie | null> {
+  return prisma.userMovie.findUnique({
+    where: { userId_movieId: { userId, movieId } },
+  });
+}

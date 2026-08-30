@@ -1,8 +1,8 @@
 import { PersonList } from "@/features/explore/components/PersonList";
+import { FavoriteButton } from "@/features/favorites/components/FavoriteButton";
 import { useMovieDetail } from "@/features/movie/hooks/useMovieDetail";
 import { BackButton } from "@/shared/components/BackButton";
 import { HeroSection } from "@/shared/components/HeroSection";
-import { PrimaryButton } from "@/shared/components/buttons/PrimaryButton";
 import { SecondaryButton } from "@/shared/components/buttons/SecondaryButton";
 import { Star } from "lucide-react";
 import { Link, useParams } from "react-router";
@@ -70,7 +70,7 @@ export default function MovieDetailPage() {
             <p className="max-w-xl text-sm md:text-base">{movie.overview}</p>
 
             <div className="flex flex-wrap gap-3">
-              <PrimaryButton>Añadir a favoritas</PrimaryButton>
+              <FavoriteButton movieId={movie.id} variant="button" />
               {movie.trailerUrl && (
                 <a
                   href={movie.trailerUrl}

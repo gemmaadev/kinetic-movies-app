@@ -1,8 +1,13 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import { MovieCard } from "./MovieCard";
 import type { Movie } from "../types/movie.types";
+import { useFavoritesContext } from "@/features/favorites/hooks/useFavoritesContext";
+
+vi.mock("@/features/favorites/hooks/useFavoritesContext", () => ({
+  useFavoritesContext: vi.fn(),
+}));
 
 const mockMovie: Movie = {
   id: 2,
@@ -21,6 +26,13 @@ function renderMovieCard(movie: Movie) {
 }
 
 describe("MovieCard", () => {
+  beforeEach(() => {
+    vi.mocked(useFavoritesContext).mockReturnValue({
+      favoriteIds: new Set(),
+      toggleFavorite: vi.fn(),
+    });
+  });
+
   it("renders the movie title, rating and release year", () => {
     renderMovieCard(mockMovie);
 

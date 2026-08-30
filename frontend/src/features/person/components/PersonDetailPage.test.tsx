@@ -3,10 +3,15 @@ import { render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router";
 import { PersonDetailPage } from "./PersonDetailPage";
 import { usePersonDetail } from "@/features/person/hooks/usePersonDetail";
+import { useFavoritesContext } from "@/features/favorites/hooks/useFavoritesContext";
 import type { MovieCredit, Person } from "@/features/person/types/person.types";
 
 vi.mock("@/features/person/hooks/usePersonDetail", () => ({
   usePersonDetail: vi.fn(),
+}));
+
+vi.mock("@/features/favorites/hooks/useFavoritesContext", () => ({
+  useFavoritesContext: vi.fn(),
 }));
 
 interface RenderProps {
@@ -54,6 +59,10 @@ const mockPerson: Person = {
 describe("PersonDetailPage", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.mocked(useFavoritesContext).mockReturnValue({
+      favoriteIds: new Set(),
+      toggleFavorite: vi.fn(),
+    });
   });
 
   // Scenario: Show loading indicator while data is being fetched

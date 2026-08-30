@@ -4,8 +4,10 @@ import type {
   TmdbMovieRaw,
   TmdbMovieDetailRaw,
   Movie,
-  MovieDetail,
+  MovieDetailFromTmdb,
 } from "../movie.types.js";
+import type { AuthenticatedRequest } from "../../../middleware/verifyFirebaseToken.js";
+import { getUserMovie } from "../movie.model.js";
 
 function mapMovie(movie: TmdbMovieRaw): Movie {
   return {
@@ -21,7 +23,7 @@ function mapMovie(movie: TmdbMovieRaw): Movie {
   };
 }
 
-function mapMovieDetail(movie: TmdbMovieDetailRaw): MovieDetail {
+function mapMovieDetail(movie: TmdbMovieDetailRaw): MovieDetailFromTmdb {
   const trailer = movie.videos.results.find(
     (video) => video.site === "YouTube" && video.type === "Trailer",
   );
@@ -123,15 +125,23 @@ export async function getUpcoming(req: Request, res: Response) {
   }
 }
 
-export async function getMovieDetail(req: Request, res: Response) {
+export async function getMovieDetail(req: AuthenticatedRequest, res: Response) {
   const { id } = req.params;
+  const userId = req.userId;
 
   try {
     const movie = await tmdbFetch(`/movie/${id}`, {
       append_to_response: "credits,videos,watch/providers",
       language: "es-ES",
     });
-    return res.json(mapMovieDetail(movie));
+
+    let isFavourite = false;
+    if (userId) {
+      const userMovie = await getUserMovie(userId, Number(id));
+      isFavourite = userMovie?.isFavourite ?? false;
+    }
+
+    return res.json({ ...mapMovieDetail(movie), isFavourite });
   } catch (error) {
     console.error(`Failed to fetch movie detail for id ${id}:`, error);
     return res.status(502).json({ error: "Failed to fetch data from TMDB" });

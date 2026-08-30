@@ -1,14 +1,29 @@
-import { it, expect, vi } from "vitest";
+import { it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router";
 import DirectorDetailPage from "./DirectorDetailPage";
 import { usePersonDetail } from "@/features/person/hooks/usePersonDetail";
+import { useFavoritesContext } from "@/features/favorites/hooks/useFavoritesContext";
 
 vi.mock("@/features/person/hooks/usePersonDetail", () => ({
   usePersonDetail: vi.fn(),
 }));
 
-// Scenario: DirectorDetailPage uses the director's filmography (not acting credits)
+vi.mock("@/features/favorites/hooks/useFavoritesContext", () => ({
+  useFavoritesContext: vi.fn(),
+}));
+
+beforeEach(() => {
+  vi.mocked(useFavoritesContext).mockReturnValue({
+    favoriteIds: new Set(),
+    toggleFavorite: vi.fn(),
+  });
+});
+
+// Scenario: Director's page shows only their directing credits
+//   Given a person with both acting and directing credits
+//   When I view their director detail page
+//   Then only their directing credits should be shown, not their acting credits
 it("renders directing filmography, not acting credits", () => {
   vi.mocked(usePersonDetail).mockReturnValue({
     person: {
