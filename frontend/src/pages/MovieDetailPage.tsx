@@ -1,19 +1,47 @@
 import { PersonList } from "@/features/explore/components/PersonList";
 import { FavoriteButton } from "@/features/favorites/components/FavoriteButton";
+import { RatingInput } from "@/features/favorites/components/RatingInput";
+import { useRating } from "@/features/favorites/hooks/useRating";
 import { useMovieDetail } from "@/features/movie/hooks/useMovieDetail";
+import type { MovieDetail } from "@/features/movie/types/movieDetail.types";
 import { BackButton } from "@/shared/components/BackButton";
 import { HeroSection } from "@/shared/components/HeroSection";
 import { SecondaryButton } from "@/shared/components/buttons/SecondaryButton";
 import { Star } from "lucide-react";
+import { useState } from "react";
 import { Link, useParams } from "react-router";
 
 export default function MovieDetailPage() {
   const { id } = useParams();
   const { movie, isLoading, error } = useMovieDetail(id);
+  const { rateMovie } = useRating();
 
   if (isLoading) return <p className="p-6">Cargando...</p>;
   if (error) return <p className="p-6 text-error">Error: {error}</p>;
   if (!movie) return <p className="p-6">Película no encontrada.</p>;
+
+  return <MovieDetailContent movie={movie} rateMovie={rateMovie} />;
+}
+
+function MovieDetailContent({
+  movie,
+  rateMovie,
+}: {
+  movie: MovieDetail;
+  rateMovie: (movieId: number, rating: number) => Promise<void>;
+}) {
+  const [currentRating, setCurrentRating] = useState(movie.userRating);
+
+  async function handleRatingChange(rating: number) {
+    const previousRating = currentRating;
+    setCurrentRating(rating);
+
+    try {
+      await rateMovie(movie.id, rating);
+    } catch {
+      setCurrentRating(previousRating);
+    }
+  }
 
   return (
     <article>
@@ -129,20 +157,7 @@ export default function MovieDetailPage() {
         <div className="flex flex-col gap-5">
           <section className="flex flex-col gap-4 md:p-6">
             <h2 className="text-2xl font-bold">Tu valoración</h2>
-            <div
-              className="flex items-center gap-3"
-              role="img"
-              aria-label="Sin valorar todavía"
-            >
-              {Array.from({ length: 5 }).map((_, index) => (
-                <Star
-                  key={index}
-                  size={30}
-                  className="text-secondary-text"
-                  aria-hidden="true"
-                />
-              ))}
-            </div>
+            <RatingInput value={currentRating} onChange={handleRatingChange} />
           </section>
 
           {movie.watchProviders.length > 0 && (
