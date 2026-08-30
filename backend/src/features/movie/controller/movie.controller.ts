@@ -136,12 +136,14 @@ export async function getMovieDetail(req: AuthenticatedRequest, res: Response) {
     });
 
     let isFavourite = false;
+    let userRating: number | null = null;
     if (userId) {
       const userMovie = await getUserMovie(userId, Number(id));
       isFavourite = userMovie?.isFavourite ?? false;
+      userRating = userMovie?.userRating ?? null;
     }
 
-    return res.json({ ...mapMovieDetail(movie), isFavourite });
+    return res.json({ ...mapMovieDetail(movie), isFavourite, userRating });
   } catch (error) {
     console.error(`Failed to fetch movie detail for id ${id}:`, error);
     return res.status(502).json({ error: "Failed to fetch data from TMDB" });
