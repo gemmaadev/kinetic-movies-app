@@ -19,6 +19,10 @@ async function updateOrInsertMovie(data: {
 export async function updateMovieFavorite(data: {
   userId: string;
   movieId: number;
+  title?: string;
+  posterUrl?: string | null;
+  voteAverage?: number;
+  releaseYear?: number | null;
 }): Promise<UserMovie> {
   const existing = await prisma.userMovie.findUnique({
     where: { userId_movieId: { userId: data.userId, movieId: data.movieId } },
@@ -30,7 +34,15 @@ export async function updateMovieFavorite(data: {
     userId: data.userId,
     movieId: data.movieId,
     update: { isFavourite: newFavoriteStatus },
-    create: { userId: data.userId, movieId: data.movieId, isFavourite: true },
+    create: {
+      userId: data.userId,
+      movieId: data.movieId,
+      isFavourite: true,
+      title: data.title,
+      posterUrl: data.posterUrl,
+      voteAverage: data.voteAverage,
+      releaseYear: data.releaseYear,
+    },
   });
 }
 

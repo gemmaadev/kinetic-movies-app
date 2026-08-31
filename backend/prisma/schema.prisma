@@ -28,6 +28,10 @@ model UserMovie {
   userRating  Int?
   isFavourite Boolean  @default(false)
   addedAt     DateTime @default(now())
+  title       String?
+  posterUrl   String?
+  voteAverage Float?
+  releaseYear Int?
 
   @@unique([userId, movieId])
 }

@@ -18,7 +18,18 @@ export async function getFavoriteMovies(
 
   try {
     const favorites = await getFavoritesByUser(userId);
-    return res.json({ favorites });
+
+    const movies = favorites.map((favorite) => ({
+      id: favorite.movieId,
+      title: favorite.title,
+      posterUrl: favorite.posterUrl,
+      voteAverage: favorite.voteAverage,
+      releaseYear: favorite.releaseYear,
+      userRating: favorite.userRating,
+      addedAt: favorite.addedAt,
+    }));
+
+    return res.json({ favorites: movies });
   } catch (error) {
     console.error("Failed to fetch favorite movies:", error);
     return res.status(500).json({ error: "Failed to fetch favorite movies" });
@@ -27,7 +38,7 @@ export async function getFavoriteMovies(
 
 export async function toggleFavorite(req: AuthenticatedRequest, res: Response) {
   const userId = req.userId;
-  const { movieId } = req.body;
+  const { movieId, title, posterUrl, voteAverage, releaseYear } = req.body;
 
   if (!userId) {
     return res.status(401).json({ error: "No user id in request" });
@@ -38,7 +49,14 @@ export async function toggleFavorite(req: AuthenticatedRequest, res: Response) {
   }
 
   try {
-    const result = await updateMovieFavorite({ userId, movieId });
+    const result = await updateMovieFavorite({
+      userId,
+      movieId,
+      title,
+      posterUrl,
+      voteAverage,
+      releaseYear,
+    });
     return res.json(result);
   } catch (error) {
     console.error("Failed to toggle favorite:", error);
