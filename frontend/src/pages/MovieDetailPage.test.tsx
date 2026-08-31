@@ -4,6 +4,7 @@ import { MemoryRouter, Route, Routes } from "react-router";
 import MovieDetailPage from "./MovieDetailPage";
 import { useMovieDetail } from "@/features/movie/hooks/useMovieDetail";
 import { useFavoritesContext } from "@/features/favorites/hooks/useFavoritesContext";
+import { useRating } from "@/features/favorites/hooks/useRating";
 
 vi.mock("@/features/movie/hooks/useMovieDetail", () => ({
   useMovieDetail: vi.fn(),
@@ -11,6 +12,10 @@ vi.mock("@/features/movie/hooks/useMovieDetail", () => ({
 
 vi.mock("@/features/favorites/hooks/useFavoritesContext", () => ({
   useFavoritesContext: vi.fn(),
+}));
+
+vi.mock("@/features/favorites/hooks/useRating", () => ({
+  useRating: vi.fn(),
 }));
 
 function renderWithRouter() {
@@ -41,6 +46,7 @@ const mockMovie = {
   watchProviders: [],
   watchProvidersLink: null,
   isFavourite: false,
+  userRating: null,
 };
 
 describe("MovieDetailPage", () => {
@@ -49,6 +55,11 @@ describe("MovieDetailPage", () => {
     vi.mocked(useFavoritesContext).mockReturnValue({
       favoriteIds: new Set(),
       toggleFavorite: vi.fn(),
+    });
+    vi.mocked(useRating).mockReturnValue({
+      rateMovie: vi.fn(),
+      isLoading: false,
+      error: null,
     });
   });
 
@@ -135,5 +146,49 @@ describe("MovieDetailPage", () => {
       name: "Christopher Nolan",
     });
     expect(directorLink).toHaveAttribute("href", "/director/525");
+  });
+
+  // Scenario: Rating input shows the movie's current rating
+  //   Given the movie already has a userRating of 6
+  //   When the page renders
+  //   Then the rating input should display "6/10"
+  it("shows the movie's current rating in the RatingInput", () => {
+    vi.mocked(useMovieDetail).mockReturnValue({
+      movie: { ...mockMovie, userRating: 6 },
+      isLoading: false,
+      error: null,
+    });
+
+    renderWithRouter();
+
+    expect(screen.getByText("6/10")).toBeInTheDocument();
+  });
+
+  // Scenario: Clicking a rating star calls rateMovie
+  //   Given the movie has no rating yet
+  //   When I click a star to rate it
+  //   Then rateMovie should be called with the movie's id and the chosen rating
+  it("calls rateMovie when clicking a star in the RatingInput", async () => {
+    const rateMovie = vi.fn().mockResolvedValue(undefined);
+    vi.mocked(useRating).mockReturnValue({
+      rateMovie,
+      isLoading: false,
+      error: null,
+    });
+    vi.mocked(useMovieDetail).mockReturnValue({
+      movie: mockMovie,
+      isLoading: false,
+      error: null,
+    });
+
+    const { default: userEvent } = await import("@testing-library/user-event");
+    const user = userEvent.setup();
+
+    renderWithRouter();
+
+    const button = screen.getByLabelText("Puntuar con 8 de 10");
+    await user.click(button);
+
+    expect(rateMovie).toHaveBeenCalledWith(157336, 8);
   });
 });

@@ -39,4 +39,5 @@ export interface MovieDetail {
   watchProviders: WatchProvider[];
   watchProvidersLink: string | null;
   isFavourite: boolean;
+  userRating: number | null;
 }

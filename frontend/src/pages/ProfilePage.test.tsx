@@ -5,6 +5,7 @@ import { MemoryRouter } from "react-router";
 import ProfilePage from "./ProfilePage";
 import { useProfile } from "@/features/auth/hooks/useProfile";
 import { useLogout } from "@/features/auth/hooks/useLogout";
+import { useFavoritesContext } from "@/features/favorites/hooks/useFavoritesContext";
 
 vi.mock("@/features/auth/hooks/useProfile", () => ({
   useProfile: vi.fn(),
@@ -12,6 +13,10 @@ vi.mock("@/features/auth/hooks/useProfile", () => ({
 
 vi.mock("@/features/auth/hooks/useLogout", () => ({
   useLogout: vi.fn(),
+}));
+
+vi.mock("@/features/favorites/hooks/useFavoritesContext", () => ({
+  useFavoritesContext: vi.fn(),
 }));
 
 function renderPage() {
@@ -37,12 +42,13 @@ describe("ProfilePage", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.mocked(useLogout).mockReturnValue(logout);
+    vi.mocked(useFavoritesContext).mockReturnValue({
+      favoriteIds: new Set(),
+      toggleFavorite: vi.fn(),
+    });
   });
 
   // Scenario: Show loading state
-  //   Given the profile is still being fetched
-  //   When the page renders
-  //   Then a loading indicator should be shown
   it("shows loading state", () => {
     vi.mocked(useProfile).mockReturnValue({
       profile: null,
@@ -56,9 +62,6 @@ describe("ProfilePage", () => {
   });
 
   // Scenario: Show error state
-  //   Given the profile request failed
-  //   When the page renders
-  //   Then an error message should be shown
   it("shows error state", () => {
     vi.mocked(useProfile).mockReturnValue({
       profile: null,
@@ -72,9 +75,6 @@ describe("ProfilePage", () => {
   });
 
   // Scenario: Render the user's name and email
-  //   Given a loaded profile
-  //   When the page renders
-  //   Then the name and email should be visible
   it("renders the user's name and email", () => {
     vi.mocked(useProfile).mockReturnValue({
       profile: mockProfile,
@@ -89,9 +89,6 @@ describe("ProfilePage", () => {
   });
 
   // Scenario: Show initial avatar fallback when there's no photo
-  //   Given a profile without an avatarUrl
-  //   When the page renders
-  //   Then the first letter of the name should be shown instead of a photo
   it("shows the name's initial as a fallback when there is no avatarUrl", () => {
     vi.mocked(useProfile).mockReturnValue({
       profile: mockProfile,
@@ -105,9 +102,6 @@ describe("ProfilePage", () => {
   });
 
   // Scenario: Show the real photo when avatarUrl exists
-  //   Given a profile with an avatarUrl (e.g. from Google)
-  //   When the page renders
-  //   Then the photo should be visible instead of the initial fallback
   it("shows the real photo when avatarUrl exists", () => {
     vi.mocked(useProfile).mockReturnValue({
       profile: { ...mockProfile, avatarUrl: "https://example.com/photo.jpg" },
@@ -122,9 +116,6 @@ describe("ProfilePage", () => {
   });
 
   // Scenario: Show the "member since" year
-  //   Given a profile with a createdAt date
-  //   When the page renders
-  //   Then the year should be shown
   it("shows the member-since year", () => {
     vi.mocked(useProfile).mockReturnValue({
       profile: mockProfile,
@@ -138,8 +129,6 @@ describe("ProfilePage", () => {
   });
 
   // Scenario: Sidebar links to existing pages are clickable
-  //   Given the profile page has loaded
-  //   Then "Resumen" and "Favoritas" should be real links
   it("renders working links for pages that exist", () => {
     vi.mocked(useProfile).mockReturnValue({
       profile: mockProfile,
@@ -160,9 +149,6 @@ describe("ProfilePage", () => {
   });
 
   // Scenario: Open the logout confirmation modal
-  //   Given the profile page has loaded
-  //   When I click "Cerrar sesión" in the sidebar
-  //   Then a confirmation modal should appear, without calling logout yet
   it("opens the logout confirmation modal without logging out immediately", async () => {
     vi.mocked(useProfile).mockReturnValue({
       profile: mockProfile,
@@ -180,9 +166,6 @@ describe("ProfilePage", () => {
   });
 
   // Scenario: Confirm logout from the modal
-  //   Given the logout confirmation modal is open
-  //   When I click "Cerrar sesión" inside the modal
-  //   Then logout should be called
   it("calls logout when confirming in the modal", async () => {
     vi.mocked(useProfile).mockReturnValue({
       profile: mockProfile,

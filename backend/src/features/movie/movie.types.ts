@@ -44,6 +44,7 @@ export interface MovieDetailFromTmdb extends Movie {
 
 export interface MovieDetail extends MovieDetailFromTmdb {
   isFavourite: boolean;
+  userRating: number | null;
 }
 
 export interface TmdbMovieRaw {
