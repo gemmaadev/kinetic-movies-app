@@ -5,9 +5,10 @@ import { FavoriteButton } from "@/features/favorites/components/FavoriteButton";
 
 interface MovieCardProps {
   movie: Movie;
+  userRating?: number | null;
 }
 
-export function MovieCard({ movie }: MovieCardProps) {
+export function MovieCard({ movie, userRating }: MovieCardProps) {
   return (
     <div className="relative w-40 shrink-0 overflow-hidden rounded-lg bg-bg-surface transition-transform hover:scale-[1.02]">
       <div className="absolute right-2 top-2 z-10">
@@ -45,6 +46,12 @@ export function MovieCard({ movie }: MovieCardProps) {
             </div>
             <span>{movie.releaseYear}</span>
           </div>
+          {userRating != null && (
+            <div className="flex items-center gap-1 text-sm text-brand-blue">
+              <Star size={14} className="fill-brand-blue text-brand-blue" />
+              <span>Tu puntuación: {userRating}/10</span>
+            </div>
+          )}
         </div>
       </Link>
     </div>
