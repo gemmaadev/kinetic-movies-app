@@ -42,7 +42,9 @@ export function MovieCard({ movie, userRating }: MovieCardProps) {
           <div className="flex items-center justify-between text-sm text-secondary-text">
             <div className="flex items-center gap-1">
               <Star size={14} className="fill-amber-300 text-amber-300" />
-              <span>{movie.voteAverage.toFixed(1)}</span>
+              <span>
+                {movie.voteAverage != null ? movie.voteAverage.toFixed(1) : "—"}
+              </span>
             </div>
             <span>{movie.releaseYear}</span>
           </div>
