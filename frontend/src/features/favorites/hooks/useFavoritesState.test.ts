@@ -32,7 +32,7 @@ describe("useFavoritesState", () => {
   it("loads favorite ids when the user is authenticated", async () => {
     vi.mocked(useAuth).mockReturnValue({ isAuthenticated: true } as never);
     vi.mocked(apiClient).mockResolvedValue({
-      favorites: [{ movieId: 550 }, { movieId: 27205 }],
+      favorites: [{ id: 550 }, { id: 27205 }],
     });
 
     const { result } = renderHook(() => useFavoritesState());
@@ -88,7 +88,7 @@ describe("useFavoritesState", () => {
   it("optimistically removes a movie that was already a favorite", async () => {
     vi.mocked(useAuth).mockReturnValue({ isAuthenticated: true } as never);
     vi.mocked(apiClient).mockResolvedValueOnce({
-      favorites: [{ movieId: 550 }],
+      favorites: [{ id: 550 }],
     });
 
     const { result } = renderHook(() => useFavoritesState());
