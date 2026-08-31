@@ -51,7 +51,7 @@ export function MovieCard({ movie, userRating }: MovieCardProps) {
           {userRating != null && (
             <div className="flex items-center gap-1 text-sm text-brand-blue">
               <Star size={14} className="fill-brand-blue text-brand-blue" />
-              <span>Tu puntuación: {userRating}/10</span>
+              <span className="font-bold">Tu nota: {userRating}/10</span>
             </div>
           )}
         </div>

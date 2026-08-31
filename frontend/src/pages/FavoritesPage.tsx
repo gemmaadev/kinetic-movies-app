@@ -27,7 +27,7 @@ export default function FavoritesPage() {
 
   return (
     <div className="flex flex-col gap-4 p-4 md:p-6">
-      <div className="flex flex-row items-center justify-between">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="flex flex-col gap-2">
           <h1 className="text-3xl font-bold md:text-4xl">Mis favoritas</h1>
           <span className="text-secondary-text">
@@ -35,12 +35,14 @@ export default function FavoritesPage() {
           </span>
         </div>
 
-        <FilterSelect
-          value={sortBy}
-          onChange={setSortBy}
-          placeholder="Ordenar por"
-          options={sortOptions}
-        />
+        <div className="self-start md:self-auto">
+          <FilterSelect
+            value={sortBy}
+            onChange={setSortBy}
+            placeholder="Ordenar por"
+            options={sortOptions}
+          />
+        </div>
       </div>
 
       {favorites.length > 0 ? (
