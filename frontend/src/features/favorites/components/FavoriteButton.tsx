@@ -1,21 +1,22 @@
 import { Heart } from "lucide-react";
 import { useFavoritesContext } from "@/features/favorites/hooks/useFavoritesContext";
 import { PrimaryButton } from "@/shared/components/buttons/PrimaryButton";
+import type { MovieSnapshot } from "../context/FavoritesContext";
 
 interface FavoriteButtonProps {
-  movieId: number;
+  movie: MovieSnapshot;
   variant?: "icon" | "button";
 }
 
 export function FavoriteButton({
-  movieId,
+  movie,
   variant = "icon",
 }: FavoriteButtonProps) {
   const { favoriteIds, toggleFavorite } = useFavoritesContext();
-  const isFavorite = favoriteIds.has(movieId);
+  const isFavorite = favoriteIds.has(movie.movieId);
 
   function handleClick() {
-    toggleFavorite(movieId).catch(() => {});
+    toggleFavorite(movie).catch(() => {});
   }
 
   if (variant === "button") {

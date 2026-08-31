@@ -1,7 +1,10 @@
 import { useState, useCallback, useEffect } from "react";
 import { apiClient } from "@/shared/services/apiClient";
 import { useAuth } from "@/features/auth/hooks/useAuth";
-import type { FavoritesContextValue } from "../context/FavoritesContext";
+import type {
+  FavoritesContextValue,
+  MovieSnapshot,
+} from "../context/FavoritesContext";
 
 export function useFavoritesState(): FavoritesContextValue {
   const [rawFavoriteIds, setRawFavoriteIds] = useState<Set<number>>(new Set());
@@ -14,10 +17,10 @@ export function useFavoritesState(): FavoritesContextValue {
 
     let cancelled = false;
 
-    apiClient<{ favorites: { movieId: number }[] }>("/api/movie/favorites")
+    apiClient<{ favorites: { id: number }[] }>("/api/movie/favorites")
       .then((data) => {
         if (!cancelled) {
-          setRawFavoriteIds(new Set(data.favorites.map((f) => f.movieId)));
+          setRawFavoriteIds(new Set(data.favorites.map((f) => f.id)));
         }
       })
       .catch(() => {});
@@ -28,15 +31,15 @@ export function useFavoritesState(): FavoritesContextValue {
   }, [isAuthenticated]);
 
   const toggleFavorite = useCallback(
-    async (movieId: number) => {
-      const wasAlreadyFavorite = rawFavoriteIds.has(movieId);
+    async (movie: MovieSnapshot) => {
+      const wasAlreadyFavorite = rawFavoriteIds.has(movie.movieId);
 
       setRawFavoriteIds((prev) => {
         const next = new Set(prev);
         if (wasAlreadyFavorite) {
-          next.delete(movieId);
+          next.delete(movie.movieId);
         } else {
-          next.add(movieId);
+          next.add(movie.movieId);
         }
         return next;
       });
@@ -44,15 +47,15 @@ export function useFavoritesState(): FavoritesContextValue {
       try {
         await apiClient("/api/movie/favorites", {
           method: "POST",
-          body: JSON.stringify({ movieId }),
+          body: JSON.stringify(movie),
         });
       } catch (error) {
         setRawFavoriteIds((prev) => {
           const next = new Set(prev);
           if (wasAlreadyFavorite) {
-            next.add(movieId);
+            next.add(movie.movieId);
           } else {
-            next.delete(movieId);
+            next.delete(movie.movieId);
           }
           return next;
         });

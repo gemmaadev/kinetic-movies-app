@@ -5,13 +5,22 @@ import { FavoriteButton } from "@/features/favorites/components/FavoriteButton";
 
 interface MovieCardProps {
   movie: Movie;
+  userRating?: number | null;
 }
 
-export function MovieCard({ movie }: MovieCardProps) {
+export function MovieCard({ movie, userRating }: MovieCardProps) {
   return (
     <div className="relative w-40 shrink-0 overflow-hidden rounded-lg bg-bg-surface transition-transform hover:scale-[1.02]">
       <div className="absolute right-2 top-2 z-10">
-        <FavoriteButton movieId={movie.id}/>
+        <FavoriteButton
+          movie={{
+            movieId: movie.id,
+            title: movie.title,
+            posterUrl: movie.posterUrl,
+            voteAverage: movie.voteAverage,
+            releaseYear: movie.releaseYear,
+          }}
+        />
       </div>
 
       <Link to={`/pelicula/${movie.id}`}>
@@ -33,10 +42,18 @@ export function MovieCard({ movie }: MovieCardProps) {
           <div className="flex items-center justify-between text-sm text-secondary-text">
             <div className="flex items-center gap-1">
               <Star size={14} className="fill-amber-300 text-amber-300" />
-              <span>{movie.voteAverage.toFixed(1)}</span>
+              <span>
+                {movie.voteAverage != null ? movie.voteAverage.toFixed(1) : "—"}
+              </span>
             </div>
             <span>{movie.releaseYear}</span>
           </div>
+          {userRating != null && (
+            <div className="flex items-center gap-1 text-sm text-brand-blue">
+              <Star size={14} className="fill-brand-blue text-brand-blue" />
+              <span className="font-bold">Tu nota: {userRating}/10</span>
+            </div>
+          )}
         </div>
       </Link>
     </div>

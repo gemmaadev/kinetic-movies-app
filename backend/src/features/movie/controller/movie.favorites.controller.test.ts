@@ -32,6 +32,10 @@ const mockUserMovie = {
   userRating: null,
   isFavourite: true,
   addedAt: new Date(),
+  title: "Fight Club",
+  posterUrl: "https://image.tmdb.org/t/p/w500/fightclub.jpg",
+  voteAverage: 8.4,
+  releaseYear: 1999,
 };
 
 describe("movie.favorites.controller", () => {
@@ -43,8 +47,9 @@ describe("movie.favorites.controller", () => {
     // Scenario: List the authenticated user's favorite movies
     //   Given the user has favorite movies saved
     //   When getFavoriteMovies is called
-    //   Then it should return their list of favorites
-    it("returns the user's favorites", async () => {
+    //   Then it should return their list of favorites, mapped to the
+    //   frontend's Movie shape
+    it("returns the user's favorites mapped to Movie shape", async () => {
       vi.mocked(getFavoritesByUser).mockResolvedValue([mockUserMovie]);
 
       const req = {
@@ -55,7 +60,19 @@ describe("movie.favorites.controller", () => {
       await getFavoriteMovies(req, res);
 
       expect(getFavoritesByUser).toHaveBeenCalledWith("firebase-uid-1");
-      expect(res.json).toHaveBeenCalledWith({ favorites: [mockUserMovie] });
+      expect(res.json).toHaveBeenCalledWith({
+        favorites: [
+          {
+            id: 550,
+            title: "Fight Club",
+            posterUrl: "https://image.tmdb.org/t/p/w500/fightclub.jpg",
+            voteAverage: 8.4,
+            releaseYear: 1999,
+            userRating: null,
+            addedAt: mockUserMovie.addedAt,
+          },
+        ],
+      });
     });
 
     // Scenario: No user id in the request
@@ -74,7 +91,7 @@ describe("movie.favorites.controller", () => {
 
   describe("toggleFavorite", () => {
     // Scenario: Toggle a movie's favorite status
-    //   Given a valid movieId
+    //   Given a valid movieId and movie details
     //   When toggleFavorite is called
     //   Then it should update the favorite status and return the record
     it("toggles the favorite and returns the updated record", async () => {
@@ -82,7 +99,13 @@ describe("movie.favorites.controller", () => {
 
       const req = {
         userId: "firebase-uid-1",
-        body: { movieId: 550 },
+        body: {
+          movieId: 550,
+          title: "Fight Club",
+          posterUrl: "https://image.tmdb.org/t/p/w500/fightclub.jpg",
+          voteAverage: 8.4,
+          releaseYear: 1999,
+        },
       } as unknown as AuthenticatedRequest;
       const res = createMockResponse();
 
@@ -91,6 +114,10 @@ describe("movie.favorites.controller", () => {
       expect(updateMovieFavorite).toHaveBeenCalledWith({
         userId: "firebase-uid-1",
         movieId: 550,
+        title: "Fight Club",
+        posterUrl: "https://image.tmdb.org/t/p/w500/fightclub.jpg",
+        voteAverage: 8.4,
+        releaseYear: 1999,
       });
       expect(res.json).toHaveBeenCalledWith(mockUserMovie);
     });

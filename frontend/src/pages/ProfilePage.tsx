@@ -16,7 +16,7 @@ import {
 import { useProfile } from "@/features/auth/hooks/useProfile";
 import { useLogout } from "@/features/auth/hooks/useLogout";
 import { LogoutConfirmModal } from "@/features/auth/components/LogoutConfirmModal";
-import { useFavoritesContext } from "@/features/favorites/hooks/useFavoritesContext";
+import { useFavoritesList } from "@/features/favorites/hooks/useFavoritesList";
 
 const sidebarLinks = [
   { icon: Home, label: "Resumen", active: true, to: "/perfil" },
@@ -31,11 +31,11 @@ export default function ProfilePage() {
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const { profile, isLoading, error } = useProfile();
   const logout = useLogout();
-  const { favoriteIds } = useFavoritesContext();
+  const { favorites } = useFavoritesList();
 
   const stats = [
     { icon: Clapperboard, value: "—", label: "Películas vistas" },
-    { icon: Heart, value: String(favoriteIds.size), label: "Favoritas" },
+    { icon: Heart, value: String(favorites.length), label: "Favoritas" },
     { icon: Star, value: "—", label: "Puntuadas" },
     { icon: TrendingUp, value: "—", label: "Puntuación media" },
   ];

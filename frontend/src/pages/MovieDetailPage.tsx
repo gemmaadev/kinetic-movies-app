@@ -98,7 +98,16 @@ function MovieDetailContent({
             <p className="max-w-xl text-sm md:text-base">{movie.overview}</p>
 
             <div className="flex flex-wrap gap-3">
-              <FavoriteButton movieId={movie.id} variant="button" />
+              <FavoriteButton
+                movie={{
+                  movieId: movie.id,
+                  title: movie.title,
+                  posterUrl: movie.posterUrl,
+                  voteAverage: movie.voteAverage,
+                  releaseYear: movie.releaseYear,
+                }}
+                variant="button"
+              />
               {movie.trailerUrl && (
                 <a
                   href={movie.trailerUrl}

@@ -12,6 +12,14 @@ vi.mock("@/features/auth/hooks/useAuth", () => ({
   useAuth: vi.fn(),
 }));
 
+const mockMovie = {
+  movieId: 550,
+  title: "Fight Club",
+  posterUrl: "https://example.com/poster.jpg",
+  voteAverage: 8.4,
+  releaseYear: 1999,
+};
+
 describe("useFavoritesState", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -24,7 +32,7 @@ describe("useFavoritesState", () => {
   it("loads favorite ids when the user is authenticated", async () => {
     vi.mocked(useAuth).mockReturnValue({ isAuthenticated: true } as never);
     vi.mocked(apiClient).mockResolvedValue({
-      favorites: [{ movieId: 550 }, { movieId: 27205 }],
+      favorites: [{ id: 550 }, { id: 27205 }],
     });
 
     const { result } = renderHook(() => useFavoritesState());
@@ -50,7 +58,7 @@ describe("useFavoritesState", () => {
 
   // Scenario: Toggle adds a movie optimistically and confirms with the server
   //   Given the movie is not currently a favorite
-  //   When toggleFavorite is called and the API succeeds
+  //   When toggleFavorite is called with the movie snapshot and the API succeeds
   //   Then the movie should be added to favoriteIds
   it("optimistically adds a movie and confirms via the API", async () => {
     vi.mocked(useAuth).mockReturnValue({ isAuthenticated: true } as never);
@@ -63,13 +71,13 @@ describe("useFavoritesState", () => {
     vi.mocked(apiClient).mockResolvedValueOnce({ isFavourite: true });
 
     await act(async () => {
-      await result.current.toggleFavorite(550);
+      await result.current.toggleFavorite(mockMovie);
     });
 
     expect(result.current.favoriteIds.has(550)).toBe(true);
     expect(apiClient).toHaveBeenCalledWith("/api/movie/favorites", {
       method: "POST",
-      body: JSON.stringify({ movieId: 550 }),
+      body: JSON.stringify(mockMovie),
     });
   });
 
@@ -80,7 +88,7 @@ describe("useFavoritesState", () => {
   it("optimistically removes a movie that was already a favorite", async () => {
     vi.mocked(useAuth).mockReturnValue({ isAuthenticated: true } as never);
     vi.mocked(apiClient).mockResolvedValueOnce({
-      favorites: [{ movieId: 550 }],
+      favorites: [{ id: 550 }],
     });
 
     const { result } = renderHook(() => useFavoritesState());
@@ -90,7 +98,7 @@ describe("useFavoritesState", () => {
     vi.mocked(apiClient).mockResolvedValueOnce({ isFavourite: false });
 
     await act(async () => {
-      await result.current.toggleFavorite(550);
+      await result.current.toggleFavorite(mockMovie);
     });
 
     expect(result.current.favoriteIds.has(550)).toBe(false);
@@ -111,7 +119,7 @@ describe("useFavoritesState", () => {
     vi.mocked(apiClient).mockRejectedValueOnce(new Error("Network error"));
 
     await act(async () => {
-      await expect(result.current.toggleFavorite(550)).rejects.toThrow(
+      await expect(result.current.toggleFavorite(mockMovie)).rejects.toThrow(
         "Network error",
       );
     });
