@@ -17,10 +17,10 @@ export function useFavoritesState(): FavoritesContextValue {
 
     let cancelled = false;
 
-    apiClient<{ favorites: { movieId: number }[] }>("/api/movie/favorites")
+    apiClient<{ favorites: { id: number }[] }>("/api/movie/favorites")
       .then((data) => {
         if (!cancelled) {
-          setRawFavoriteIds(new Set(data.favorites.map((f) => f.movieId)));
+          setRawFavoriteIds(new Set(data.favorites.map((f) => f.id)));
         }
       })
       .catch(() => {});
