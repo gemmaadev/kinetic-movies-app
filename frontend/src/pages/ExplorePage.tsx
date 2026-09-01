@@ -100,6 +100,8 @@ export default function ExplorePage() {
         {!search && (
           <button
             onClick={() => setShowFilters((open) => !open)}
+            aria-label="Mostrar filtros"
+            aria-expanded={showFilters}
             className="flex items-center gap-2 rounded-md bg-bg-surface px-4 py-2 text-sm font-bold text-secondary-text"
           >
             <SlidersHorizontal size={16} />
