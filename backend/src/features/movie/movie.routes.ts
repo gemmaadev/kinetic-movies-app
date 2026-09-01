@@ -13,7 +13,10 @@ import {
   toggleFavorite,
   rateMovie,
 } from "./controller/movie.favorites.controller.js";
-import { getMyRankedMovies } from "./controller/movie-stats.controller.js";
+import {
+  getGlobalKineticRankedMovies,
+  getMyRankedMovies,
+} from "./controller/movie-stats.controller.js";
 
 const router = Router();
 
@@ -21,6 +24,7 @@ router.get("/favorites", verifyFirebaseToken, getFavoriteMovies);
 router.post("/favorites", verifyFirebaseToken, toggleFavorite);
 router.patch("/rating", verifyFirebaseToken, rateMovie);
 router.get("/stats/mine", verifyFirebaseToken, getMyRankedMovies);
+router.get("/stats/ranking", verifyFirebaseToken, getGlobalKineticRankedMovies);
 
 router.get("/", verifyFirebaseToken, getPopular);
 router.get("/now-playing", verifyFirebaseToken, getNowPlaying);
