@@ -1,6 +1,9 @@
 import type { Response } from "express";
 import type { AuthenticatedRequest } from "../../../middleware/verifyFirebaseToken.js";
-import { getRankedMoviesByUser, getGlobalRanking } from "../movie.model.js";
+import {
+  getGlobalRanking,
+  getRankedMoviesByUser,
+} from "../model/movie-stats.model.js";
 
 export async function getMyRankedMovies(
   req: AuthenticatedRequest,

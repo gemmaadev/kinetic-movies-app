@@ -7,7 +7,7 @@ import type {
   MovieDetailFromTmdb,
 } from "../movie.types.js";
 import type { AuthenticatedRequest } from "../../../middleware/verifyFirebaseToken.js";
-import { getUserMovie } from "../movie.model.js";
+import { getUserMovie } from "../model/movie.model.js";
 
 function mapMovie(movie: TmdbMovieRaw): Movie {
   return {
