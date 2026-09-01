@@ -25,6 +25,7 @@ export function useExplore(
   const [movies, setMovies] = useState<Movie[]>([]);
   const [actors, setActors] = useState<Person[]>([]);
   const [directors, setDirectors] = useState<Person[]>([]);
+  const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -33,17 +34,27 @@ export function useExplore(
       filters.genre || filters.year || filters.language || filters.minRating,
     );
 
+    function applyResults(data: {
+      movies: Movie[];
+      actors?: Person[];
+      directors?: Person[];
+      totalPages: number;
+    }) {
+      setMovies((prev) =>
+        page === 1 ? data.movies : [...prev, ...data.movies],
+      );
+      setActors(data.actors ?? []);
+      setDirectors(data.directors ?? []);
+      setTotalPages(data.totalPages);
+    }
+
     if (search) {
       const params = new URLSearchParams();
       params.set("search", search);
       params.set("page", String(page));
 
       apiClient<ExploreResponse>(`/api/explore?${params.toString()}`)
-        .then((data) => {
-          setMovies(data.movies);
-          setActors(data.actors);
-          setDirectors(data.directors);
-        })
+        .then(applyResults)
         .catch((error) => setError(error.message))
         .finally(() => setIsLoading(false));
     } else if (hasFilters) {
@@ -55,22 +66,16 @@ export function useExplore(
       params.set("page", String(page));
 
       apiClient<CategoryResponse>(`/api/explore?${params.toString()}`)
-        .then((data) => {
-          setMovies(data.movies);
-          setActors([]);
-          setDirectors([]);
-        })
+        .then(applyResults)
         .catch((error) => setError(error.message))
         .finally(() => setIsLoading(false));
     } else {
       const endpoint = categoryEndpoints[category] ?? categoryEndpoints.popular;
+      const params = new URLSearchParams();
+      params.set("page", String(page));
 
-      apiClient<CategoryResponse>(endpoint)
-        .then((data) => {
-          setMovies(data.movies);
-          setActors([]);
-          setDirectors([]);
-        })
+      apiClient<CategoryResponse>(`${endpoint}?${params.toString()}`)
+        .then(applyResults)
         .catch((error) => setError(error.message))
         .finally(() => setIsLoading(false));
     }
@@ -84,5 +89,7 @@ export function useExplore(
     page,
   ]);
 
-  return { movies, actors, directors, isLoading, error };
+  const hasMore = page < totalPages;
+
+  return { movies, actors, directors, isLoading, error, hasMore };
 }

@@ -26,3 +26,15 @@ export interface Person {
   name: string;
   photoUrl: string | null;
 }
+
+export interface ExploreResponse {
+  movies: Movie[];
+  actors: Person[];
+  directors: Person[];
+  totalPages: number;
+}
+
+export interface CategoryResponse {
+  movies: Movie[];
+  totalPages: number;
+}
