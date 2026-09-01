@@ -66,7 +66,8 @@ export async function toggleFavorite(req: AuthenticatedRequest, res: Response) {
 
 export async function rateMovie(req: AuthenticatedRequest, res: Response) {
   const userId = req.userId;
-  const { movieId, rating } = req.body;
+  const { movieId, rating, title, posterUrl, voteAverage, releaseYear } =
+    req.body;
 
   if (!userId) {
     return res.status(401).json({ error: "No user id in request" });
@@ -83,7 +84,15 @@ export async function rateMovie(req: AuthenticatedRequest, res: Response) {
   }
 
   try {
-    const result = await updateMovieRating({ userId, movieId, rating });
+    const result = await updateMovieRating({
+      userId,
+      movieId,
+      rating,
+      title,
+      posterUrl,
+      voteAverage,
+      releaseYear,
+    });
     return res.json(result);
   } catch (error) {
     console.error("Failed to rate movie:", error);

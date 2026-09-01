@@ -45,6 +45,7 @@ export async function getGlobalKineticRankedMovies(
       id: entry.movieId,
       title: entry.title,
       posterUrl: entry.posterUrl,
+      releaseYear: entry.releaseYear,
       averageRating: entry.averageRating,
       ratingCount: entry.ratingCount,
     }));
