@@ -50,6 +50,10 @@ export async function updateMovieRating(data: {
   userId: string;
   movieId: number;
   rating: number;
+  title?: string;
+  posterUrl?: string | null;
+  voteAverage?: number;
+  releaseYear?: number | null;
 }): Promise<UserMovie> {
   if (data.rating < 1 || data.rating > 10) {
     throw new Error("Rating must be between 1 and 10");
@@ -63,6 +67,10 @@ export async function updateMovieRating(data: {
       userId: data.userId,
       movieId: data.movieId,
       userRating: data.rating,
+      title: data.title,
+      posterUrl: data.posterUrl,
+      voteAverage: data.voteAverage,
+      releaseYear: data.releaseYear,
     },
   });
 }

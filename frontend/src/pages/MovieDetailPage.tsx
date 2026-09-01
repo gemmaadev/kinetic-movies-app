@@ -1,6 +1,7 @@
 import { PersonList } from "@/features/explore/components/PersonList";
 import { FavoriteButton } from "@/features/favorites/components/FavoriteButton";
 import { RatingInput } from "@/features/favorites/components/RatingInput";
+import type { MovieSnapshot } from "@/features/favorites/context/FavoritesContext";
 import { useRating } from "@/features/favorites/hooks/useRating";
 import { useMovieDetail } from "@/features/movie/hooks/useMovieDetail";
 import type { MovieDetail } from "@/features/movie/types/movieDetail.types";
@@ -28,16 +29,24 @@ function MovieDetailContent({
   rateMovie,
 }: {
   movie: MovieDetail;
-  rateMovie: (movieId: number, rating: number) => Promise<void>;
+  rateMovie: (movie: MovieSnapshot, rating: number) => Promise<void>;
 }) {
   const [currentRating, setCurrentRating] = useState(movie.userRating);
 
   async function handleRatingChange(rating: number) {
     const previousRating = currentRating;
     setCurrentRating(rating);
-
     try {
-      await rateMovie(movie.id, rating);
+      await rateMovie(
+        {
+          movieId: movie.id,
+          title: movie.title,
+          posterUrl: movie.posterUrl,
+          voteAverage: movie.voteAverage,
+          releaseYear: movie.releaseYear,
+        },
+        rating,
+      );
     } catch {
       setCurrentRating(previousRating);
     }

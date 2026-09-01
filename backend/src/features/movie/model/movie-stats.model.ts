@@ -15,6 +15,7 @@ export async function getGlobalRanking(limit: number): Promise<
     movieId: number;
     title: string | null;
     posterUrl: string | null;
+    releaseYear: number | null;
     averageRating: number;
     ratingCount: number;
   }[]
@@ -33,7 +34,7 @@ export async function getGlobalRanking(limit: number): Promise<
   const movieDetails = await prisma.userMovie.findMany({
     where: { movieId: { in: movieIds } },
     distinct: ["movieId"],
-    select: { movieId: true, title: true, posterUrl: true },
+    select: { movieId: true, title: true, posterUrl: true, releaseYear: true },
   });
 
   const detailsMap = new Map(
@@ -44,6 +45,7 @@ export async function getGlobalRanking(limit: number): Promise<
     movieId: group.movieId,
     title: detailsMap.get(group.movieId)?.title ?? null,
     posterUrl: detailsMap.get(group.movieId)?.posterUrl ?? null,
+    releaseYear: detailsMap.get(group.movieId)?.releaseYear ?? null,
     averageRating: group._avg.userRating ?? 0,
     ratingCount: group._count.userRating,
   }));
