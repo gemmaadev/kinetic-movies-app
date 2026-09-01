@@ -8,6 +8,7 @@ import { ExploreFilters } from "@/features/explore/components/ExploreFilters";
 import type { ExploreFiltersValues } from "@/features/explore/types/explore.types";
 import { useDebounce } from "@/shared/hooks/useDebounce";
 import { MovieGrid } from "@/features/explore/components/MovieGrid";
+import { SecondaryButton } from "@/shared/components/buttons/SecondaryButton";
 
 const categories = [
   { key: "popular", label: "Populares" },
@@ -20,6 +21,7 @@ const categories = [
 export default function ExplorePage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [showFilters, setShowFilters] = useState(false);
+  const [page, setPage] = useState(1);
 
   const search = searchParams.get("search") ?? "";
   const activeCategory = searchParams.get("category") ?? "popular";
@@ -32,11 +34,11 @@ export default function ExplorePage() {
 
   const debouncedSearch = useDebounce(search, 400);
 
-  const { movies, actors, directors, isLoading, error } = useExplore(
+  const { movies, actors, directors, isLoading, error, hasMore } = useExplore(
     debouncedSearch,
     activeCategory,
     filters,
-    1,
+    page,
   );
 
   function updateParams(updates: Record<string, string>) {
@@ -54,10 +56,12 @@ export default function ExplorePage() {
   }
 
   function handleSearchChange(value: string) {
+    setPage(1);
     updateParams({ search: value });
   }
 
   function handleFiltersChange(newFilters: ExploreFiltersValues) {
+    setPage(1);
     updateParams({
       genre: newFilters.genre,
       year: newFilters.year,
@@ -67,6 +71,7 @@ export default function ExplorePage() {
   }
 
   function handleCategoryClick(categoryKey: string) {
+    setPage(1);
     setSearchParams((prev) => {
       const next = new URLSearchParams(prev);
       next.set("category", categoryKey);
@@ -76,6 +81,10 @@ export default function ExplorePage() {
       next.delete("minRating");
       return next;
     });
+  }
+
+  function handleLoadMore() {
+    setPage((prev) => prev + 1);
   }
 
   return (
@@ -132,7 +141,7 @@ export default function ExplorePage() {
         </div>
       )}
 
-      {isLoading && <p>Cargando...</p>}
+      {isLoading && page === 1 && <p>Cargando...</p>}
       {error && <p className="text-error">Error: {error}</p>}
       {!isLoading &&
         !error &&
@@ -149,6 +158,14 @@ export default function ExplorePage() {
         <section className="flex flex-col gap-3">
           <h2 className="text-xl font-bold md:text-2xl">Películas</h2>
           <MovieGrid movies={movies} />
+
+          {hasMore && (
+            <div className="flex justify-center pt-10">
+              <SecondaryButton onClick={handleLoadMore}>
+                {isLoading ? "Cargando..." : "Cargar más"}
+              </SecondaryButton>
+            </div>
+          )}
         </section>
       )}
 

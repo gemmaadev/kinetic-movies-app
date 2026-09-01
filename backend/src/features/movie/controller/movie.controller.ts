@@ -72,10 +72,20 @@ function mapMovieDetail(movie: TmdbMovieDetailRaw): MovieDetailFromTmdb {
   };
 }
 
+function getPageParam(req: Request): string {
+  const page = Number(req.query.page);
+  return page > 0 ? String(page) : "1";
+}
+
 export async function getPopular(req: Request, res: Response) {
   try {
-    const results = await tmdbFetch("/movie/popular");
-    return res.json({ movies: results.results.map(mapMovie) });
+    const results = await tmdbFetch("/movie/popular", {
+      page: getPageParam(req),
+    });
+    return res.json({
+      movies: results.results.map(mapMovie),
+      totalPages: results.total_pages,
+    });
   } catch (error) {
     console.error("Failed to fetch popular movies:", error);
     return res.status(502).json({ error: "Failed to fetch data from TMDB" });
@@ -84,8 +94,14 @@ export async function getPopular(req: Request, res: Response) {
 
 export async function getNowPlaying(req: Request, res: Response) {
   try {
-    const results = await tmdbFetch("/movie/now_playing", { region: "ES" });
-    return res.json({ movies: results.results.map(mapMovie) });
+    const results = await tmdbFetch("/movie/now_playing", {
+      region: "ES",
+      page: getPageParam(req),
+    });
+    return res.json({
+      movies: results.results.map(mapMovie),
+      totalPages: results.total_pages,
+    });
   } catch (error) {
     console.error("Failed to fetch now playing movies:", error);
     return res.status(502).json({ error: "Failed to fetch data from TMDB" });
@@ -94,8 +110,13 @@ export async function getNowPlaying(req: Request, res: Response) {
 
 export async function getTrending(req: Request, res: Response) {
   try {
-    const results = await tmdbFetch("/trending/movie/week");
-    return res.json({ movies: results.results.map(mapMovie) });
+    const results = await tmdbFetch("/trending/movie/week", {
+      page: getPageParam(req),
+    });
+    return res.json({
+      movies: results.results.map(mapMovie),
+      totalPages: results.total_pages,
+    });
   } catch (error) {
     console.error("Failed to fetch trending movies:", error);
     return res.status(502).json({ error: "Failed to fetch data from TMDB" });
@@ -107,8 +128,12 @@ export async function getTopRated(req: Request, res: Response) {
     const results = await tmdbFetch("/movie/top_rated", {
       region: "ES",
       "vote_count.gte": "1000",
+      page: getPageParam(req),
     });
-    return res.json({ movies: results.results.map(mapMovie) });
+    return res.json({
+      movies: results.results.map(mapMovie),
+      totalPages: results.total_pages,
+    });
   } catch (error) {
     console.error("Failed to fetch top rated movies:", error);
     return res.status(502).json({ error: "Failed to fetch data from TMDB" });
@@ -117,8 +142,14 @@ export async function getTopRated(req: Request, res: Response) {
 
 export async function getUpcoming(req: Request, res: Response) {
   try {
-    const results = await tmdbFetch("/movie/upcoming", { region: "ES" });
-    return res.json({ movies: results.results.map(mapMovie) });
+    const results = await tmdbFetch("/movie/upcoming", {
+      region: "ES",
+      page: getPageParam(req),
+    });
+    return res.json({
+      movies: results.results.map(mapMovie),
+      totalPages: results.total_pages,
+    });
   } catch (error) {
     console.error("Failed to fetch upcoming movies:", error);
     return res.status(502).json({ error: "Failed to fetch data from TMDB" });
