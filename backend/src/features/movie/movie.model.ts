@@ -88,3 +88,22 @@ export async function getRankedMoviesByUser(
     orderBy: { userRating: "desc" },
   });
 }
+
+export async function getGlobalRanking(
+  limit: number,
+): Promise<{ movieId: number; averageRating: number; ratingCount: number }[]> {
+  const grouped = await prisma.userMovie.groupBy({
+    by: ["movieId"],
+    where: { userRating: { not: null } },
+    _avg: { userRating: true },
+    _count: { userRating: true },
+    orderBy: { _avg: { userRating: "desc" } },
+    take: limit,
+  });
+
+  return grouped.map((group) => ({
+    movieId: group.movieId,
+    averageRating: group._avg.userRating ?? 0,
+    ratingCount: group._count.userRating,
+  }));
+}
