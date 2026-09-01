@@ -1,5 +1,6 @@
 import { Star } from "lucide-react";
 import { useRanking } from "@/features/stats/hooks/useRanking";
+import { Link } from "react-router";
 
 export default function RankingPage() {
   const { ranking, isLoading, error } = useRanking();
@@ -10,29 +11,34 @@ export default function RankingPage() {
   return (
     <div className="flex flex-col gap-4 p-4 md:p-6">
       <div className="flex flex-col gap-1">
-        <h1 className="text-3xl font-bold md:text-4xl">Top 20 películas</h1>
+        <h1 className="text-3xl font-bold md:text-4xl">Top 10 películas</h1>
         <span className="text-secondary-text">
           Ranking de las películas mejor valoradas por la comunidad Kinetic.
         </span>
       </div>
 
-      <div className="flex flex-col gap-2">
-        <div className="grid grid-cols-[60px_1fr_150px_100px] items-center gap-4 px-3 text-sm font-bold text-secondary-text">
+      <div className="flex flex-col gap-2 py-3 md:px-10 md:py-4">
+        <div className="grid grid-cols-[40px_1fr_90px] items-center gap-2 px-3 text-sm font-bold text-secondary-text md:grid-cols-[60px_1fr_150px_100px] md:gap-4">
           <span className="text-center">#</span>
           <span>PELÍCULA</span>
-          <span className="text-center">VALORACIÓN MEDIA</span>
-          <span className="text-center">VOTOS</span>
+          <span className="text-center">VALORACIÓN</span>
+          <span className="hidden text-center md:block">VOTOS</span>
         </div>
 
         <ol className="flex flex-col gap-2">
           {ranking.map((movie, index) => (
             <li
               key={movie.id}
-              className="grid grid-cols-[60px_1fr_150px_100px] items-center gap-4 rounded-lg bg-bg-surface p-3"
+              className="grid grid-cols-[40px_1fr_90px] items-center gap-2 rounded-lg bg-bg-surface p-3 md:grid-cols-[60px_1fr_150px_100px] md:gap-4"
             >
-              <span className="text-center text-xl font-bold">{index + 1}</span>
+              <span className="text-center text-lg font-bold md:text-xl">
+                {index + 1}
+              </span>
 
-              <div className="flex items-center gap-3">
+              <Link
+                to={`/pelicula/${movie.id}`}
+                className="flex items-center gap-3 hover:text-brand-teal"
+              >
                 {movie.posterUrl ? (
                   <img
                     src={movie.posterUrl}
@@ -52,7 +58,7 @@ export default function RankingPage() {
                     {movie.releaseYear}
                   </span>
                 </div>
-              </div>
+              </Link>
 
               <div className="flex items-center justify-center gap-1">
                 <Star size={16} className="fill-brand-blue text-brand-blue" />
@@ -61,7 +67,7 @@ export default function RankingPage() {
                 </span>
               </div>
 
-              <span className="text-center text-sm text-secondary-text">
+              <span className="hidden text-center text-sm text-secondary-text md:block">
                 {movie.ratingCount} votos
               </span>
             </li>
