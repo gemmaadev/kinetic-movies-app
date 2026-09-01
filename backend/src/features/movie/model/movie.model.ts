@@ -1,5 +1,5 @@
-import prisma from "../../config/db.js";
-import type { UserMovie, Prisma } from "../../generated/prisma/client.js";
+import prisma from "../../../config/db.js";
+import type { UserMovie, Prisma } from "../../../generated/prisma/client.js";
 
 export type { UserMovie };
 

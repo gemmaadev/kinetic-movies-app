@@ -1,10 +1,10 @@
 import type { Response } from "express";
-import { AuthenticatedRequest } from "../../../middleware/verifyFirebaseToken.js";
+import type { AuthenticatedRequest } from "../../../middleware/verifyFirebaseToken.js";
 import {
   getFavoritesByUser,
   updateMovieFavorite,
   updateMovieRating,
-} from "../movie.model.js";
+} from "../model/movie.model.js";
 
 export async function getFavoriteMovies(
   req: AuthenticatedRequest,
