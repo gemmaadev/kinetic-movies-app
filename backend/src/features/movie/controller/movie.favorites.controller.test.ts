@@ -5,14 +5,14 @@ import {
   updateMovieFavorite,
   updateMovieRating,
   getFavoritesByUser,
-} from "../movie.model.js";
+} from "../model/movie.model.js";
 import {
   getFavoriteMovies,
   toggleFavorite,
   rateMovie,
 } from "./movie.favorites.controller.js";
 
-vi.mock("../movie.model.js", () => ({
+vi.mock("../model/movie.model.js", () => ({
   updateMovieFavorite: vi.fn(),
   updateMovieRating: vi.fn(),
   getFavoritesByUser: vi.fn(),
