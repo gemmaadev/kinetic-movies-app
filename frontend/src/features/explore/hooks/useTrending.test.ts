@@ -31,7 +31,7 @@ describe("useTrending", () => {
 
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
-    expect(apiClient).toHaveBeenCalledWith("/api/movie/trending");
+    expect(apiClient).toHaveBeenCalledWith("/api/movie/trending?page=1");
     expect(result.current.movies).toEqual(mockMovies);
     expect(result.current.error).toBeNull();
   });
