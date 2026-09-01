@@ -1,18 +1,22 @@
 import { useState } from "react";
 import { apiClient } from "@/shared/services/apiClient";
+import type { MovieSnapshot } from "@/features/favorites/context/FavoritesContext";
 
 export function useRating() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  async function rateMovie(movieId: number, rating: number): Promise<void> {
+  async function rateMovie(
+    movie: MovieSnapshot,
+    rating: number,
+  ): Promise<void> {
     setIsLoading(true);
     setError(null);
 
     try {
       await apiClient("/api/movie/rating", {
         method: "PATCH",
-        body: JSON.stringify({ movieId, rating }),
+        body: JSON.stringify({ ...movie, rating }),
       });
     } catch (error) {
       setError(
