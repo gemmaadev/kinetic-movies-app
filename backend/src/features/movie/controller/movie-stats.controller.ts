@@ -40,7 +40,16 @@ export async function getGlobalKineticRankedMovies(
 ) {
   try {
     const ranking = await getGlobalRanking(10);
-    return res.json({ ranking });
+
+    const movies = ranking.map((entry) => ({
+      id: entry.movieId,
+      title: entry.title,
+      posterUrl: entry.posterUrl,
+      averageRating: entry.averageRating,
+      ratingCount: entry.ratingCount,
+    }));
+
+    return res.json({ ranking: movies });
   } catch (error) {
     console.error("Failed to fetch global ranking:", error);
     return res.status(500).json({ error: "Failed to fetch global ranking" });

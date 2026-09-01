@@ -85,11 +85,11 @@ describe("movie-stats.controller", () => {
   });
 
   describe("getGlobalKineticRankedMovies", () => {
-    // Scenario: Return the global Top 10 ranking
+    // Scenario: Return the global Top 10 ranking, mapped to id (not movieId)
     //   Given aggregated ranking data exists
     //   When getGlobalKineticRankedMovies is called
-    //   Then it should return the top 10 ranked movies
-    it("returns the global ranking, limited to 10", async () => {
+    //   Then it should return the top 10 ranked movies with movieId mapped to id
+    it("returns the global ranking, limited to 10, mapped to id", async () => {
       vi.mocked(getGlobalRanking).mockResolvedValue([
         {
           movieId: 550,
@@ -109,7 +109,7 @@ describe("movie-stats.controller", () => {
       expect(res.json).toHaveBeenCalledWith({
         ranking: [
           {
-            movieId: 550,
+            id: 550,
             title: "Fight Club",
             posterUrl: "https://example.com/poster.jpg",
             averageRating: 8.5,
