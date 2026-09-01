@@ -189,6 +189,15 @@ describe("MovieDetailPage", () => {
     const button = screen.getByLabelText("Puntuar con 8 de 10");
     await user.click(button);
 
-    expect(rateMovie).toHaveBeenCalledWith(157336, 8);
+    expect(rateMovie).toHaveBeenCalledWith(
+      {
+        movieId: 157336,
+        title: "Interstellar",
+        posterUrl: null,
+        voteAverage: 8.6,
+        releaseYear: 2014,
+      },
+      8,
+    );
   });
 });
