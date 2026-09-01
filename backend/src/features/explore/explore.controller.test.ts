@@ -159,6 +159,7 @@ describe("exploreController", () => {
       "vote_average.gte": "6",
       "vote_count.gte": "50",
       sort_by: "popularity.desc",
+      page: "1",
     });
     expect(res.json).toHaveBeenCalledWith({
       movies: [

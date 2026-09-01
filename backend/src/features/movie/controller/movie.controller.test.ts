@@ -21,6 +21,10 @@ function createMockResponse() {
   return res;
 }
 
+function createMockRequest(overrides: Partial<Request> = {}) {
+  return { query: {}, ...overrides } as unknown as Request;
+}
+
 const mockRawMovie = {
   id: 1,
   title: "Interstellar",
@@ -37,6 +41,8 @@ const mockMappedMovie = {
   releaseYear: 2014,
 };
 
+const mockTmdbResponse = { results: [mockRawMovie], total_pages: 5 };
+
 describe("movie.controller", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -45,17 +51,20 @@ describe("movie.controller", () => {
   // Scenario: Fetch popular movies successfully
   //   Given TMDB returns a list of popular movies
   //   When getPopular is called
-  //   Then it should return the mapped movies
+  //   Then it should return the mapped movies with pagination info
   it("getPopular returns mapped movies from /movie/popular", async () => {
-    vi.mocked(tmdbFetch).mockResolvedValue({ results: [mockRawMovie] });
+    vi.mocked(tmdbFetch).mockResolvedValue(mockTmdbResponse);
 
-    const req = {} as Request;
+    const req = createMockRequest();
     const res = createMockResponse();
 
     await getPopular(req, res);
 
-    expect(tmdbFetch).toHaveBeenCalledWith("/movie/popular");
-    expect(res.json).toHaveBeenCalledWith({ movies: [mockMappedMovie] });
+    expect(tmdbFetch).toHaveBeenCalledWith("/movie/popular", { page: "1" });
+    expect(res.json).toHaveBeenCalledWith({
+      movies: [mockMappedMovie],
+      totalPages: 5,
+    });
   });
 
   // Scenario: TMDB fails while fetching popular movies
@@ -65,7 +74,7 @@ describe("movie.controller", () => {
   it("getPopular returns 502 when TMDB fails", async () => {
     vi.mocked(tmdbFetch).mockRejectedValue(new Error("TMDB is down"));
 
-    const req = {} as Request;
+    const req = createMockRequest();
     const res = createMockResponse();
 
     await getPopular(req, res);
@@ -73,22 +82,41 @@ describe("movie.controller", () => {
     expect(res.status).toHaveBeenCalledWith(502);
   });
 
+  // Scenario: Fetch a specific page of popular movies
+  //   Given the request includes a page query param
+  //   When getPopular is called
+  //   Then it should request that specific page from TMDB
+  it("getPopular requests the page given in the query", async () => {
+    vi.mocked(tmdbFetch).mockResolvedValue(mockTmdbResponse);
+
+    const req = createMockRequest({ query: { page: "2" } });
+    const res = createMockResponse();
+
+    await getPopular(req, res);
+
+    expect(tmdbFetch).toHaveBeenCalledWith("/movie/popular", { page: "2" });
+  });
+
   // Scenario: Fetch now-playing movies for Spain
   //   Given TMDB returns now-playing movies
   //   When getNowPlaying is called
   //   Then it should request the ES region and return the mapped movies
   it("getNowPlaying returns mapped movies from /movie/now_playing", async () => {
-    vi.mocked(tmdbFetch).mockResolvedValue({ results: [mockRawMovie] });
+    vi.mocked(tmdbFetch).mockResolvedValue(mockTmdbResponse);
 
-    const req = {} as Request;
+    const req = createMockRequest();
     const res = createMockResponse();
 
     await getNowPlaying(req, res);
 
     expect(tmdbFetch).toHaveBeenCalledWith("/movie/now_playing", {
       region: "ES",
+      page: "1",
     });
-    expect(res.json).toHaveBeenCalledWith({ movies: [mockMappedMovie] });
+    expect(res.json).toHaveBeenCalledWith({
+      movies: [mockMappedMovie],
+      totalPages: 5,
+    });
   });
 
   // Scenario: Fetch trending movies of the week
@@ -96,15 +124,20 @@ describe("movie.controller", () => {
   //   When getTrending is called
   //   Then it should return the mapped movies
   it("getTrending returns mapped movies from /trending/movie/week", async () => {
-    vi.mocked(tmdbFetch).mockResolvedValue({ results: [mockRawMovie] });
+    vi.mocked(tmdbFetch).mockResolvedValue(mockTmdbResponse);
 
-    const req = {} as Request;
+    const req = createMockRequest();
     const res = createMockResponse();
 
     await getTrending(req, res);
 
-    expect(tmdbFetch).toHaveBeenCalledWith("/trending/movie/week");
-    expect(res.json).toHaveBeenCalledWith({ movies: [mockMappedMovie] });
+    expect(tmdbFetch).toHaveBeenCalledWith("/trending/movie/week", {
+      page: "1",
+    });
+    expect(res.json).toHaveBeenCalledWith({
+      movies: [mockMappedMovie],
+      totalPages: 5,
+    });
   });
 
   // Scenario: Fetch top-rated movies with a minimum vote count
@@ -112,9 +145,9 @@ describe("movie.controller", () => {
   //   When getTopRated is called
   //   Then it should filter by vote_count and return the mapped movies
   it("getTopRated returns mapped movies from /movie/top_rated", async () => {
-    vi.mocked(tmdbFetch).mockResolvedValue({ results: [mockRawMovie] });
+    vi.mocked(tmdbFetch).mockResolvedValue(mockTmdbResponse);
 
-    const req = {} as Request;
+    const req = createMockRequest();
     const res = createMockResponse();
 
     await getTopRated(req, res);
@@ -122,8 +155,12 @@ describe("movie.controller", () => {
     expect(tmdbFetch).toHaveBeenCalledWith("/movie/top_rated", {
       region: "ES",
       "vote_count.gte": "1000",
+      page: "1",
     });
-    expect(res.json).toHaveBeenCalledWith({ movies: [mockMappedMovie] });
+    expect(res.json).toHaveBeenCalledWith({
+      movies: [mockMappedMovie],
+      totalPages: 5,
+    });
   });
 
   // Scenario: Fetch upcoming movies for Spain
@@ -131,17 +168,21 @@ describe("movie.controller", () => {
   //   When getUpcoming is called
   //   Then it should request the ES region and return the mapped movies
   it("getUpcoming returns mapped movies from /movie/upcoming", async () => {
-    vi.mocked(tmdbFetch).mockResolvedValue({ results: [mockRawMovie] });
+    vi.mocked(tmdbFetch).mockResolvedValue(mockTmdbResponse);
 
-    const req = {} as Request;
+    const req = createMockRequest();
     const res = createMockResponse();
 
     await getUpcoming(req, res);
 
     expect(tmdbFetch).toHaveBeenCalledWith("/movie/upcoming", {
       region: "ES",
+      page: "1",
     });
-    expect(res.json).toHaveBeenCalledWith({ movies: [mockMappedMovie] });
+    expect(res.json).toHaveBeenCalledWith({
+      movies: [mockMappedMovie],
+      totalPages: 5,
+    });
   });
 
   // Scenario: Fetch full movie detail

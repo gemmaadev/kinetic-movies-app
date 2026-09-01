@@ -33,14 +33,17 @@ function mapPerson(person: TmdbPersonRaw): Person {
 
 export async function exploreController(req: Request, res: Response) {
   const { search, genre, minRating, year, language, page } = req.query;
+  const pageParam = page ? String(page) : "1";
 
   try {
     if (search && typeof search === "string") {
       const [movieResults, personResults] = await Promise.all([
-        tmdbFetch("/search/movie", { query: search }).catch((error) => {
-          console.error("Movie search failed:", error);
-          return null;
-        }),
+        tmdbFetch("/search/movie", { query: search, page: pageParam }).catch(
+          (error) => {
+            console.error("Movie search failed:", error);
+            return null;
+          },
+        ),
         tmdbFetch("/search/person", { query: search }).catch((error) => {
           console.error("Person search failed:", error);
           return null;
@@ -75,6 +78,7 @@ export async function exploreController(req: Request, res: Response) {
         movies: movieResults ? movieResults.results.map(mapMovie) : [],
         actors,
         directors,
+        totalPages: movieResults ? movieResults.total_pages : 0,
       });
     }
 
@@ -83,7 +87,7 @@ export async function exploreController(req: Request, res: Response) {
     if (minRating) params["vote_average.gte"] = String(minRating);
     if (year) params.primary_release_year = String(year);
     if (language) params.with_original_language = String(language);
-    if (page) params.page = String(page);
+    params.page = pageParam;
 
     params["vote_count.gte"] = "50";
     params.sort_by = "popularity.desc";
@@ -94,6 +98,7 @@ export async function exploreController(req: Request, res: Response) {
       movies: discoverResults.results.map(mapMovie),
       actors: [],
       directors: [],
+      totalPages: discoverResults.total_pages,
     });
   } catch (error) {
     return res.status(502).json({ error: "Failed to fetch data from TMDB" });
