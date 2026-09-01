@@ -17,6 +17,9 @@ import { useProfile } from "@/features/auth/hooks/useProfile";
 import { useLogout } from "@/features/auth/hooks/useLogout";
 import { LogoutConfirmModal } from "@/features/auth/components/LogoutConfirmModal";
 import { useFavoritesList } from "@/features/favorites/hooks/useFavoritesList";
+import { useMyRanking } from "@/features/stats/hooks/useMyRanking";
+import type { FavoriteMovie } from "@/features/favorites/types/favorite.types";
+import type { MyRankedMovie } from "@/features/stats/types/ranking.types";
 
 const sidebarLinks = [
   { icon: Home, label: "Resumen", active: true, to: "/perfil" },
@@ -32,12 +35,21 @@ export default function ProfilePage() {
   const { profile, isLoading, error } = useProfile();
   const logout = useLogout();
   const { favorites } = useFavoritesList();
+  const { myRanking } = useMyRanking();
 
   const stats = [
-    { icon: Clapperboard, value: "—", label: "Películas vistas" },
+    {
+      icon: Clapperboard,
+      value: String(calculateWatchedCount(favorites, myRanking)),
+      label: "Películas vistas",
+    },
     { icon: Heart, value: String(favorites.length), label: "Favoritas" },
-    { icon: Star, value: "—", label: "Puntuadas" },
-    { icon: TrendingUp, value: "—", label: "Puntuación media" },
+    { icon: Star, value: String(myRanking.length), label: "Puntuadas" },
+    {
+      icon: TrendingUp,
+      value: calculateAverageRating(myRanking),
+      label: "Puntuación media",
+    },
   ];
 
   if (isLoading) return <p className="p-6">Cargando...</p>;
@@ -161,4 +173,25 @@ export default function ProfilePage() {
       />
     </div>
   );
+}
+
+function calculateAverageRating(ranking: MyRankedMovie[]): string {
+  if (ranking.length === 0) return "—";
+  const sum = ranking.reduce(
+    (total, movie) => total + (movie.userRating ?? 0),
+    0,
+  );
+  return (sum / ranking.length).toFixed(1);
+}
+
+// NOTE: "Películas vistas" is an approximation (favorites ∪ rated),
+// not a real "watched" concept in the DB. Implementing it properly
+// would require a watched: Boolean field on UserMovie, with its own
+// endpoint/button — left as a possible future feature.
+function calculateWatchedCount(
+  favorites: FavoriteMovie[],
+  ranking: MyRankedMovie[],
+): number {
+  return new Set([...favorites.map((m) => m.id), ...ranking.map((m) => m.id)])
+    .size;
 }
