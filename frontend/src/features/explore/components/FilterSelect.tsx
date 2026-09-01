@@ -18,6 +18,7 @@ export function FilterSelect({
       <select
         value={value}
         onChange={(event) => onChange(event.target.value)}
+        aria-label={placeholder}
         className="appearance-none rounded-md bg-bg-surface p-2 pr-8 text-sm text-primary-text"
       >
         <option value="">{placeholder}</option>

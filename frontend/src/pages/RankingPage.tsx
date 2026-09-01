@@ -37,6 +37,7 @@ export default function RankingPage() {
 
               <Link
                 to={`/pelicula/${movie.id}`}
+                aria-label={`Puesto ${index + 1}: ${movie.title}, valoración media ${movie.averageRating.toFixed(1)} de 10, ${movie.ratingCount} votos`}
                 className="flex items-center gap-3 hover:text-brand-teal"
               >
                 {movie.posterUrl ? (
