@@ -79,3 +79,12 @@ export async function getUserMovie(
     where: { userId_movieId: { userId, movieId } },
   });
 }
+
+export async function getRankedMoviesByUser(
+  userId: string,
+): Promise<UserMovie[]> {
+  return prisma.userMovie.findMany({
+    where: { userId, userRating: { not: null } },
+    orderBy: { userRating: "desc" },
+  });
+}
