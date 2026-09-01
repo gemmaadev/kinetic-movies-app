@@ -40,9 +40,15 @@ export function useExplore(
       directors?: Person[];
       totalPages: number;
     }) {
-      setMovies((prev) =>
-        page === 1 ? data.movies : [...prev, ...data.movies],
-      );
+      setMovies((prev) => {
+        if (page === 1) return data.movies;
+
+        const existingIds = new Set(prev.map((movie) => movie.id));
+        const newMovies = data.movies.filter(
+          (movie) => !existingIds.has(movie.id),
+        );
+        return [...prev, ...newMovies];
+      });
       setActors(data.actors ?? []);
       setDirectors(data.directors ?? []);
       setTotalPages(data.totalPages);
