@@ -22,7 +22,10 @@ export default function RankingPage() {
         </span>
       </div>
 
-      <div className="flex flex-col gap-2 py-3 md:px-10 md:py-4">
+      <section
+        aria-label="Ranking de películas"
+        className="flex flex-col gap-2 py-3 md:px-10 md:py-4"
+      >
         <div className="grid grid-cols-[40px_1fr_90px] items-center gap-2 px-3 text-sm font-bold text-secondary-text md:grid-cols-[60px_1fr_150px_100px] md:gap-4">
           <span className="text-center">#</span>
           <span>PELÍCULA</span>
@@ -79,7 +82,7 @@ export default function RankingPage() {
             </li>
           ))}
         </ol>
-      </div>
+      </section>
     </div>
   );
 }
