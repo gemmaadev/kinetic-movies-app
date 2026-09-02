@@ -8,6 +8,14 @@ vi.mock("@/features/auth/hooks/useAuth", () => ({
   useAuth: vi.fn(),
 }));
 
+vi.mock("react-router", async () => {
+  const actual = await vi.importActual("react-router");
+  return {
+    ...actual,
+    ScrollRestoration: () => null,
+  };
+});
+
 describe("Layout", () => {
   beforeEach(() => {
     vi.mocked(useAuth).mockReturnValue({
