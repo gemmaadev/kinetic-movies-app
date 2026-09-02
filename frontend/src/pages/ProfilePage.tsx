@@ -71,53 +71,54 @@ export default function ProfilePage() {
           {isSidebarOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
         </button>
 
-        <ul
-          className={`${
-            isSidebarOpen ? "flex" : "hidden"
-          } flex-col gap-2 px-4 pb-4 md:flex md:gap-5 md:p-4`}
+        <nav
+          aria-label="Menú del perfil"
+          className={`${isSidebarOpen ? "block" : "hidden"} md:block`}
         >
-          {sidebarLinks.map((link) => {
-            const Icon = link.icon;
-            const itemClassName = `flex items-center gap-3 rounded-lg px-4 py-3 ${
-              link.active ? "bg-brand-blue font-bold" : "hover:bg-bg-surface"
-            }`;
+          <ul className="flex flex-col gap-2 px-4 pb-4 md:gap-5 md:p-4">
+            {sidebarLinks.map((link) => {
+              const Icon = link.icon;
+              const itemClassName = `flex items-center gap-3 rounded-lg px-4 py-3 ${
+                link.active ? "bg-brand-blue font-bold" : "hover:bg-bg-surface"
+              }`;
 
-            if (link.to) {
+              if (link.to) {
+                return (
+                  <li key={link.label}>
+                    <Link to={link.to} className={itemClassName}>
+                      <Icon size={20} />
+                      <span>{link.label}</span>
+                    </Link>
+                  </li>
+                );
+              }
+
               return (
-                <li key={link.label}>
-                  <Link to={link.to} className={itemClassName}>
-                    <Icon size={20} />
-                    <span>{link.label}</span>
-                  </Link>
+                <li
+                  key={link.label}
+                  className={`${itemClassName} cursor-not-allowed opacity-50`}
+                >
+                  <Icon size={20} />
+                  <span>{link.label}</span>
                 </li>
               );
-            }
+            })}
 
-            return (
-              <li
-                key={link.label}
-                className={`${itemClassName} cursor-not-allowed opacity-50`}
+            <li>
+              <button
+                onClick={() => setShowLogoutConfirm(true)}
+                className="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left hover:bg-bg-surface"
               >
-                <Icon size={20} />
-                <span>{link.label}</span>
-              </li>
-            );
-          })}
-
-          <li>
-            <button
-              onClick={() => setShowLogoutConfirm(true)}
-              className="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left hover:bg-bg-surface"
-            >
-              <LogOut size={20} />
-              <span>Cerrar sesión</span>
-            </button>
-          </li>
-        </ul>
+                <LogOut size={20} />
+                <span>Cerrar sesión</span>
+              </button>
+            </li>
+          </ul>
+        </nav>
       </aside>
 
       <main className="flex flex-col gap-10 p-10">
-        <div className="flex flex-col gap-10">
+        <section className="flex flex-col gap-10">
           <h1 className="text-4xl font-bold">Resumen</h1>
           <div className="flex max-w-2xl flex-row gap-3">
             {profile?.avatarUrl ? (
@@ -143,9 +144,12 @@ export default function ProfilePage() {
               </span>
             </div>
           </div>
-        </div>
+        </section>
 
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+        <section
+          aria-label="Estadísticas"
+          className="grid grid-cols-2 gap-4 md:grid-cols-4"
+        >
           {stats.map((stat) => {
             const Icon = stat.icon;
             return (
@@ -161,14 +165,14 @@ export default function ProfilePage() {
               </div>
             );
           })}
-        </div>
+        </section>
 
-        <div className="flex flex-col gap-3">
+        <section className="flex flex-col gap-3">
           <h2 className="text-2xl font-bold">Actividad reciente</h2>
           <p className="text-secondary-text">
             Aquí verás tu actividad reciente próximamente.
           </p>
-        </div>
+        </section>
       </main>
 
       <LogoutConfirmModal
