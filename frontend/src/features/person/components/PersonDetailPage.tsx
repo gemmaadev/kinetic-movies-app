@@ -58,6 +58,8 @@ export function PersonDetailPage({
           <img
             src={person.photoUrl}
             alt={`Imagen de ${person.name}`}
+            width={240}
+            height={360}
             className="w-60 self-start rounded-lg"
           />
         ) : (

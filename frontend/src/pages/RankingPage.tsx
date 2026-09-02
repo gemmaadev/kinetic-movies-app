@@ -52,6 +52,8 @@ export default function RankingPage() {
                   <img
                     src={movie.posterUrl}
                     alt={movie.title}
+                    width={48}
+                    height={48}
                     className="h-12 w-12 rounded-md object-cover"
                   />
                 ) : (

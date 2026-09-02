@@ -20,7 +20,13 @@ export default function NavBar() {
   return (
     <div className="flex items-center justify-between">
       <Link to="/">
-        <img src={logo} alt="Kinetic logo" className="h-11 cursor-pointer" />
+        <img
+          src={logo}
+          alt="Kinetic logo"
+          width={145}
+          height={44}
+          className="h-11 cursor-pointer"
+        />
       </Link>
 
       <nav className="hidden md:flex gap-10">
@@ -69,6 +75,8 @@ export default function NavBar() {
                 src={user.photoURL}
                 alt={user.displayName ?? "Usuario"}
                 referrerPolicy="no-referrer"
+                width={36}
+                height={36}
                 className="h-9 w-9 rounded-full object-cover"
               />
             ) : (

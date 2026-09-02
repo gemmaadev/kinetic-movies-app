@@ -28,6 +28,8 @@ export function MovieCard({ movie, userRating }: MovieCardProps) {
           <img
             src={movie.posterUrl}
             alt={movie.title}
+            width={160}
+            height={240}
             className="h-60 w-40 object-cover"
           />
         ) : (

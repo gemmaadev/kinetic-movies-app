@@ -79,6 +79,8 @@ function MovieDetailContent({
           <img
             src={movie.posterUrl ?? undefined}
             alt={`Póster de ${movie.title}`}
+            width={224}
+            height={336}
             className="w-56 self-start rounded-lg"
           />
 
@@ -206,6 +208,8 @@ function MovieDetailContent({
                       src={provider.logoUrl}
                       alt={provider.providerName}
                       title={provider.providerName}
+                      width={48}
+                      height={48}
                       className="h-12 w-12 rounded-lg"
                     />
                   </li>

@@ -33,7 +33,13 @@ export function Footer() {
     <>
       <div className="grid grid-cols-1 gap-8 md:grid-cols-5 pb-8">
         <div className="flex flex-col gap-3 md:col-span-2">
-          <img src={logo} alt="Kinetic logo" className="w-32 cursor-pointer" />
+          <img
+            src={logo}
+            alt="Kinetic logo"
+            width={128}
+            height={39}
+            className="w-32 cursor-pointer"
+          />
           <p className="text-secondary-text text-sm">
             Tu plataforma personal para explorar, <br /> valorar y disfrutar del
             mejor cine. Todo el universo <br />

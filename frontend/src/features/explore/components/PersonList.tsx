@@ -27,6 +27,8 @@ export function PersonList({ title, people, linkTo }: PersonListProps) {
                 <img
                   src={person.photoUrl}
                   alt={person.name}
+                  width={96}
+                  height={96}
                   className="h-20 w-20 rounded-full object-cover md:h-24 md:w-24"
                 />
               ) : (

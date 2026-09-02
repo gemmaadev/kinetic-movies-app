@@ -125,6 +125,8 @@ export default function ProfilePage() {
               <img
                 src={profile.avatarUrl}
                 alt={profile.name}
+                width={96}
+                height={96}
                 className="h-24 w-24 rounded-full object-cover"
               />
             ) : (
