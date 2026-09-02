@@ -74,6 +74,7 @@ describe("PersonDetailPage", () => {
       person: null,
       isLoading: true,
       error: null,
+      notFound: false,
     });
 
     renderWithRouter(defaultProps);
@@ -90,6 +91,7 @@ describe("PersonDetailPage", () => {
       person: null,
       isLoading: false,
       error: "Network error",
+      notFound: false,
     });
 
     renderWithRouter(defaultProps);
@@ -106,6 +108,7 @@ describe("PersonDetailPage", () => {
       person: null,
       isLoading: false,
       error: null,
+      notFound: true,
     });
 
     renderWithRouter({
@@ -125,6 +128,7 @@ describe("PersonDetailPage", () => {
       person: mockPerson,
       isLoading: false,
       error: null,
+      notFound: false,
     });
 
     renderWithRouter(defaultProps);
@@ -160,6 +164,7 @@ describe("PersonDetailPage", () => {
       person: personWithDirectorCredits,
       isLoading: false,
       error: null,
+      notFound: false,
     });
 
     renderWithRouter({ ...defaultProps, getMovies });
@@ -181,6 +186,7 @@ describe("PersonDetailPage", () => {
       person: mockPerson,
       isLoading: false,
       error: null,
+      notFound: false,
     });
 
     renderWithRouter({ ...defaultProps, moviesTitle: "Películas dirigidas" });
@@ -200,6 +206,7 @@ describe("PersonDetailPage", () => {
       person: mockPerson,
       isLoading: false,
       error: null,
+      notFound: false,
     });
 
     renderWithRouter(defaultProps);

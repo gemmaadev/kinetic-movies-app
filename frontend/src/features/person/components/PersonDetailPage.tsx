@@ -23,12 +23,27 @@ export function PersonDetailPage({
   notFoundMessage,
 }: PersonDetailPageProps) {
   const { id } = useParams();
-  const { person, isLoading, error } = usePersonDetail(id);
+  const { person, isLoading, error, notFound } = usePersonDetail(id);
   const [showAll, setShowAll] = useState(false);
 
   if (isLoading) return <p className="p-6">Cargando...</p>;
-  if (error) return <p className="p-6 text-error">Error: {error}</p>;
-  if (!person) return <p className="p-6">{notFoundMessage}</p>;
+  if (error)
+    return (
+      <p className="p-6 text-error">
+        Ha ocurrido un error. Inténtalo de nuevo más tarde.
+      </p>
+    );
+  if (notFound) {
+    return (
+      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-2 p-6 text-center">
+        <h1 className="text-2xl font-bold">{notFoundMessage}</h1>
+        <p className="text-secondary-text">
+          No hemos podido encontrar a la persona que buscas.
+        </p>
+      </div>
+    );
+  }
+  if (!person) return null;
 
   const movies = getMovies(person.filmography, person.filmographyAsDirector);
   const visibleMovies = showAll

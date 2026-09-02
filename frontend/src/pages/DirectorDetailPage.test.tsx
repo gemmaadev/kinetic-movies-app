@@ -54,6 +54,7 @@ it("renders directing filmography, not acting credits", () => {
     },
     isLoading: false,
     error: null,
+    notFound: false,
   });
 
   render(
