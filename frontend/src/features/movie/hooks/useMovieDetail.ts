@@ -1,20 +1,27 @@
 import { useEffect, useState } from "react";
-import { apiClient } from "@/shared/services/apiClient";
+import { apiClient, ApiError } from "@/shared/services/apiClient";
 import type { MovieDetail } from "../types/movieDetail.types";
 
 export function useMovieDetail(id: string | undefined) {
   const [movie, setMovie] = useState<MovieDetail | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
     if (!id) return;
 
     apiClient<MovieDetail>(`/api/movie/${id}`)
       .then((data) => setMovie(data))
-      .catch((error) => setError(error.message))
+      .catch((error) => {
+        if (error instanceof ApiError && error.status === 404) {
+          setNotFound(true);
+        } else {
+          setError(error.message);
+        }
+      })
       .finally(() => setIsLoading(false));
   }, [id]);
 
-  return { movie, isLoading, error };
+  return { movie, isLoading, error, notFound };
 }

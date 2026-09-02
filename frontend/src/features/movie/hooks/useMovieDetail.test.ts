@@ -1,10 +1,17 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, waitFor } from "@testing-library/react";
 import { useMovieDetail } from "./useMovieDetail";
-import { apiClient } from "@/shared/services/apiClient";
+import { apiClient, ApiError } from "@/shared/services/apiClient";
 
 vi.mock("@/shared/services/apiClient", () => ({
   apiClient: vi.fn(),
+  ApiError: class ApiError extends Error {
+    status: number;
+    constructor(status: number, statusText: string) {
+      super(`API request failed: ${status} ${statusText}`);
+      this.status = status;
+    }
+  },
 }));
 
 const mockMovie = {
@@ -47,21 +54,38 @@ describe("useMovieDetail", () => {
     expect(apiClient).toHaveBeenCalledWith("/api/movie/157336");
     expect(result.current.movie).toEqual(mockMovie);
     expect(result.current.error).toBeNull();
+    expect(result.current.notFound).toBe(false);
   });
 
-  // Scenario: API request fails
-  //   Given a movie id that does not exist or the request fails
+  // Scenario: API request fails with a generic error
+  //   Given a request that fails with a non-404 error
   //   When the hook is called
   //   Then it should set the error and leave the movie as null
-  it("sets error when the request fails", async () => {
-    vi.mocked(apiClient).mockRejectedValue(new Error("Not found"));
+  it("sets error when the request fails with a generic error", async () => {
+    vi.mocked(apiClient).mockRejectedValue(new Error("Network error"));
 
     const { result } = renderHook(() => useMovieDetail("999999"));
 
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
-    expect(result.current.error).toBe("Not found");
+    expect(result.current.error).toBe("Network error");
     expect(result.current.movie).toBeNull();
+    expect(result.current.notFound).toBe(false);
+  });
+
+  // Scenario: Movie not found (404)
+  //   Given a movie id that doesn't exist in TMDB
+  //   When the hook is called
+  //   Then it should set notFound to true, not error
+  it("sets notFound when the API returns a 404", async () => {
+    vi.mocked(apiClient).mockRejectedValue(new ApiError(404, "Not Found"));
+
+    const { result } = renderHook(() => useMovieDetail("999999999"));
+
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+    expect(result.current.notFound).toBe(true);
+    expect(result.current.error).toBeNull();
   });
 
   // Scenario: No id is provided

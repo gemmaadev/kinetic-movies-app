@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { tmdbFetch } from "../../../shared/tmdbClient.js";
+import { TmdbError, tmdbFetch } from "../../../shared/tmdbClient.js";
 import type {
   TmdbMovieRaw,
   TmdbMovieDetailRaw,
@@ -176,6 +176,9 @@ export async function getMovieDetail(req: AuthenticatedRequest, res: Response) {
 
     return res.json({ ...mapMovieDetail(movie), isFavourite, userRating });
   } catch (error) {
+    if (error instanceof TmdbError && error.status === 404) {
+      return res.status(404).json({ error: "Movie not found" });
+    }
     console.error(`Failed to fetch movie detail for id ${id}:`, error);
     return res.status(502).json({ error: "Failed to fetch data from TMDB" });
   }

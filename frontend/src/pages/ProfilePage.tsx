@@ -53,7 +53,12 @@ export default function ProfilePage() {
   ];
 
   if (isLoading) return <p className="p-6">Cargando...</p>;
-  if (error) return <p className="p-6 text-error">Error: {error}</p>;
+  if (error)
+    return (
+      <p className="p-6 text-error">
+        Ha ocurrido un error. Inténtalo de nuevo más tarde.
+      </p>
+    );
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-[280px_1fr]">

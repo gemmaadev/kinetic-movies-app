@@ -8,10 +8,17 @@ import {
   getUpcoming,
   getMovieDetail,
 } from "./movie.controller.js";
-import { tmdbFetch } from "../../../shared/tmdbClient.js";
+import { TmdbError, tmdbFetch } from "../../../shared/tmdbClient.js";
 
 vi.mock("../../../shared/tmdbClient.js", () => ({
   tmdbFetch: vi.fn(),
+  TmdbError: class TmdbError extends Error {
+    status: number;
+    constructor(status: number, statusText: string) {
+      super(`TMDB request failed: ${status} ${statusText}`);
+      this.status = status;
+    }
+  },
 }));
 
 function createMockResponse() {
@@ -311,4 +318,20 @@ describe("movie.controller", () => {
 
     expect(res.status).toHaveBeenCalledWith(502);
   });
+});
+
+// Scenario: TMDB returns 404 (movie not found)
+//   Given TMDB responds with a 404 for this movie id
+//   When getMovieDetail is called
+//   Then it should return 404 with a clear "Movie not found" message
+it("getMovieDetail returns 404 when the movie doesn't exist", async () => {
+  vi.mocked(tmdbFetch).mockRejectedValue(new TmdbError(404, "Not Found"));
+
+  const req = { params: { id: "999999999" } } as unknown as Request;
+  const res = createMockResponse();
+
+  await getMovieDetail(req, res);
+
+  expect(res.status).toHaveBeenCalledWith(404);
+  expect(res.json).toHaveBeenCalledWith({ error: "Movie not found" });
 });

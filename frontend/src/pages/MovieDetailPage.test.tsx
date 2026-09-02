@@ -72,6 +72,7 @@ describe("MovieDetailPage", () => {
       movie: null,
       isLoading: true,
       error: null,
+      notFound: false,
     });
 
     renderWithRouter();
@@ -88,6 +89,7 @@ describe("MovieDetailPage", () => {
       movie: null,
       isLoading: false,
       error: "Network error",
+      notFound: false,
     });
 
     renderWithRouter();
@@ -99,16 +101,17 @@ describe("MovieDetailPage", () => {
   //   Given I navigate to a movie detail page with an invalid id
   //   When the request completes without finding the movie
   //   Then I should see the message "Película no encontrada"
-  it("shows not found state when movie is null", () => {
+  it("shows not found state when notFound is true", () => {
     vi.mocked(useMovieDetail).mockReturnValue({
       movie: null,
       isLoading: false,
       error: null,
+      notFound: true,
     });
 
     renderWithRouter();
 
-    expect(screen.getByText(/no encontrada/i)).toBeInTheDocument();
+    expect(screen.getByText(/Película no encontrada/i)).toBeInTheDocument();
   });
 
   // Scenario: View the detail sheet of an existing movie
@@ -120,6 +123,7 @@ describe("MovieDetailPage", () => {
       movie: mockMovie,
       isLoading: false,
       error: null,
+      notFound: false,
     });
 
     renderWithRouter();
@@ -138,6 +142,7 @@ describe("MovieDetailPage", () => {
       movie: mockMovie,
       isLoading: false,
       error: null,
+      notFound: false,
     });
 
     renderWithRouter();
@@ -157,6 +162,7 @@ describe("MovieDetailPage", () => {
       movie: { ...mockMovie, userRating: 6 },
       isLoading: false,
       error: null,
+      notFound: false,
     });
 
     renderWithRouter();
@@ -179,6 +185,7 @@ describe("MovieDetailPage", () => {
       movie: mockMovie,
       isLoading: false,
       error: null,
+      notFound: false,
     });
 
     const { default: userEvent } = await import("@testing-library/user-event");

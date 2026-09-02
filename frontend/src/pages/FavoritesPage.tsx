@@ -23,7 +23,12 @@ export default function FavoritesPage() {
   });
 
   if (isLoading) return <p className="p-6">Cargando...</p>;
-  if (error) return <p className="p-6 text-error">Error: {error}</p>;
+  if (error)
+    return (
+      <p className="p-6 text-error">
+        Ha ocurrido un error. Inténtalo de nuevo más tarde.
+      </p>
+    );
 
   return (
     <div className="flex flex-col gap-4 p-4 md:p-6">

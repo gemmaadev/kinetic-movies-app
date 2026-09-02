@@ -14,12 +14,27 @@ import { Link, useParams } from "react-router";
 
 export default function MovieDetailPage() {
   const { id } = useParams();
-  const { movie, isLoading, error } = useMovieDetail(id);
+  const { movie, isLoading, error, notFound } = useMovieDetail(id);
   const { rateMovie } = useRating();
 
   if (isLoading) return <p className="p-6">Cargando...</p>;
-  if (error) return <p className="p-6 text-error">Error: {error}</p>;
-  if (!movie) return <p className="p-6">Película no encontrada.</p>;
+  if (error)
+    return (
+      <p className="p-6 text-error">
+        Ha ocurrido un error. Inténtalo de nuevo más tarde.
+      </p>
+    );
+  if (notFound) {
+    return (
+      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-2 p-6 text-center">
+        <h1 className="text-2xl font-bold">Película no encontrada</h1>
+        <p className="text-secondary-text">
+          No hemos podido encontrar la película que buscas.
+        </p>
+      </div>
+    );
+  }
+  if (!movie) return null;
 
   return <MovieDetailContent movie={movie} rateMovie={rateMovie} />;
 }

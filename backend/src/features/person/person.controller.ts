@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { tmdbFetch } from "../../shared/tmdbClient.js";
+import { tmdbFetch, TmdbError } from "../../shared/tmdbClient.js";
 import type {
   TmdbPersonDetailRaw,
   TmdbMovieCreditRaw,
@@ -59,6 +59,9 @@ export async function getPersonDetail(req: Request, res: Response) {
     });
     return res.json(mapPersonDetail(person));
   } catch (error) {
+    if (error instanceof TmdbError && error.status === 404) {
+      return res.status(404).json({ error: "Person not found" });
+    }
     console.error(`Failed to fetch person detail for id ${id}:`, error);
     return res.status(502).json({ error: "Failed to fetch data from TMDB" });
   }

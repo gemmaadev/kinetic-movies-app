@@ -1,3 +1,13 @@
+export class TmdbError extends Error {
+  status: number;
+
+  constructor(status: number, statusText: string) {
+    super(`TMDB request failed: ${status} ${statusText}`);
+    this.name = "TmdbError";
+    this.status = status;
+  }
+}
+
 const TMDB_API_KEY = process.env.TMDB_API_KEY;
 const TMDB_BASE_URL = process.env.TMDB_BASE_URL;
 
@@ -21,9 +31,7 @@ export async function tmdbFetch(
   const response = await fetch(url.toString());
 
   if (!response.ok) {
-    throw new Error(
-      `TMDB request failed: ${response.status} ${response.statusText}`,
-    );
+    throw new TmdbError(response.status, response.statusText);
   }
 
   return response.json();
