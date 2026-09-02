@@ -19,6 +19,10 @@ describe("exploreController", () => {
     vi.clearAllMocks();
   });
 
+  // Scenario: Search by text returns combined movies, actors, and directors
+  //   Given a search query
+  //   When exploreController is called
+  //   Then it should return matching movies, actors, and directors
   it("returns combined movies, actors, and directors when searching by text", async () => {
     vi.mocked(tmdbFetch).mockImplementation((endpoint: string) => {
       if (endpoint === "/search/movie") {
@@ -32,6 +36,7 @@ describe("exploreController", () => {
               release_date: "2024-01-01",
             },
           ],
+          total_pages: 3,
         });
       }
       if (endpoint === "/search/person") {
@@ -78,9 +83,14 @@ describe("exploreController", () => {
         },
       ],
       directors: [{ id: 20, name: "Jon Watts", photoUrl: null }],
+      totalPages: 3,
     });
   });
 
+  // Scenario: Person search fails, but movie search succeeds
+  //   Given the person search fails
+  //   When exploreController is called
+  //   Then it should still return movies, with empty actors/directors
   it("returns movies only (empty actors/directors) when only the person search fails", async () => {
     vi.mocked(tmdbFetch).mockImplementation((endpoint: string) => {
       if (endpoint === "/search/movie") {
@@ -94,6 +104,7 @@ describe("exploreController", () => {
               release_date: "2024-01-01",
             },
           ],
+          total_pages: 1,
         });
       }
       return Promise.reject(new Error("TMDB person search down"));
@@ -117,9 +128,14 @@ describe("exploreController", () => {
       ],
       actors: [],
       directors: [],
+      totalPages: 1,
     });
   });
 
+  // Scenario: Both searches fail
+  //   Given both movie and person searches fail
+  //   When exploreController is called
+  //   Then it should return 502
   it("returns 502 when both search calls fail", async () => {
     vi.mocked(tmdbFetch).mockRejectedValue(new Error("TMDB is down"));
 
@@ -134,6 +150,10 @@ describe("exploreController", () => {
     });
   });
 
+  // Scenario: No search text, uses discover/movie with filters
+  //   Given filters but no search text
+  //   When exploreController is called
+  //   Then it should call discover/movie with the mapped filter params, including page
   it("uses discover/movie with filters when there is no search text", async () => {
     vi.mocked(tmdbFetch).mockResolvedValue({
       results: [
@@ -145,6 +165,7 @@ describe("exploreController", () => {
           release_date: "2023-05-01",
         },
       ],
+      total_pages: 8,
     });
 
     const req = {
@@ -173,9 +194,14 @@ describe("exploreController", () => {
       ],
       actors: [],
       directors: [],
+      totalPages: 8,
     });
   });
 
+  // Scenario: discover/movie fails
+  //   Given TMDB is unreachable
+  //   When exploreController is called
+  //   Then it should return 502
   it("returns 502 when discover/movie fails", async () => {
     vi.mocked(tmdbFetch).mockRejectedValue(new Error("TMDB is down"));
 

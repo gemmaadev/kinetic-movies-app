@@ -11,6 +11,10 @@ describe("tmdbFetch", () => {
     vi.restoreAllMocks();
   });
 
+  // Scenario: Successful TMDB request
+  //   Given a valid TMDB endpoint
+  //   When tmdbFetch is called
+  //   Then it should include the api_key parameter and return the parsed JSON
   it("calls TMDB with the api_key parameter", async () => {
     const { tmdbFetch } = await import("./tmdbClient.js");
     const mockResponse = { results: [{ title: "Test Movie" }] };
@@ -28,6 +32,10 @@ describe("tmdbFetch", () => {
     expect(data).toEqual(mockResponse);
   });
 
+  // Scenario: TMDB request fails
+  //   Given TMDB returns a non-ok response
+  //   When tmdbFetch is called
+  //   Then it should throw a TmdbError with the failure details
   it("throws an error when the TMDB request fails", async () => {
     const { tmdbFetch } = await import("./tmdbClient.js");
 

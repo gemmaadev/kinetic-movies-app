@@ -33,6 +33,10 @@ describe("MovieCard", () => {
     });
   });
 
+  // Scenario: Render the movie's basic info
+  //   Given a movie with title, rating, and release year
+  //   When the card renders
+  //   Then all three should be visible
   it("renders the movie title, rating and release year", () => {
     renderMovieCard(mockMovie);
 
@@ -41,6 +45,10 @@ describe("MovieCard", () => {
     expect(screen.getByText("2024")).toBeInTheDocument();
   });
 
+  // Scenario: Card links to the movie's detail page
+  //   Given a movie with a given id
+  //   When the card renders
+  //   Then it should link to /pelicula/:id
   it("links to the correct movie detail page", () => {
     renderMovieCard(mockMovie);
 
@@ -48,6 +56,10 @@ describe("MovieCard", () => {
     expect(link).toHaveAttribute("href", "/pelicula/2");
   });
 
+  // Scenario: Poster image renders with the correct source
+  //   Given a movie with a posterUrl
+  //   When the card renders
+  //   Then the image should have the correct src and alt text
   it("renders the poster image with correct src and alt", () => {
     renderMovieCard(mockMovie);
 
@@ -58,6 +70,10 @@ describe("MovieCard", () => {
     );
   });
 
+  // Scenario: No poster available
+  //   Given a movie without a posterUrl
+  //   When the card renders
+  //   Then it should show an accessible placeholder instead of breaking
   it("does not break when posterUrl is null", () => {
     renderMovieCard({ ...mockMovie, posterUrl: null });
 

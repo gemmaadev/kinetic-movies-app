@@ -26,6 +26,10 @@ describe("getPersonDetail", () => {
     vi.clearAllMocks();
   });
 
+  // Scenario: Fetch full person detail
+  //   Given TMDB returns a person with acting and directing credits
+  //   When getPersonDetail is called
+  //   Then filmography and filmographyAsDirector should be correctly separated and mapped
   it("returns person detail with filmography and filmographyAsDirector", async () => {
     vi.mocked(tmdbFetch).mockResolvedValue({
       id: 525,
@@ -87,6 +91,10 @@ describe("getPersonDetail", () => {
     );
   });
 
+  // Scenario: TMDB fails with a generic error
+  //   Given TMDB is unreachable
+  //   When getPersonDetail is called
+  //   Then it should return 502
   it("returns 502 when TMDB fails", async () => {
     vi.mocked(tmdbFetch).mockRejectedValue(new Error("TMDB is down"));
 
@@ -100,20 +108,20 @@ describe("getPersonDetail", () => {
       error: "Failed to fetch data from TMDB",
     });
   });
-});
 
-// Scenario: TMDB returns 404 (person not found)
-//   Given TMDB responds with a 404 for this person id
-//   When getPersonDetail is called
-//   Then it should return 404 with a clear "Person not found" message
-it("getPersonDetail returns 404 when the person doesn't exist", async () => {
-  vi.mocked(tmdbFetch).mockRejectedValue(new TmdbError(404, "Not Found"));
+  // Scenario: TMDB returns 404 (person not found)
+  //   Given TMDB responds with a 404 for this person id
+  //   When getPersonDetail is called
+  //   Then it should return 404 with a clear "Person not found" message
+  it("returns 404 when the person doesn't exist", async () => {
+    vi.mocked(tmdbFetch).mockRejectedValue(new TmdbError(404, "Not Found"));
 
-  const req = { params: { id: "999999999" } } as unknown as Request;
-  const res = createMockResponse();
+    const req = { params: { id: "999999999" } } as unknown as Request;
+    const res = createMockResponse();
 
-  await getPersonDetail(req, res);
+    await getPersonDetail(req, res);
 
-  expect(res.status).toHaveBeenCalledWith(404);
-  expect(res.json).toHaveBeenCalledWith({ error: "Person not found" });
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.json).toHaveBeenCalledWith({ error: "Person not found" });
+  });
 });

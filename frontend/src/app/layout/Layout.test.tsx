@@ -18,6 +18,10 @@ describe("Layout", () => {
     });
   });
 
+  // Scenario: Header with navigation is always visible
+  //   Given the Layout is rendered
+  //   When the page loads
+  //   Then the header should be visible with the navigation links
   it("renders the header with navigation", () => {
     render(
       <MemoryRouter>
@@ -36,6 +40,10 @@ describe("Layout", () => {
     ).toBeInTheDocument();
   });
 
+  // Scenario: Active route's content renders inside the Outlet
+  //   Given a route is active within the Layout
+  //   When the page renders
+  //   Then that route's content should be visible
   it("renders the active route's content inside the Outlet", () => {
     render(
       <MemoryRouter>

@@ -22,6 +22,10 @@ describe("useNowPlaying", () => {
     vi.clearAllMocks();
   });
 
+  // Scenario: Successfully load now-playing movies
+  //   Given the API returns now-playing movies
+  //   When the hook mounts
+  //   Then it should store the movies and stop loading
   it("fetches and returns now-playing movies", async () => {
     vi.mocked(apiClient).mockResolvedValue({ movies: mockMovies });
 
@@ -36,6 +40,10 @@ describe("useNowPlaying", () => {
     expect(result.current.error).toBeNull();
   });
 
+  // Scenario: API request fails
+  //   Given the API call fails
+  //   When the hook mounts
+  //   Then it should set an error and leave movies empty
   it("sets error when the request fails", async () => {
     vi.mocked(apiClient).mockRejectedValue(new Error("Network error"));
 
