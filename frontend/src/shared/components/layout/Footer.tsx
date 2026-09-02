@@ -43,7 +43,7 @@ export function Footer() {
 
         <FooterColumn title="DESCUBRIR" links={discoverLinks} />
 
-        <div className="flex flex-col gap-3">
+        <nav aria-label="Cuenta" className="flex flex-col gap-3">
           <h4 className="font-bold">CUENTA</h4>
           <ul className="flex flex-col gap-2">
             <li>
@@ -63,7 +63,7 @@ export function Footer() {
               </button>
             </li>
           </ul>
-        </div>
+        </nav>
 
         <FooterColumn title="LEGAL" links={legalLinks} />
 
@@ -109,7 +109,7 @@ function FooterColumn({
   links: { to: string; label: string }[];
 }) {
   return (
-    <div className="flex flex-col gap-3">
+    <nav aria-label={title} className="flex flex-col gap-3">
       <h4 className="font-bold">{title}</h4>
       <ul className="flex flex-col gap-2">
         {links.map(({ to, label }) => (
@@ -120,6 +120,6 @@ function FooterColumn({
           </li>
         ))}
       </ul>
-    </div>
+    </nav>
   );
 }
