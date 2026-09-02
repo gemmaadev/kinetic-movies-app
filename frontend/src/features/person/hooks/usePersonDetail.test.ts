@@ -1,10 +1,17 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, waitFor } from "@testing-library/react";
 import { usePersonDetail } from "./usePersonDetail";
-import { apiClient } from "@/shared/services/apiClient";
+import { apiClient, ApiError } from "@/shared/services/apiClient";
 
 vi.mock("@/shared/services/apiClient", () => ({
   apiClient: vi.fn(),
+  ApiError: class ApiError extends Error {
+    status: number;
+    constructor(status: number, statusText: string) {
+      super(`API request failed: ${status} ${statusText}`);
+      this.status = status;
+    }
+  },
 }));
 
 const mockPerson = {
@@ -39,21 +46,38 @@ describe("usePersonDetail", () => {
     expect(apiClient).toHaveBeenCalledWith("/api/person/6193");
     expect(result.current.person).toEqual(mockPerson);
     expect(result.current.error).toBeNull();
+    expect(result.current.notFound).toBe(false);
   });
 
-  // Scenario: API request fails
-  //   Given a person id that does not exist or the request fails
+  // Scenario: API request fails with a generic error
+  //   Given a request that fails with a non-404 error
   //   When the hook is called
   //   Then it should set the error and leave the person as null
-  it("sets error when the request fails", async () => {
-    vi.mocked(apiClient).mockRejectedValue(new Error("Not found"));
+  it("sets error when the request fails with a generic error", async () => {
+    vi.mocked(apiClient).mockRejectedValue(new Error("Network error"));
 
     const { result } = renderHook(() => usePersonDetail("999999"));
 
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
-    expect(result.current.error).toBe("Not found");
+    expect(result.current.error).toBe("Network error");
     expect(result.current.person).toBeNull();
+    expect(result.current.notFound).toBe(false);
+  });
+
+  // Scenario: Person not found (404)
+  //   Given a person id that doesn't exist in TMDB
+  //   When the hook is called
+  //   Then it should set notFound to true, not error
+  it("sets notFound when the API returns a 404", async () => {
+    vi.mocked(apiClient).mockRejectedValue(new ApiError(404, "Not Found"));
+
+    const { result } = renderHook(() => usePersonDetail("999999999"));
+
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+    expect(result.current.notFound).toBe(true);
+    expect(result.current.error).toBeNull();
   });
 
   // Scenario: No id is provided
