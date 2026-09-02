@@ -22,6 +22,10 @@ describe("useTrending", () => {
     vi.clearAllMocks();
   });
 
+  // Scenario: Successfully load trending movies
+  //   Given the API returns trending movies
+  //   When the hook mounts
+  //   Then it should store the movies and stop loading
   it("fetches and returns trending movies", async () => {
     vi.mocked(apiClient).mockResolvedValue({ movies: mockMovies });
 
@@ -36,6 +40,10 @@ describe("useTrending", () => {
     expect(result.current.error).toBeNull();
   });
 
+  // Scenario: API request fails
+  //   Given the API call fails
+  //   When the hook mounts
+  //   Then it should set an error and leave movies empty
   it("sets error when the request fails", async () => {
     vi.mocked(apiClient).mockRejectedValue(new Error("Network error"));
 

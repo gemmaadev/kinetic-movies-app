@@ -6,6 +6,10 @@ describe("Database connection", () => {
     await prisma.$disconnect();
   });
 
+  // Scenario: Database connection works end-to-end
+  //   Given a real connection to the database
+  //   When a User and a related UserMovie are created
+  //   Then both should be persisted correctly, then cleaned up
   it("connects and creates a test User and UserMovie record", async () => {
     const testUid = `test-${Date.now()}`;
 

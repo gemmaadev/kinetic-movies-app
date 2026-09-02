@@ -10,7 +10,7 @@ interface MovieCardProps {
 
 export function MovieCard({ movie, userRating }: MovieCardProps) {
   return (
-    <div className="relative w-40 shrink-0 overflow-hidden rounded-lg bg-bg-surface transition-transform hover:scale-[1.02]">
+    <article className="relative w-40 shrink-0 overflow-hidden rounded-lg bg-bg-surface transition-transform hover:scale-[1.02]">
       <div className="absolute right-2 top-2 z-10">
         <FavoriteButton
           movie={{
@@ -56,6 +56,6 @@ export function MovieCard({ movie, userRating }: MovieCardProps) {
           )}
         </div>
       </Link>
-    </div>
+    </article>
   );
 }

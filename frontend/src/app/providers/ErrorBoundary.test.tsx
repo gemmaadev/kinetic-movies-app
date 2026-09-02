@@ -8,6 +8,10 @@ function ProblemChild(): ReactElement {
 }
 
 describe("ErrorBoundary", () => {
+  // Scenario: A child component throws an error
+  //   Given a child component throws during render
+  //   When ErrorBoundary catches it
+  //   Then the fallback UI should be shown instead
   it("shows the fallback when a child throws an error", () => {
     vi.spyOn(console, "error").mockImplementation(() => {});
 
@@ -20,6 +24,10 @@ describe("ErrorBoundary", () => {
     expect(screen.getByText("Algo ha ido mal")).toBeInTheDocument();
   });
 
+  // Scenario: No error occurs
+  //   Given a child component renders without throwing
+  //   When ErrorBoundary wraps it
+  //   Then the child's content should render normally
   it("renders children normally when there is no error", () => {
     render(
       <ErrorBoundary>

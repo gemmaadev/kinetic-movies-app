@@ -18,6 +18,10 @@ function createMockResponse() {
 }
 
 describe("verifyFirebaseToken", () => {
+  // Scenario: Valid token
+  //   Given a request with a valid Firebase token
+  //   When verifyFirebaseToken runs
+  //   Then it should attach userId to the request and call next()
   it("calls next() and sets req.userId when the token is valid", async () => {
     vi.mocked(firebaseAuth.verifyIdToken).mockResolvedValue({
       uid: "user-123",
@@ -36,6 +40,10 @@ describe("verifyFirebaseToken", () => {
     expect(res.status).not.toHaveBeenCalled();
   });
 
+  // Scenario: Invalid or expired token
+  //   Given a request with a token that Firebase rejects
+  //   When verifyFirebaseToken runs
+  //   Then it should return 401 without calling next()
   it("returns 401 when the token is invalid", async () => {
     vi.mocked(firebaseAuth.verifyIdToken).mockRejectedValue(
       new Error("Invalid token"),
@@ -56,6 +64,10 @@ describe("verifyFirebaseToken", () => {
     expect(next).not.toHaveBeenCalled();
   });
 
+  // Scenario: No token provided
+  //   Given a request without an Authorization header
+  //   When verifyFirebaseToken runs
+  //   Then it should return 401 without calling next()
   it("returns 401 when no token is provided", async () => {
     const req = { headers: {} } as AuthenticatedRequest;
     const res = createMockResponse();
