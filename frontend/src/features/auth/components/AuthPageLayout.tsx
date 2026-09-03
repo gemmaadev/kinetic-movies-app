@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import backgroundImage from "@/shared/assets/background-login-register.png";
+import backgroundImage from "@/shared/assets/background-login-register.webp";
 
 interface AuthPageLayoutProps {
   children: ReactNode;

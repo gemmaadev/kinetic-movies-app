@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="./frontend/src/shared/assets/logo.png" alt="Kinetic Logo" width="300" />
+<img src="./frontend/src/shared/assets/logo.webp" alt="Kinetic Logo" width="300" />
 
 ### Kinetic - Movies App
 
@@ -199,10 +199,10 @@ npm test
 
 | Category   | Frontend | Backend |
 | ---------- | -------- | ------- |
-| Statements | 88.68%   | 84.98%  |
-| Branches   | 85.09%   | 77.2%   |
-| Functions  | 82.84%   | 82.53%  |
-| Lines      | 89.72%   | 85.13%  |
+| Statements | 88.56%   | 84.98%  |
+| Branches   | 83.63%   | 77.2%   |
+| Functions  | 82.92%   | 82.53%  |
+| Lines      | 89.86%   | 85.13%  |
 
 _Tests written following Gherkin scenarios (Given / When / Then) as comments above each test._
 
@@ -246,16 +246,16 @@ kinetic-movies-app/
         ├── pages/                   # Top-level pages (one per route)
         ├── shared/
         │   ├── components/          # Buttons, EmptyState, FormField, layout (NavBar, Footer)
-        │   ├── hooks/                # useDebounce
-        │   └── services/             # apiClient (ApiError), firebase.ts
+        │   ├── hooks/               # useDebounce
+        │   ├── services/            # apiClient (ApiError), firebase.ts
+        │   └── utils/               # resizePosterUrl
         └── features/
             ├── auth/                 # AuthContext, AuthProvider, login/register hooks
-            ├── explore/               # useExplore, MovieCard, MovieGrid, filters
-            ├── movie/                 # useMovieDetail, movie detail types
-            ├── person/                # Shared PersonDetailPage, usePersonDetail
-            ├── favorites/             # FavoritesContext, FavoriteButton, RatingInput, useRating
-            └── stats/                 # useRanking, useMyRanking
-```
+            ├── explore/              # useExplore, MovieCard, MovieGrid, filters
+            ├── movie/                # useMovieDetail, movie detail types
+            ├── person/               # Shared PersonDetailPage, usePersonDetail
+            ├── favorites/            # FavoritesContext, FavoriteButton, RatingInput, useRating
+            └── stats/                # useRanking, useMyRanking
 
 ---
 
@@ -273,6 +273,7 @@ kinetic-movies-app/
 - **Debounced search input** — text search is debounced (400ms) before triggering a request, avoiding a network call on every keystroke
 - **Split test types** — most tests are unit tests with mocked dependencies; the ranking aggregation queries (`groupBy`, averages) are tested as integration tests against a real database, since mocking Prisma's aggregation behavior would test the mock, not the actual SQL logic
 - **Accessibility as a first-class concern** — semantic HTML applied consciously throughout the codebase, only where it genuinely reflects the content's structure rather than as a blanket replacement for generic elements; `aria-label` added to icon-only buttons and grouped links; verified with Lighthouse across all pages (92–94% accessibility score)
+- **Performance-conscious images** — explicit `width`/`height` to avoid layout shift, static assets converted to WebP, TMDB images requested at the smallest size needed. Verified with Lighthouse: 90–100% Performance, 0 CLS
 
 ---
 
@@ -281,3 +282,4 @@ kinetic-movies-app/
 **Gemma Maeso** · [@gemmaadev](https://github.com/gemmaadev)
 
 Project developed as part of the **IT Academy** program by Barcelona Activa
+```

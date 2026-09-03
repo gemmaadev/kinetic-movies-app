@@ -2,6 +2,7 @@ import { Link } from "react-router";
 import { Star } from "lucide-react";
 import type { Movie } from "../types/movie.types";
 import { FavoriteButton } from "@/features/favorites/components/FavoriteButton";
+import { resizePosterUrl } from "@/shared/utils/resizePosterUrl";
 
 interface MovieCardProps {
   movie: Movie;
@@ -26,8 +27,10 @@ export function MovieCard({ movie, userRating }: MovieCardProps) {
       <Link to={`/pelicula/${movie.id}`}>
         {movie.posterUrl ? (
           <img
-            src={movie.posterUrl}
+            src={resizePosterUrl(movie.posterUrl, "w200") ?? undefined}
             alt={movie.title}
+            width={160}
+            height={240}
             className="h-60 w-40 object-cover"
           />
         ) : (

@@ -1,6 +1,6 @@
 import { HeroSection } from "@/shared/components/HeroSection";
 import { PrimaryLinkButton } from "@/shared/components/buttons/PrimaryLinkButton";
-import heroBackground from "@/shared/assets/hero-background.png";
+import heroBackground from "@/shared/assets/hero.webp";
 import { Heart, Search, Star, User } from "lucide-react";
 import { PageContainer } from "@/shared/components/PageContainer";
 import { MovieCarousel } from "@/features/explore/components/MovieCarousel";
@@ -78,10 +78,7 @@ export default function HomePage() {
             movies={trending.movies}
           />
 
-          <MovieCarousel
-            title="En cines"
-            movies={nowPlaying.movies}
-          />
+          <MovieCarousel title="En cines" movies={nowPlaying.movies} />
         </PageContainer>
       </div>
     </div>

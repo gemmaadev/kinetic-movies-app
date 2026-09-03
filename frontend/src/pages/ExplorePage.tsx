@@ -90,7 +90,6 @@ export default function ExplorePage() {
   return (
     <div className="flex flex-col gap-6 p-4 md:p-6">
       <h1 className="text-3xl font-bold md:text-4xl">Explorar</h1>
-
       <div className="flex gap-3">
         <div className="relative flex-1">
           <Search
@@ -118,11 +117,9 @@ export default function ExplorePage() {
           </button>
         )}
       </div>
-
       {showFilters && !search && (
         <ExploreFilters filters={filters} onChange={handleFiltersChange} />
       )}
-
       {!search && (
         <div className="flex flex-wrap gap-2 md:gap-3">
           {categories.map((category) => (
@@ -141,7 +138,11 @@ export default function ExplorePage() {
         </div>
       )}
 
-      {isLoading && page === 1 && <p>Cargando...</p>}
+      {isLoading && page === 1 && (
+        <div className="min-h-[60vh]">
+          <p>Cargando...</p>
+        </div>
+      )}
       {error && <p className="text-error">Error: {error}</p>}
       {!isLoading &&
         !error &&
@@ -153,7 +154,6 @@ export default function ExplorePage() {
             cite="Star Wars: Episode IV – A New Hope"
           />
         )}
-
       {movies.length > 0 && (
         <section className="flex flex-col gap-3">
           <h2 className="text-xl font-bold md:text-2xl">Películas</h2>
@@ -168,7 +168,6 @@ export default function ExplorePage() {
           )}
         </section>
       )}
-
       <PersonList
         title="Actores"
         people={actors}

@@ -26,7 +26,13 @@ export function PersonDetailPage({
   const { person, isLoading, error, notFound } = usePersonDetail(id);
   const [showAll, setShowAll] = useState(false);
 
-  if (isLoading) return <p className="p-6">Cargando...</p>;
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen flex-col p-6">
+        <p>Cargando...</p>
+      </div>
+    );
+  }
   if (error)
     return (
       <p className="p-6 text-error">
@@ -58,6 +64,8 @@ export function PersonDetailPage({
           <img
             src={person.photoUrl}
             alt={`Imagen de ${person.name}`}
+            width={240}
+            height={360}
             className="w-60 self-start rounded-lg"
           />
         ) : (
