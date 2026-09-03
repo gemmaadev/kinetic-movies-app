@@ -21,9 +21,7 @@ export function HeroSection({
           style={{ backgroundImage: `url(${backgroundImage})` }}
         />
       )}
-      {overlay && backgroundImage && (
-        <div className="absolute inset-0 bg-bg-night/70" />
-      )}
+      {overlay && backgroundImage && <div className="absolute inset-0" />}
       <div className="relative z-10">{children}</div>
     </section>
   );

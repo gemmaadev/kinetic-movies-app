@@ -1,5 +1,5 @@
 import { Link, NavLink } from "react-router";
-import logo from "@/shared/assets/logo.png";
+import logo from "@/shared/assets/logo.webp";
 import { Menu, Search, X } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/features/auth/hooks/useAuth";
@@ -23,8 +23,8 @@ export default function NavBar() {
         <img
           src={logo}
           alt="Kinetic logo"
-          width={145}
-          height={44}
+          width={128}
+          height={39}
           className="h-11 cursor-pointer"
         />
       </Link>

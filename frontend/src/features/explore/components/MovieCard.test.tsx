@@ -66,7 +66,7 @@ describe("MovieCard", () => {
     const image = screen.getByAltText("Dune: Parte Dos");
     expect(image).toHaveAttribute(
       "src",
-      "https://image.tmdb.org/t/p/w500/dune.jpg",
+      "https://image.tmdb.org/t/p/w200/dune.jpg",
     );
   });
 
