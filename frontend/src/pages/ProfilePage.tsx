@@ -52,7 +52,13 @@ export default function ProfilePage() {
     },
   ];
 
-  if (isLoading) return <p className="p-6">Cargando...</p>;
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen flex-col p-6">
+        <p>Cargando...</p>
+      </div>
+    );
+  }
   if (error)
     return (
       <p className="p-6 text-error">

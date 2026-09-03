@@ -1,11 +1,18 @@
 import { Star } from "lucide-react";
 import { useRanking } from "@/features/stats/hooks/useRanking";
 import { Link } from "react-router";
+import { resizePosterUrl } from "@/shared/utils/resizePosterUrl";
 
 export default function RankingPage() {
   const { ranking, isLoading, error } = useRanking();
 
-  if (isLoading) return <p className="p-6">Cargando...</p>;
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen flex-col gap-4 p-4 md:p-6">
+        <p>Cargando...</p>
+      </div>
+    );
+  }
   if (error)
     return (
       <p className="p-6 text-error">
@@ -50,7 +57,7 @@ export default function RankingPage() {
               >
                 {movie.posterUrl ? (
                   <img
-                    src={movie.posterUrl}
+                    src={resizePosterUrl(movie.posterUrl, "w200") ?? undefined}
                     alt={movie.title}
                     width={48}
                     height={48}
