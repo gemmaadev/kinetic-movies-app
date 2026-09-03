@@ -1,3 +1,4 @@
+import { resizePosterUrl } from "@/shared/utils/resizePosterUrl";
 import { Link } from "react-router";
 
 interface PersonListItem {
@@ -25,7 +26,7 @@ export function PersonList({ title, people, linkTo }: PersonListProps) {
             <>
               {person.photoUrl ? (
                 <img
-                  src={person.photoUrl}
+                  src={resizePosterUrl(person.photoUrl, "w200") ?? undefined}
                   alt={person.name}
                   width={96}
                   height={96}
