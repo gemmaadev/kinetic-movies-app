@@ -2,15 +2,24 @@ import { initializeApp, cert } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
 import { readFileSync } from "fs";
 
-const serviceAccountPath = process.env.FIREBASE_SERVICE_ACCOUNT_PATH;
+function loadServiceAccount() {
+  const serviceAccountJson = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
+  const serviceAccountPath = process.env.FIREBASE_SERVICE_ACCOUNT_PATH;
 
-if (!serviceAccountPath) {
+  if (serviceAccountJson) {
+    return JSON.parse(serviceAccountJson);
+  }
+
+  if (serviceAccountPath) {
+    return JSON.parse(readFileSync(serviceAccountPath, "utf-8"));
+  }
+
   throw new Error(
-    "FIREBASE_SERVICE_ACCOUNT_PATH is not defined in environment variables",
+    "Neither FIREBASE_SERVICE_ACCOUNT_JSON nor FIREBASE_SERVICE_ACCOUNT_PATH is defined in environment variables",
   );
 }
 
-const serviceAccount = JSON.parse(readFileSync(serviceAccountPath, "utf-8"));
+const serviceAccount = loadServiceAccount();
 
 const firebaseApp = initializeApp({
   credential: cert(serviceAccount),

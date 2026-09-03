@@ -6,13 +6,17 @@
 
 Discover, rate and keep track of your favorite movies, with real-time data from TMDB and a personal ranking system.
 
-[🚀 Live Demo](https://kinetic-movies-app.netlify.app/)
+[🚀 Live Demo](https://kinetic-movies-app.netlify.app/) <br>
+Backend API: https://kinetic-backend-k6xv.onrender.com
+
+> **Note**: the backend is hosted on Render's free tier, which spins down after periods of inactivity. The first request after some idle time may take 30-60 seconds to respond.
 
 ![React](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=black)
 ![React Router](https://img.shields.io/badge/React_Router-CA4245?logo=reactrouter&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-06B6D4?logo=tailwindcss&logoColor=white)
+<br>
 ![Node.js](https://img.shields.io/badge/Node.js-339933?logo=node.js&logoColor=white)
 ![Express](https://img.shields.io/badge/Express-000000?logo=express&logoColor=white)
 ![Prisma](https://img.shields.io/badge/Prisma-2D3748?logo=prisma&logoColor=white)
@@ -22,8 +26,6 @@ Discover, rate and keep track of your favorite movies, with real-time data from 
 
 </div>
 
----
-
 ## Preview
 
 ### 🖥️ Desktop
@@ -32,7 +34,7 @@ Discover, rate and keep track of your favorite movies, with real-time data from 
 
 ### 📱 Mobile
 
-## <img src="docs/demo-mobile.gif" alt="Kinetic Mobile Demo" width="400" />
+<img src="docs/demo-mobile.gif" alt="Kinetic Mobile Demo" width="400" />
 
 ## Core features
 
@@ -70,8 +72,6 @@ Discover, rate and keep track of your favorite movies, with real-time data from 
 - Real stats: favorites count, rated movies count, and personal average rating (calculated from your own ratings)
 - Avatar (from Google, if available), name, email, member-since date
 
----
-
 ## Tech stack
 
 | Category           | Technology                                                                              |
@@ -89,8 +89,6 @@ Discover, rate and keep track of your favorite movies, with real-time data from 
 | Icons              | [Lucide React](https://lucide.dev/)                                                     |
 | Testing            | [Vitest](https://vitest.dev/) + React Testing Library + Supertest                       |
 | Version Control    | Git + GitHub (GitFlow)                                                                  |
-
----
 
 ## Getting started
 
@@ -181,8 +179,6 @@ npm run dev
 
 The app will be available at the URL shown in your terminal (typically `http://localhost:5173`).
 
----
-
 ## Testing
 
 ```bash
@@ -256,8 +252,7 @@ kinetic-movies-app/
             ├── person/               # Shared PersonDetailPage, usePersonDetail
             ├── favorites/            # FavoritesContext, FavoriteButton, RatingInput, useRating
             └── stats/                # useRanking, useMyRanking
-
----
+```
 
 ## Architecture decisions
 
@@ -275,11 +270,8 @@ kinetic-movies-app/
 - **Accessibility as a first-class concern** — semantic HTML applied consciously throughout the codebase, only where it genuinely reflects the content's structure rather than as a blanket replacement for generic elements; `aria-label` added to icon-only buttons and grouped links; verified with Lighthouse across all pages (92–94% accessibility score)
 - **Performance-conscious images** — explicit `width`/`height` to avoid layout shift, static assets converted to WebP, TMDB images requested at the smallest size needed. Verified with Lighthouse: 90–100% Performance, 0 CLS
 
----
-
 ## Author
 
 **Gemma Maeso** · [@gemmaadev](https://github.com/gemmaadev)
 
 Project developed as part of the **IT Academy** program by Barcelona Activa
-```
