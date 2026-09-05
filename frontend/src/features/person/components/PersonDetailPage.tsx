@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { usePersonDetail } from "@/features/person/hooks/usePersonDetail";
-import { MovieGrid } from "@/features/explore/components/MovieGrid";
+import { MovieGrid } from "@/features/movie/components/MovieGrid";
 import { SecondaryButton } from "@/shared/components/buttons/SecondaryButton";
 import { useParams } from "react-router";
 import type { MovieCredit } from "@/features/person/types/person.types";

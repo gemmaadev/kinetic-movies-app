@@ -3,7 +3,7 @@ import { PrimaryLinkButton } from "@/shared/components/buttons/PrimaryLinkButton
 import heroBackground from "@/shared/assets/hero.webp";
 import { Heart, Search, Star, User } from "lucide-react";
 import { PageContainer } from "@/shared/components/PageContainer";
-import { MovieCarousel } from "@/features/explore/components/MovieCarousel";
+import { MovieCarousel } from "@/features/movie/components/MovieCarousel";
 import { useTrending } from "@/features/explore/hooks/useTrending";
 import { useNowPlaying } from "@/features/explore/hooks/useNowPlaying";
 

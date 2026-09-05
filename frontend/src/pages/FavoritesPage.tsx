@@ -1,4 +1,4 @@
-import { MovieGrid } from "@/features/explore/components/MovieGrid";
+import { MovieGrid } from "@/features/movie/components/MovieGrid";
 import { FilterSelect } from "@/features/explore/components/FilterSelect";
 import { useFavoritesList } from "@/features/favorites/hooks/useFavoritesList";
 import { EmptyState } from "@/shared/components";

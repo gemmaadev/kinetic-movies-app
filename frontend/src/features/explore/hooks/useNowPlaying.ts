@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { Movie, MovieListResponse } from "../types/movie.types";
+import type { Movie, MovieListResponse } from "../../movie/types/movie.types";
 import { apiClient } from "@/shared/services/apiClient";
 
 export function useNowPlaying() {

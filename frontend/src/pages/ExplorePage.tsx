@@ -2,12 +2,12 @@ import { useState } from "react";
 import { useSearchParams } from "react-router";
 import { useExplore } from "@/features/explore/hooks/useExplore";
 import { Search, SlidersHorizontal } from "lucide-react";
-import { PersonList } from "@/features/explore/components/PersonList";
+import { PersonList } from "@/features/person/components/PersonList";
 import { EmptyState } from "@/shared/components";
 import { ExploreFilters } from "@/features/explore/components/ExploreFilters";
 import type { ExploreFiltersValues } from "@/features/explore/types/explore.types";
 import { useDebounce } from "@/shared/hooks/useDebounce";
-import { MovieGrid } from "@/features/explore/components/MovieGrid";
+import { MovieGrid } from "@/features/movie/components/MovieGrid";
 import { SecondaryButton } from "@/shared/components/buttons/SecondaryButton";
 
 const categories = [

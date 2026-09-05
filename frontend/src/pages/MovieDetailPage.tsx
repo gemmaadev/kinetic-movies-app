@@ -1,21 +1,17 @@
-import { PersonList } from "@/features/explore/components/PersonList";
+import { PersonList } from "@/features/person/components/PersonList";
 import { FavoriteButton } from "@/features/favorites/components/FavoriteButton";
 import { RatingInput } from "@/features/favorites/components/RatingInput";
-import type { MovieSnapshot } from "@/features/favorites/context/FavoritesContext";
-import { useRating } from "@/features/favorites/hooks/useRating";
 import { useMovieDetail } from "@/features/movie/hooks/useMovieDetail";
 import type { MovieDetail } from "@/features/movie/types/movieDetail.types";
 import { BackButton } from "@/shared/components/BackButton";
 import { HeroSection } from "@/shared/components/HeroSection";
 import { SecondaryButton } from "@/shared/components/buttons/SecondaryButton";
 import { Star } from "lucide-react";
-import { useState } from "react";
 import { Link, useParams } from "react-router";
 
 export default function MovieDetailPage() {
   const { id } = useParams();
   const { movie, isLoading, error, notFound } = useMovieDetail(id);
-  const { rateMovie } = useRating();
 
   if (isLoading) {
     return (
@@ -42,37 +38,10 @@ export default function MovieDetailPage() {
   }
   if (!movie) return null;
 
-  return <MovieDetailContent movie={movie} rateMovie={rateMovie} />;
+  return <MovieDetailContent movie={movie} />;
 }
 
-function MovieDetailContent({
-  movie,
-  rateMovie,
-}: {
-  movie: MovieDetail;
-  rateMovie: (movie: MovieSnapshot, rating: number) => Promise<void>;
-}) {
-  const [currentRating, setCurrentRating] = useState(movie.userRating);
-
-  async function handleRatingChange(rating: number) {
-    const previousRating = currentRating;
-    setCurrentRating(rating);
-    try {
-      await rateMovie(
-        {
-          movieId: movie.id,
-          title: movie.title,
-          posterUrl: movie.posterUrl,
-          voteAverage: movie.voteAverage,
-          releaseYear: movie.releaseYear,
-        },
-        rating,
-      );
-    } catch {
-      setCurrentRating(previousRating);
-    }
-  }
-
+function MovieDetailContent({ movie }: { movie: MovieDetail }) {
   return (
     <article>
       <BackButton />
@@ -198,7 +167,7 @@ function MovieDetailContent({
         <div className="flex flex-col gap-5">
           <section className="flex flex-col gap-4 md:p-6">
             <h2 className="text-2xl font-bold">Tu valoración</h2>
-            <RatingInput value={currentRating} onChange={handleRatingChange} />
+            <RatingInput movie={movie} />
           </section>
 
           {movie.watchProviders.length > 0 && (
