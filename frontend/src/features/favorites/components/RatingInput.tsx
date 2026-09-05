@@ -16,6 +16,7 @@ export function RatingInput({ movie }: RatingInputProps) {
 
   async function handleRatingChange(rating: number) {
     const previousRating = currentRating;
+    setHoverValue(null);
     setCurrentRating(rating);
     try {
       await rateMovie(
