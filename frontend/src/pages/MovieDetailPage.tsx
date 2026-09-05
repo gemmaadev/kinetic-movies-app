@@ -1,4 +1,4 @@
-import { PersonList } from "@/features/explore/components/PersonList";
+import { PersonList } from "@/features/person/components/PersonList";
 import { FavoriteButton } from "@/features/favorites/components/FavoriteButton";
 import { RatingInput } from "@/features/favorites/components/RatingInput";
 import type { MovieSnapshot } from "@/features/favorites/context/FavoritesContext";

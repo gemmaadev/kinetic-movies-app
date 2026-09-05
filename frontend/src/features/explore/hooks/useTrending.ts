@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { apiClient } from "@/shared/services/apiClient";
-import type { Movie, MovieListResponse } from "../types/movie.types";
+import type { Movie, MovieListResponse } from "../../movie/types/movie.types";
 
 export function useTrending() {
   const [movies, setMovies] = useState<Movie[]>([]);

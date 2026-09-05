@@ -1,4 +1,4 @@
-import type { Movie } from "./movie.types";
+import type { Movie } from "../../movie/types/movie.types";
 
 export interface Person {
   id: number;

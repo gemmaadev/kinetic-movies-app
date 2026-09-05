@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { apiClient } from "@/shared/services/apiClient";
-import type { Movie } from "../types/movie.types";
+import type { Movie } from "../../movie/types/movie.types";
 import type {
   Person,
   ExploreResponse,
